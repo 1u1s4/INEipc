@@ -1,3 +1,8 @@
 API KEY JKnsdDbemtzwvLU8UsL9
 USER lumaku97@gmail.com
 PASSWORD Helpm98mine*
+
+https://fred.stlouisfed.org/docs/api/fred/
+API KEY 734b605521e7734edc09f38e977fe238
+USER lumaku97@gmail.com
+PASSWORD INE2022$$$
