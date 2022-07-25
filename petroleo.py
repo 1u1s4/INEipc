@@ -1,5 +1,4 @@
 from fredapi import Fred
-import numpy as np
 from datetime import datetime, timedelta
 fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
 FECHA_REPORTE = "2015-11-22"#datetime.today().strftime("%Y-%m-%d")
