@@ -6,3 +6,8 @@ https://fred.stlouisfed.org/docs/api/fred/
 API KEY 734b605521e7734edc09f38e977fe238
 USER lumaku97@gmail.com
 PASSWORD INE2022$$$
+
+para INPC MX
+https://www.inegi.org.mx/servicios/api_indicadores.html
+API KEY 515963d6-1153-e348-8394-a81acec0d6da
+USER luisalvaradoar@gmail.com
