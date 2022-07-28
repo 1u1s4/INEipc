@@ -1,6 +1,7 @@
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
+from datetimeLAAR import year_ago, month_after
 FECHA_REPORTE = datetime.today().strftime("%d/%m/%Y")
 FECHA_ANTERIOR = "/".join(("28", FECHA_REPORTE.split("/")[1], str(int(FECHA_REPORTE.split("/")[2]) - 1)))
 MES_FORMATO = {
