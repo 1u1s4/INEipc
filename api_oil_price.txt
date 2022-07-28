@@ -11,3 +11,8 @@ para INPC MX
 https://www.inegi.org.mx/servicios/api_indicadores.html
 API KEY 515963d6-1153-e348-8394-a81acec0d6da
 USER luisalvaradoar@gmail.com
+
+IPC EEUU
+https://www.bls.gov/
+API KEY 7d4d7e5799fb4bbd9903f84e61b0f3a0
+USER lumaku97@gmail.com
