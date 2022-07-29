@@ -27,7 +27,8 @@ while fecha_i != FECHA_REPORTE:
     fecha_i = fecha_i.strftime("%Y-%m-%d")
     mes_actual_i = "-".join((fecha_i.split("-")[0], MES_FORMATO[fecha_i.split("-")[1]]))
     if mes_actual_i != mes_actual:
-        data_mean.append((mes_actual, sum(datos_mes)/len(datos_mes)))
+        mean = sum(datos_mes)/len(datos_mes)
+        data_mean.append((mes_actual, f"{mean:.2f}"))
         datos_mes = []
         mes_actual = mes_actual_i
     try:
