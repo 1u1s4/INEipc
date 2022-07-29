@@ -23,7 +23,7 @@ def date_mini(fecha: str) -> str: # formato AA/MM
     return f"{separador}".join((fecha.split("-")[0], fecha.split("-")[1]))
 
 def mes_by_ordinal(ordinal: str, abreviado=True) -> str:
-    MES_FORMATO = {
+    ORDINALES_MES = {
         "01":"Enero",
         "02":"Febrero",
         "03":"Marzo",
@@ -38,8 +38,32 @@ def mes_by_ordinal(ordinal: str, abreviado=True) -> str:
         "12":"Diciembre"}
     try:
         if abreviado:
-            return MES_FORMATO[ordinal][0:3]
+            return ORDINALES_MES[ordinal][0:3]
         else:
-            return MES_FORMATO[ordinal]
+            return ORDINALES_MES[ordinal]
     except:
         return "NaN"
+
+def mes_anio_by_abreviacion(abreviacion: str) -> str:
+    ABREVIATURAS = {
+        "Ene":"enero",
+        "Feb":"febrero",
+        "Mar":"marzo",
+        "Abr":"abril",
+        "May":"mayo",
+        "Jun":"junio",
+        "Jul":"julio",
+        "Ago":"agosto",
+        "Sep":"septiembre",
+        "Oct":"octubre",
+        "Nov":"noviembre",
+        "Dic":"diciembre"}
+    try:
+        mes = ABREVIATURAS[abreviacion.split("-")[1]]
+        anio = abreviacion.split("-")[0]
+        return f"{mes} {anio}"
+    except:
+        return "NaN"
+
+def anio_mes(fecha: str) -> str:
+    return "-".join((fecha.split("-")[0], mes_by_ordinal(fecha.split("-")[1])))
