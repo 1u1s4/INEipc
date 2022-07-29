@@ -21,3 +21,25 @@ def date_mini(fecha: str) -> str: # formato AA/MM
     elif "/" in fecha:
         separador = "/"
     return f"{separador}".join((fecha.split("-")[0], fecha.split("-")[1]))
+
+def mes_by_ordinal(ordinal: str, abreviado=True) -> str:
+    MES_FORMATO = {
+        "01":"Enero",
+        "02":"Febrero",
+        "03":"Marzo",
+        "04":"Abril",
+        "05":"Mayo",
+        "06":"Junio",
+        "07":"Julio",
+        "08":"Agosto",
+        "09":"Septiembre",
+        "10":"Octubre",
+        "11":"Noviembre",
+        "12":"Diciembre"}
+    try:
+        if abreviado:
+            return MES_FORMATO[ordinal][0:3]
+        else:
+            return MES_FORMATO[ordinal]
+    except:
+        return "NaN"
