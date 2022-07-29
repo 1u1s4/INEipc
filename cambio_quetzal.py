@@ -2,7 +2,8 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from datetimeLAAR import mes_by_ordinal
-FECHA_REPORTE = datetime.today().strftime("%d/%m/%Y")
+import descriptor
+FECHA_REPORTE = "28/11/2015"#datetime.today().strftime("%d/%m/%Y")
 FECHA_ANTERIOR = "/".join(("28", FECHA_REPORTE.split("/")[1], str(int(FECHA_REPORTE.split("/")[2]) - 1)))
 # SOAP request URL
 URL = "http://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
@@ -48,3 +49,4 @@ for cambio in root[0][0][0][0]:
         None
 for i in data_mean:
     print(i)
+print(descriptor.cambio_del_quetzal(data_mean))
