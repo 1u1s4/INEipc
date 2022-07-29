@@ -1,7 +1,7 @@
 import requests
 import xlrd
-from datetime import datetime, timedelta
-from datetimeLAAR import year_ago, month_after, date_mini, mes_by_ordinal
+from datetime import datetime
+from datetimeLAAR import year_ago, mes_by_ordinal
 FECHA_REPORTE = datetime.today().strftime("%Y-%m")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
 # descarga de datos

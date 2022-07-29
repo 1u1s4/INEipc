@@ -1,6 +1,6 @@
 import requests
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from datetimeLAAR import year_ago, month_after, date_mini, mes_by_ordinal
 FECHA_REPORTE = "2015-10-01"#datetime.today().strftime("%Y-%m-%d")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)

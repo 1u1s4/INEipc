@@ -1,6 +1,6 @@
 import requests
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
+from datetime import datetime
 from datetimeLAAR import mes_by_ordinal
 FECHA_REPORTE = datetime.today().strftime("%d/%m/%Y")
 FECHA_ANTERIOR = "/".join(("28", FECHA_REPORTE.split("/")[1], str(int(FECHA_REPORTE.split("/")[2]) - 1)))

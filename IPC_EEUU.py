@@ -1,5 +1,5 @@
 from fredapi import Fred
-from datetime import datetime, timedelta
+from datetime import datetime
 from datetimeLAAR import year_ago, month_after, mes_by_ordinal
 
 fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
