@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
-def hoy(separador="-") -> str:
-    return datetime.today().strftime(f"%Y{separador}%m{separador}%d")
+
+def hoy(formato="%Y-%m-%d") -> str:
+    return datetime.today().strftime(formato)
 
 def day_after(fecha: str, separador="-") -> str:
-    fecha_datetime = datetime.strptime(fecha, "%Y-%m-%d")
+    fecha_datetime = datetime.strptime(fecha, f"%Y{separador}%m{separador}%d")
     fecha_mas_un_dia = fecha_datetime + timedelta(days=1)
     fecha_texto = fecha_mas_un_dia.strftime(f"%Y{separador}%m{separador}%d")
     return fecha_texto
