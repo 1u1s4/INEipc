@@ -38,8 +38,9 @@ for cambio in root[0][0][0][0]:
     i += 1
     fecha_i = cambio[1].text
     mes_actual_i = "-".join((fecha_i.split("/")[2], mes_by_ordinal(fecha_i.split("/")[1])))
-    if mes_actual_i != mes_actual or i == len(root[0][0][0][0]): # la ultima comparacion es para calcular el promedio del ultimo mes
-        data_mean.append((mes_actual, f"{sum(datos_mes)/len(datos_mes):.2f}"))
+    # la ultima comparacion es para calcular el promedio del ultimo mes
+    if mes_actual_i != mes_actual or i == len(root[0][0][0][0]):
+        data_mean.append((mes_actual, sum(datos_mes)/len(datos_mes)))
         datos_mes = []
         mes_actual = mes_actual_i
     try:
