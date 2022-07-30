@@ -1,7 +1,9 @@
 import requests
 import json
-from datetimeLAAR import year_ago, month_after, date_mini, mes_by_ordinal, hoy
-FECHA_REPORTE = "2015-10-01"#hoy()
+from funcionesjo import year_ago, month_after, date_mini, mes_by_ordinal, hoy
+
+
+FECHA_REPORTE = "2015-10-01"#hoy("%Y-%m-%d")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
 FECHA_ANTERIOR_ANTERIOR = year_ago(FECHA_ANTERIOR)
 API_KEY = "515963d6-1153-e348-8394-a81acec0d6da"

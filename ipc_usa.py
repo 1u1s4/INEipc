@@ -1,8 +1,8 @@
 from fredapi import Fred
-from datetimeLAAR import year_ago, month_after, mes_by_ordinal, hoy
+from funcionesjo import year_ago, month_after, mes_by_ordinal, hoy
 
 fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
-FECHA_REPORTE = "2022-06-01"#hoy()
+FECHA_REPORTE = "2022-06-01"#hoy("%Y-%m-%d")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
 FECHA_ANTERIOR_ANTERIOR = year_ago(FECHA_ANTERIOR)
 data = fred.get_series('CPIAUCSL', observation_start=FECHA_ANTERIOR_ANTERIOR, observation_end=FECHA_REPORTE)
