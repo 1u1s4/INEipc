@@ -1,9 +1,10 @@
 from fredapi import Fred
-from datetime import datetime, timedelta
-from datetimeLAAR import year_ago, anio_mes, mes_by_ordinal, hoy, day_after
+from funcionesjo import year_ago, anio_mes, mes_by_ordinal, hoy, day_after
+
+
 import descriptor
 fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
-FECHA_REPORTE = hoy()
+FECHA_REPORTE = hoy("%Y-%m-%d")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
 # carga de datos
 data = fred.get_series('DCOILWTICO', observation_start=FECHA_ANTERIOR, observation_end=FECHA_REPORTE)
