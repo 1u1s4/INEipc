@@ -1,3 +1,14 @@
+from datetime import datetime, timedelta
+
+def hoy(separador="-") -> str:
+    return datetime.today().strftime(f"%Y{separador}%m{separador}%d")
+
+def day_after(fecha: str, separador="-") -> str:
+    fecha_datetime = datetime.strptime(fecha, "%Y-%m-%d")
+    fecha_mas_un_dia = fecha_datetime + timedelta(days=1)
+    fecha_texto = fecha_mas_un_dia.strftime(f"%Y{separador}%m{separador}%d")
+    return fecha_texto
+
 def year_ago(fecha: str) -> str: # formato AA/MM/DD
     if "-" in fecha:
         separador = "-"
@@ -44,7 +55,7 @@ def mes_by_ordinal(ordinal: str, abreviado=True) -> str:
     except:
         return "NaN"
 
-def mes_anio_by_abreviacion(abreviacion: str) -> str:
+def mes_anio_by_abreviacion(abreviacion: str, capON=False) -> str:
     ABREVIATURAS = {
         "Ene":"enero",
         "Feb":"febrero",
@@ -61,7 +72,10 @@ def mes_anio_by_abreviacion(abreviacion: str) -> str:
     try:
         mes = ABREVIATURAS[abreviacion.split("-")[1]]
         anio = abreviacion.split("-")[0]
-        return f"{mes} {anio}"
+        if capON:
+            return f"{mes} {anio}".capitalize()
+        else:
+            return f"{mes} {anio}"
     except:
         return "NaN"
 
