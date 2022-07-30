@@ -1,35 +1,23 @@
-'''
-# prueba usar R en py
-import os
-os.environ["R_HOME"] = r"C:\Program Files\R\R-4.2.1" # change as needed
-import rpy2.robjects.packages as rpackages
-
-devtools = rpackages.importr('devtools')
-devtools.install_github("1u1s4/funcionesINE")
-'''
+# xlsx_chef.py
 import xlsxwriter
 
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('Expenses01.xlsx')
-for j in range(3):
-    worksheet = workbook.add_worksheet()
+class CvsCocinado:
+    def __init__(self, nombre='CVSprueba') -> None:
+        self.__workbook = xlsxwriter.Workbook(nombre + '.xlsx')
 
-    # Some data we want to write to the worksheet.
-    expenses = (
-        ['Rent', 1000],
-        ['Gas',   100],
-        ['Food',  300],
-        ['Gym',    50],
-    )
+    def escribir_hoja(self, datos:list, nombre_hoja:str) -> None:
+        worksheet = self.__workbook.add_worksheet(nombre_hoja)
+        row = 1
+        col = 1
+        worksheet.write
+        for x, y in datos:
+            worksheet.write(row, col,     x)
+            worksheet.write(row, col + 1, y)
+            row += 1
+    
+    def cerrar_libro(self):
+        self.__workbook.close()
 
-    # Start from the first cell. Rows and columns are zero indexed.
-    row = 0
-    col = 0
-
-    # Iterate over the data and write it out row by row.
-    for item, cost in (expenses):
-        worksheet.write(row, col,     item)
-        worksheet.write(row, col + 1, cost)
-        row += 1
-
-workbook.close()
+prueba = CvsCocinado()
+prueba.escribir_hoja([('2000', 3), ('2001', 6), ('2002', 10)], '1_01')
+prueba.cerrar_libro()
