@@ -1,5 +1,6 @@
 *.xml
 *.xls
+*.xlsx
 __pycache__
 app_name.egg-info
 build
