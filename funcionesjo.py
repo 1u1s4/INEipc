@@ -10,7 +10,9 @@ def day_after(fecha: str, separador="-") -> str:
     fecha_texto = fecha_mas_un_dia.strftime(f"%Y{separador}%m{separador}%d")
     return fecha_texto
 
-def year_ago(fecha: str) -> str: # formato AA/MM/DD
+def year_ago(fecha: str, formato='%Y-%m-%d') -> str: # formato AA/MM/DD
+    pos_Y = formato.index('Y')
+    
     if "-" in fecha:
         separador = "-"
     elif "/" in fecha:
