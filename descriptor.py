@@ -1,5 +1,5 @@
-from numpy import var
-from datetimeLAAR import mes_anio_by_abreviacion
+from funcionesjo import mes_anio_by_abreviacion
+
 
 def variacion(dato: float, dato_antes: float) -> float:
     return ((dato - dato_antes) / dato_antes) * 100
