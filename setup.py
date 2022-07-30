@@ -12,6 +12,7 @@ setup(
         'fredapi',
         'xlrd',
         'prettytable',
-        'rpy2'
+        'rpy2',
+        'xlsxwriter'
     ]
 )
