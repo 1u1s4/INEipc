@@ -5,3 +5,4 @@ __pycache__
 app_name.egg-info
 build
 dist
+.venv
