@@ -4,30 +4,36 @@ from datetime import datetime, timedelta
 def hoy(formato="%Y-%m-%d") -> str:
     return datetime.today().strftime(formato)
 
-def day_after(fecha: str, separador="-") -> str:
-    fecha_datetime = datetime.strptime(fecha, f"%Y{separador}%m{separador}%d")
+def day_after(fecha: str, formato='%Y-%m-%d') -> str:
+    fecha_datetime = datetime.strptime(fecha, formato)
     fecha_mas_un_dia = fecha_datetime + timedelta(days=1)
-    fecha_texto = fecha_mas_un_dia.strftime(f"%Y{separador}%m{separador}%d")
+    fecha_texto = fecha_mas_un_dia.strftime(formato)
     return fecha_texto
 
-def year_ago(fecha: str, formato='%Y-%m-%d') -> str: # formato AA/MM/DD
+def year_ago(fecha: str, formato='%Y-%m-%d') -> str:
+    if "-" in fecha:
+        separador = "-"
+    elif "/" in fecha:
+        separador = "/"
+    formato = formato.replace('%', '').split(separador)
+    fecha = fecha.split(separador)
     pos_Y = formato.index('Y')
-    
-    if "-" in fecha:
-        separador = "-"
-    elif "/" in fecha:
-        separador = "/"
-    return f"{separador}".join((str(int(fecha.split("-")[0]) - 1), fecha.split("-")[1], fecha.split("-")[2]))
+    fecha[pos_Y] = str(int(fecha[pos_Y]) - 1)
+    return f"{separador}".join(fecha)
 
-def month_after(fecha: str) -> str: # formato AA/MM/DD
+def month_after(fecha: str, formato='%Y-%m-%d') -> str:
     if "-" in fecha:
         separador = "-"
     elif "/" in fecha:
         separador = "/"
-    if fecha.split("-")[1] == "12":
-        return f"{separador}".join((str(int(fecha.split("-")[0]) + 1), "01", fecha.split("-")[2]))
+    formato = formato.replace('%', '').split(separador)
+    fecha = fecha.split(separador)
+    pos_m = formato.index('m')
+    if fecha[pos_m] == "12":
+        fecha[pos_m] = "01"
     else:
-        return f"{separador}".join((fecha.split("-")[0], str(int(fecha.split("-")[1]) + 1).rjust(2, "0"), fecha.split("-")[2]))
+        fecha[pos_m] = str(int(fecha[pos_m]) + 1).rjust(2, "0")
+    return f"{separador}".join(fecha)
 
 def date_mini(fecha: str) -> str: # formato AA/MM
     if "-" in fecha:
