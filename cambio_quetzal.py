@@ -1,11 +1,11 @@
 import requests
 import xml.etree.ElementTree as ET
-from funcionesjo import mes_by_ordinal, hoy
-
-
+from funcionesjo import mes_by_ordinal, hoy, year_ago
 import descriptor
-FECHA_REPORTE = hoy("%d/%m/%Y")
-FECHA_ANTERIOR = "/".join(("28", FECHA_REPORTE.split("/")[1], str(int(FECHA_REPORTE.split("/")[2]) - 1)))
+
+FORMATO = "%d/%m/%Y"
+FECHA_REPORTE = hoy(FORMATO)
+FECHA_ANTERIOR = year_ago(fecha=FECHA_REPORTE, formato=FORMATO)
 # SOAP request URL
 URL = "http://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
 PAYLOAD = """<?xml version="1.0" encoding="utf-8"?>
