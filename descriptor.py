@@ -61,7 +61,7 @@ def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
     PLANTILLA = f"""El tipo de cambio de referencia del
                 quetzal respecto al dólar de los Estados
                 Unidos de América, registró en {FECHA_1} 
-                un precio medio de Q{PRECIO} por
+                un precio medio de Q{PRECIO:.2f} por
                 US$1.00, lo que representa una variación
                 de {VARIACION_1:.2f}% respecto a {FECHA_2} y de
                 {VARIACION_2:.2f}% respecto a {FECHA_3}."""
