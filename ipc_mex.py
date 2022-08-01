@@ -1,7 +1,7 @@
 import requests
 import json
 from funcionesjo import year_ago, month_after, date_mini, mes_by_ordinal, hoy
-
+import descriptor
 
 FECHA_REPORTE = "2015-10-01"#hoy("%Y-%m-%d")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
@@ -25,9 +25,10 @@ for i in range(13):
     precio_anterior = data[date_mini(year_ago(fecha_i))]
     mes_actual_i = "-".join((fecha_i.split("-")[0], mes_by_ordinal(fecha_i.split("-")[1])))
     variacion = ((precio / precio_anterior) - 1) * 100
-    datos_variacion_interanual.append((mes_actual_i, f"{variacion:.2f}"))
+    datos_variacion_interanual.append((mes_actual_i, variacion))
 
     fecha_i = month_after(fecha_i)
 
 for i in datos_variacion_interanual:
     print(i)
+print(descriptor.ipc_mex(datos_variacion_interanual))

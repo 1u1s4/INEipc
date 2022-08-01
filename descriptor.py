@@ -138,3 +138,35 @@ def ipc_usa(datos: list[tuple[str]]) -> str:
     PLANTILLA = PLANTILLA.split()
     PLANTILLA = " ".join(PLANTILLA)
     return PLANTILLA
+
+# IPC MEX
+"""
+ejemplo de datos
+('2021-Ago', 5.205331689652515)
+('2021-Sep', 5.389907375379521)
+...
+('2022-May', 8.516412942713858)
+('2022-Jun', 8.995220608588127)
+"""
+def ipc_mex(datos: list[tuple[str]]) -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
+    INDICE_1 = datos[-1][1]
+    INDICE_2 = datos[0][1]
+    DIFERENCIA = datos[-1][1] - datos[0][1]
+    if DIFERENCIA < 0:
+        CAMBIO = "se desaceleró"
+        DIFERENCIA *= -1
+    elif DIFERENCIA > 0:
+        CAMBIO = "se aceleró"
+    else:
+        CAMBIO = "cambio"
+    PLANTILLA = f"""El Índice de Precios al Consumidor en México de registró una
+                variación interanual al mes de {FECHA_1} de {INDICE_1:.2f}%. En
+                {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
+                por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
+                porcentuales en el último año."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
