@@ -6,12 +6,11 @@ def variacion(dato: float, dato_antes: float) -> float:
 # petroleo
 """
 ejemplo de datos
-('2014-Nov', '72.36')
-('2014-Dic', '59.29')
+('2014-Nov', 75.78947368421052)
+('2014-Dic', 59.29045454545455)
 ...
-('2015-Sep', '45.48')
-('2015-Oct', '46.22')
-('2015-Nov', '43.10')
+('2015-Sep', 45.479523809523805)
+('2015-Oct', 46.22363636363636)
 """
 def petroleo(datos: list[tuple[str]]) -> str:
     FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
@@ -45,11 +44,10 @@ def petroleo(datos: list[tuple[str]]) -> str:
 # cambio del quetzal
 """
 ejemplo de datos
-('2021-Jul', '7.75')
-('2021-Ago', '7.74')
+('2021-Ago', 7.738385161290321)
 ...
-('2022-Jun', '7.74')
-('2022-Jul', '7.74')
+('2022-Jun', 7.735068333333335)
+('2022-Jul', 7.739475806451614)
 """
 def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
     FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
@@ -72,16 +70,12 @@ def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
 
 # tasa de interes
 """
-ejemplo de datos
-('2021-Ago', '12.14')
-('2021-Sep', '12.16')
+('2021-Ago', 12.139999999999999)
+('2021-Sep', 12.16)
 ...
-('2022-Abr', '11.93')
-('2022-May', '11.94')
-('2022-Jun', '11.98')
-('2022-Jul', None)
-('2022-Ago', None)
-devuelve "None" cuando el Banco de Guatemala no ha actualizado la base de datos
+('2022-Abr', 11.93)
+('2022-May', 11.940000000000001)
+('2022-Jun', 11.98)
 """
 def tasa_de_interes(datos: list[tuple[str]]) -> str:
     FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
@@ -108,6 +102,38 @@ def tasa_de_interes(datos: list[tuple[str]]) -> str:
     en moneda nacional se ubicó en {FECHA_1} en {TASA:.2f}%, lo que representa
     {CAMBIO_1} de {DIFERENCIA_1:.2f} puntos porcentuales respecto a {FECHA_2}
     y {CAMBIO_2} de {DIFERENCIA_2:.2f} puntos porcentuales respecto a {FECHA_3}."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
+
+# IPC USA
+"""
+ejemplo de datos
+('2021-Ago', 5.205331689652515)
+('2021-Sep', 5.389907375379521)
+...
+('2022-May', 8.516412942713858)
+('2022-Jun', 8.995220608588127)
+"""
+def ipc_usa(datos: list[tuple[str]]) -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
+    INDICE_1 = datos[-1][1]
+    INDICE_2 = datos[0][1]
+    DIFERENCIA = datos[-1][1] - datos[0][1]
+    if DIFERENCIA < 0:
+        CAMBIO = "se desaceleró"
+        DIFERENCIA *= -1
+    elif DIFERENCIA > 0:
+        CAMBIO = "se aceleró"
+    else:
+        CAMBIO = "cambio"
+    PLANTILLA = f"""El Índice de Precios al Consumidor en los Estados Unidos de
+                América registró una variación interanual al mes de {FECHA_1} de
+                {INDICE_1:.2f}%. En {FECHA_2} la variación interanual se ubicó en
+                {INDICE_2:.2f}%, por lo que este indicador {CAMBIO} {DIFERENCIA:.2f}
+                puntos porcentuales en el último año."""
     PLANTILLA = PLANTILLA.replace("\n", " ")
     PLANTILLA = PLANTILLA.split()
     PLANTILLA = " ".join(PLANTILLA)
