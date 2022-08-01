@@ -29,8 +29,10 @@ def month_after(fecha: str, formato='%Y-%m-%d') -> str:
     formato = formato.replace('%', '').split(separador)
     fecha = fecha.split(separador)
     pos_m = formato.index('m')
+    pos_Y = formato.index('Y')
     if fecha[pos_m] == "12":
         fecha[pos_m] = "01"
+        fecha[pos_Y] = str(int(fecha[pos_Y]) + 1)
     else:
         fecha[pos_m] = str(int(fecha[pos_m]) + 1).rjust(2, "0")
     return f"{separador}".join(fecha)
