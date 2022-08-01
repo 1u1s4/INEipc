@@ -1,8 +1,9 @@
 from fredapi import Fred
 from funcionesjo import year_ago, month_after, mes_by_ordinal, hoy
+import descriptor
 
 fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
-FECHA_REPORTE = hoy("%Y-%m-01")#"2015-11-01"
+FECHA_REPORTE = "2015-10-01"#hoy("%Y-%m-01")
 FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
 FECHA_ANTERIOR_ANTERIOR = str(int(FECHA_REPORTE.split("-")[0]) - 2) + "-01-01"
 data = fred.get_series('CPIAUCSL', observation_start=FECHA_ANTERIOR_ANTERIOR, observation_end=FECHA_REPORTE)
@@ -21,3 +22,4 @@ for i in range(13):
 
 for i in datos_variacion_interanual:
     print(i)
+print(descriptor.ipc_usa(datos_variacion_interanual))
