@@ -18,7 +18,7 @@ while fecha_i != FECHA_REPORTE:
     fecha_i = day_after(fecha_i)
     mes_actual_i = anio_mes(fecha_i)
     if mes_actual_i != mes_actual or fecha_i == FECHA_REPORTE:
-        mean = sum(datos_mes)/len(datos_mes)
+        mean = sum(datos_mes) / len(datos_mes)
         data_mean.append((mes_actual, mean))
         datos_mes = []
         mes_actual = mes_actual_i
