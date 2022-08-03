@@ -1,6 +1,5 @@
 # xlsx_chef.py
 import xlsxwriter
-from cambio_quetzal import cambio_quetzal
 
 class XLSXCocinado:
     def __init__(self, nombre='XLSXprueba') -> None:
