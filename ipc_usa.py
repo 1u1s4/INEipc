@@ -2,7 +2,7 @@ from fredapi import Fred
 from funcionesjo import year_ago, month_after, mes_by_ordinal, hoy
 
 
-def ipc_mex(fecha_hasta="", fecha_desde="") -> list[tuple]:
+def ipc_usa(fecha_hasta="", fecha_desde="") -> list[tuple]:
     FORMATO = "%Y-%m-%d"
     if len(fecha_hasta) == 0:
         FECHA_REPORTE = hoy("%Y-%m-01")
