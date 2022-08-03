@@ -11,3 +11,24 @@ funcionesINE.escribirCSV(
     funcionesINE.leerLibroNormal(f'{ruta}/Libros/pobrezaCocinado.xlsx'),
     ruta=f"{ruta}CSVENCOVI/"
     )
+
+class Reporte:
+    def __init__(self, nombre: str) -> None:
+        self._nombre = nombre
+        self._data = []
+    
+    @property
+    def data(self):
+        return self._nombre
+    
+    @property
+    def data(self):
+        return self._data
+    
+    @data.setter
+    def data(self, new_data: dict):
+        self._data.append(new_data)
+    
+    def hacer_graficas(self, todas=True, capitulos=tuple) -> None:
+        if todas:
+            for capitulo in 
