@@ -2,10 +2,16 @@ import requests
 import json
 from funcionesjo import year_ago, month_after, date_mini, mes_by_ordinal, hoy
 
-def cambio_quetzal(fecha_hasta="", fecha_desde="") -> list[tuple]:
-    FECHA_REPORTE = "2015-10-01"#hoy("%Y-%m-%d")
-    FECHA_ANTERIOR = year_ago(FECHA_REPORTE)
-    FECHA_ANTERIOR_ANTERIOR = year_ago(FECHA_ANTERIOR)
+def ipc_mex(fecha_hasta="", fecha_desde="") -> list[tuple]:
+    FORMATO = "%Y-%m-%d"
+    if len(fecha_hasta) == 0:
+        FECHA_REPORTE = hoy(FORMATO)
+    else:
+        FECHA_REPORTE = fecha_hasta
+    if len(fecha_desde) == 0:
+        FECHA_ANTERIOR = year_ago(fecha=FECHA_REPORTE)
+    else:
+        FECHA_ANTERIOR = fecha_desde
     API_KEY = "515963d6-1153-e348-8394-a81acec0d6da"
     #Llamado al API
     URL = f'https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/628222/es/0700/false/BIE/2.0/{API_KEY}?type=json'
@@ -30,3 +36,5 @@ def cambio_quetzal(fecha_hasta="", fecha_desde="") -> list[tuple]:
         fecha_i = month_after(fecha_i)
 
     return datos_variacion_interanual
+
+ipc_mex()
