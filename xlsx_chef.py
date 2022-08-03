@@ -1,23 +1,26 @@
 # xlsx_chef.py
 import xlsxwriter
+from cambio_quetzal import cambio_quetzal
 
-class CvsCocinado:
-    def __init__(self, nombre='CVSprueba') -> None:
+class XLSXCocinado:
+    def __init__(self, nombre='XLSXprueba') -> None:
         self.__workbook = xlsxwriter.Workbook(nombre + '.xlsx')
 
-    def escribir_hoja(self, datos:list, nombre_hoja:str) -> None:
+    def escribir_hoja(self, datos:list, encabezados=(), nombre_hoja="") -> None:
         worksheet = self.__workbook.add_worksheet(nombre_hoja)
+        col = 0
+        if len(encabezados) == 0:
+            encabezados = range(len(datos[0]))
+        for encabezado in encabezados:
+            worksheet.write(0, col, encabezado)
+            col += 1
         row = 1
-        col = 1
-        worksheet.write
-        for x, y in datos:
-            worksheet.write(row, col,     x)
-            worksheet.write(row, col + 1, y)
+        for fila in datos:
+            col = 0
+            for celda in fila:
+                worksheet.write(row, col, celda)
+                col += 1
             row += 1
     
     def cerrar_libro(self):
         self.__workbook.close()
-
-prueba = CvsCocinado()
-prueba.escribir_hoja([('2000', 3), ('2001', 6), ('2002', 10)], '1_01')
-prueba.cerrar_libro()
