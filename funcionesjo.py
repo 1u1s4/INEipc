@@ -10,7 +10,7 @@ def day_after(fecha: str, formato='%Y-%m-%d') -> str:
     fecha_texto = fecha_mas_un_dia.strftime(formato)
     return fecha_texto
 
-def year_ago(fecha: str, formato='%Y-%m-%d') -> str:
+def year_ago(fecha: str, formato='%Y-%m-%d', inicio_de_mes=False) -> str:
     if "-" in fecha:
         separador = "-"
     elif "/" in fecha:
@@ -19,6 +19,9 @@ def year_ago(fecha: str, formato='%Y-%m-%d') -> str:
     fecha = fecha.split(separador)
     pos_Y = formato.index('Y')
     fecha[pos_Y] = str(int(fecha[pos_Y]) - 1)
+    if inicio_de_mes:
+        pos_d = formato.index('d')
+        fecha[pos_d] = "01"
     return f"{separador}".join(fecha)
 
 def month_after(fecha: str, formato='%Y-%m-%d') -> str:
@@ -92,3 +95,28 @@ def mes_anio_by_abreviacion(abreviacion: str, capON=False) -> str:
 
 def anio_mes(fecha: str) -> str:
     return "-".join((fecha.split("-")[0], mes_by_ordinal(fecha.split("-")[1])))
+
+def ultimo_dia_del_mes(fecha:str, formato='%Y-%m-%d') -> str:
+    if "-" in fecha:
+        separador = "-"
+    elif "/" in fecha:
+        separador = "/"
+    formato = formato.replace('%', '').split(separador)
+    fecha = fecha.split(separador)
+    pos_m = formato.index('m')
+    pos_d = formato.index('d')
+    pos_Y = formato.index('Y')
+    if fecha[pos_m] == 2:
+        if es_bisiesto(int(fecha[pos_Y])):
+           fecha[pos_d] = "29"
+        else:
+           fecha[pos_d] = "28"
+    elif int(fecha[pos_m]) in (4, 6, 9, 11):
+        fecha[pos_d] = "30"
+    else:
+        fecha[pos_d] = "31"
+
+    return f"{separador}".join(fecha)
+
+def es_bisiesto(anio):
+	return not anio % 4 and (anio % 100 or not anio % 400)
