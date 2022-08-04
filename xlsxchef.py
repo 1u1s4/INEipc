@@ -1,7 +1,7 @@
 # xlsx_chef.py
 import xlsxwriter
 
-class XLSXCocinado:
+class xlsxChef:
     def __init__(self, nombre='XLSXprueba') -> None:
         self.__workbook = xlsxwriter.Workbook(nombre + '.xlsx')
 
