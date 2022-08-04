@@ -4,21 +4,18 @@ import json
 import xlrd
 from fredapi import Fred
 from funcionesjo import year_ago, anio_mes, mes_by_ordinal, hoy, day_after, month_after, date_mini, ultimo_dia_del_mes
-
+import descriptoripc
 
 class datosIPC:
     def __init__(self) -> None:
-        pass
-
+        self._FORMATO = "%Y-%m-%d"
 # FAO
-
     def petroleo(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
-        FORMATO = "%Y-%m-%d"
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
         if len(fecha_hasta) == 0:
-            FECHA_REPORTE = hoy(FORMATO)
+            FECHA_REPORTE = hoy(self._FORMATO)
         else:
             FECHA_REPORTE = fecha_hasta
         if len(fecha_desde) == 0:
@@ -49,7 +46,7 @@ class datosIPC:
                 datos_mes.append(precio)
             except:
                 None
-        return data_mean
+        return (data_mean, descriptoripc.petroleo(data_mean))
 
     def cambio_quetzal(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
         FORMATO = "%d/%m/%Y"
@@ -104,7 +101,7 @@ class datosIPC:
                 datos_mes.append(precio)
             except:
                 None
-        return data_mean
+        return (data_mean, descriptoripc.cambio_del_quetzal(data_mean))
 
     def tasa_interes(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
         FORMATO = "%Y-%m"
@@ -139,22 +136,20 @@ class datosIPC:
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
                 data.append((marca_temp, 100*interes))
-        return data
+        return (data, descriptoripc.tasa_de_interes(data))
 
     def ipc_usa(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
-        FORMATO = "%Y-%m-%d"
         if len(fecha_hasta) == 0:
-            FECHA_REPORTE = hoy("%Y-%m-01")
+            FECHA_REPORTE = hoy(self._FORMATO, inicio_de_mes=True)
         else:
             FECHA_REPORTE = fecha_hasta
         if len(fecha_desde) == 0:
             FECHA_ANTERIOR = year_ago(fecha=FECHA_REPORTE)
         else:
             FECHA_ANTERIOR = fecha_desde
-
-        FECHA_ANTERIOR_ANTERIOR = str(int(FECHA_REPORTE.split("-")[0]) - 2) + "-01-01"
-
-        fred = Fred(api_key='734b605521e7734edc09f38e977fe238')
+        FECHA_ANTERIOR_ANTERIOR = year_ago(fecha=FECHA_ANTERIOR, inicio_de_anio=True)
+        API_KEY = '734b605521e7734edc09f38e977fe238'
+        fred = Fred(api_key=API_KEY)
         data = fred.get_series('CPIAUCSL', observation_start=FECHA_ANTERIOR_ANTERIOR, observation_end=FECHA_REPORTE)
         fecha_i = FECHA_ANTERIOR
         datos_variacion_interanual = []
@@ -168,13 +163,11 @@ class datosIPC:
                 fecha_i = month_after(fecha_i)
             except:
                 pass
-
-        return datos_variacion_interanual
+        return (datos_variacion_interanual, descriptoripc.ipc_usa(datos_variacion_interanual))
 
     def ipc_mex(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
-        FORMATO = "%Y-%m-%d"
         if len(fecha_hasta) == 0:
-            FECHA_REPORTE = hoy(FORMATO)
+            FECHA_REPORTE = hoy(self._FORMATO)
         else:
             FECHA_REPORTE = fecha_hasta
         if len(fecha_desde) == 0:
@@ -205,6 +198,6 @@ class datosIPC:
                 fecha_i = month_after(fecha_i)
             except:
                 pass
-        return datos_variacion_interanual
+        return (datos_variacion_interanual, descriptoripc.ipc_mex(datos_variacion_interanual))
 
 # inlfacion America Central
