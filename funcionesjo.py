@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
 
-def hoy(formato="%Y-%m-%d") -> str:
+def hoy(formato="%Y-%m-%d", inicio_de_mes=False) -> str:
+    if inicio_de_mes and "%d" in formato:
+        formato = formato.replace("%d", "01")
     return datetime.today().strftime(formato)
 
 def day_after(fecha: str, formato='%Y-%m-%d') -> str:
@@ -10,7 +12,7 @@ def day_after(fecha: str, formato='%Y-%m-%d') -> str:
     fecha_texto = fecha_mas_un_dia.strftime(formato)
     return fecha_texto
 
-def year_ago(fecha: str, formato='%Y-%m-%d', inicio_de_mes=False) -> str:
+def year_ago(fecha: str, formato='%Y-%m-%d', inicio_de_mes=False, inicio_de_anio=False) -> str:
     if "-" in fecha:
         separador = "-"
     elif "/" in fecha:
@@ -22,6 +24,11 @@ def year_ago(fecha: str, formato='%Y-%m-%d', inicio_de_mes=False) -> str:
     if inicio_de_mes:
         pos_d = formato.index('d')
         fecha[pos_d] = "01"
+    elif inicio_de_anio:
+        pos_d = formato.index('d')
+        pos_m = formato.index('m')
+        fecha[pos_d] = "01"
+        fecha[pos_m] = "01"
     return f"{separador}".join(fecha)
 
 def month_after(fecha: str, formato='%Y-%m-%d') -> str:
