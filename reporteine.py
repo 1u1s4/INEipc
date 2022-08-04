@@ -14,11 +14,35 @@ funcionesINE.escribirCSV(
     ) """
 
 from xlsxchef import xlsxChef
-
-class Reporte:
-    def __init__(self, nombre: str) -> None:
-        self._nombre = nombre
-        self._data = []
+"""
+data := {
+    'nombre_reporte':str,
+    'fecha_desde':str,
+    'fecha_hasta':str,
+    'presentacion':str,
+    'capitulos':[
+        {
+            'titulo':str,
+            'resumen':str,
+            'sub_capitulos':[
+                {
+                    'titulo':str,
+                    'titulo_grafico':str,
+                    'descripcion_grafico':str,
+                    'descripcion':str,
+                    'fuente':str,
+                    'tipo_grafico':str,
+                    'data':list[tuple[str, int]]
+                }
+            ]
+        }
+    ]
+}
+"""
+class ReporteINE:
+    def __init__(self, nombre_reporte: str, fecha_desde, fecha_hasta) -> None:
+        self._data = {}
+        self._data[]
 
     @property
     def data(self):
@@ -29,5 +53,4 @@ class Reporte:
         self._data.append(new_data)
     
     def hacer_graficas(self, todas=True, capitulos=tuple) -> None:
-        if todas:
-            for capitulo in 
+        pass
