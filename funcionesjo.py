@@ -40,12 +40,16 @@ def month_after(fecha: str, formato='%Y-%m-%d') -> str:
         fecha[pos_m] = str(int(fecha[pos_m]) + 1).rjust(2, "0")
     return f"{separador}".join(fecha)
 
-def date_mini(fecha: str) -> str: # formato AA/MM
+def date_mini(fecha: str, formato='%Y-%m-%d') -> str: # formato %Y-%m
     if "-" in fecha:
         separador = "-"
     elif "/" in fecha:
         separador = "/"
-    return f"{separador}".join((fecha.split("-")[0], fecha.split("-")[1]))
+    formato = formato.replace('%', '').split(separador)
+    fecha = fecha.split(separador)
+    pos_m = formato.index('m')
+    pos_Y = formato.index('Y')
+    return f"{separador}".join((fecha[pos_Y], fecha[pos_m]))
 
 def mes_by_ordinal(ordinal: str, abreviado=True) -> str:
     ORDINALES_MES = {
