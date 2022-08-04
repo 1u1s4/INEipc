@@ -1,4 +1,5 @@
-# prueba usar R en py
+""" # prueba usar R en py
+import imp
 import os
 os.environ["R_HOME"] = r"C:\Program Files\R\R-4.2.1" # change as needed
 import rpy2.robjects.packages as rpackages
@@ -10,17 +11,15 @@ ruta = 'C:/Users/laalvarado/Documents/pruebas/'
 funcionesINE.escribirCSV(
     funcionesINE.leerLibroNormal(f'{ruta}/Libros/pobrezaCocinado.xlsx'),
     ruta=f"{ruta}CSVENCOVI/"
-    )
+    ) """
+
+from xlsxchef import xlsxChef
 
 class Reporte:
     def __init__(self, nombre: str) -> None:
         self._nombre = nombre
         self._data = []
-    
-    @property
-    def data(self):
-        return self._nombre
-    
+
     @property
     def data(self):
         return self._data
