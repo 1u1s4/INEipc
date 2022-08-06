@@ -10,18 +10,18 @@ class datosIPC:
     def __init__(self) -> None:
         self._FORMATO = "%Y-%m-%d"
 # FAO
-    def petroleo(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
+    def petroleo(self, fecha_final="", fecha_inicio="") -> list[tuple]:
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
-        if len(fecha_hasta) == 0:
+        if len(fecha_final) == 0:
             FECHA_REPORTE = Jo.hoy(self._FORMATO)
         else:
-            FECHA_REPORTE = fecha_hasta
-        if len(fecha_desde) == 0:
+            FECHA_REPORTE = fecha_final
+        if len(fecha_inicio) == 0:
             FECHA_ANTERIOR = Jo.year_ago(fecha=FECHA_REPORTE)
         else:
-            FECHA_ANTERIOR = fecha_desde
+            FECHA_ANTERIOR = fecha_inicio
         # carga de datos
         data = fred.get_series(
             series_id=SERIES_ID,
@@ -48,16 +48,16 @@ class datosIPC:
                 None
         return (data_mean, descriptoripc.petroleo(data_mean))
 
-    def cambio_quetzal(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
+    def cambio_quetzal(self, fecha_final="", fecha_inicio="") -> list[tuple]:
         FORMATO = "%d/%m/%Y"
-        if len(fecha_hasta) == 0:
+        if len(fecha_final) == 0:
             FECHA_REPORTE = Jo.hoy(FORMATO)
         else:
-            FECHA_REPORTE = Jo.ultimo_dia_del_mes(fecha=fecha_hasta, formato=FORMATO)
-        if len(fecha_desde) == 0:
+            FECHA_REPORTE = Jo.ultimo_dia_del_mes(fecha=fecha_final, formato=FORMATO)
+        if len(fecha_inicio) == 0:
             FECHA_ANTERIOR = Jo.year_ago(fecha=FECHA_REPORTE, formato=FORMATO, inicio_de_mes=True)
         else:
-            FECHA_ANTERIOR = fecha_desde
+            FECHA_ANTERIOR = fecha_inicio
         # SOAP request URL
         URL = "http://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
         PAYLOAD = """<?xml version="1.0" encoding="utf-8"?>
@@ -103,16 +103,16 @@ class datosIPC:
                 None
         return (data_mean, descriptoripc.cambio_del_quetzal(data_mean))
 
-    def tasa_interes(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
+    def tasa_interes(self, fecha_final="", fecha_inicio="") -> list[tuple]:
         FORMATO = "%Y-%m"
-        if len(fecha_hasta) == 0:
+        if len(fecha_final) == 0:
             FECHA_REPORTE = Jo.hoy(FORMATO)
         else:
-            FECHA_REPORTE = fecha_hasta
-        if len(fecha_desde) == 0:
+            FECHA_REPORTE = fecha_final
+        if len(fecha_inicio) == 0:
             FECHA_ANTERIOR = Jo.year_ago(fecha=FECHA_REPORTE, formato=FORMATO)
         else:
-            FECHA_ANTERIOR = fecha_desde
+            FECHA_ANTERIOR = fecha_inicio
         # descarga de datos
         DATA_URL = "https://banguat.gob.gt/sites/default/files/banguat/imm/imm04.xls"
         with open('tasa_interes.xls', 'wb') as f:
@@ -138,15 +138,15 @@ class datosIPC:
                 data.append((marca_temp, 100*interes))
         return (data, descriptoripc.tasa_de_interes(data))
 
-    def ipc_usa(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
-        if len(fecha_hasta) == 0:
+    def ipc_usa(self, fecha_final="", fecha_inicio="") -> list[tuple]:
+        if len(fecha_final) == 0:
             FECHA_REPORTE = Jo.hoy(self._FORMATO, inicio_de_mes=True)
         else:
-            FECHA_REPORTE = fecha_hasta
-        if len(fecha_desde) == 0:
+            FECHA_REPORTE = fecha_final
+        if len(fecha_inicio) == 0:
             FECHA_ANTERIOR = Jo.year_ago(fecha=FECHA_REPORTE)
         else:
-            FECHA_ANTERIOR = fecha_desde
+            FECHA_ANTERIOR = fecha_inicio
         FECHA_ANTERIOR_ANTERIOR = Jo.year_ago(fecha=FECHA_ANTERIOR, inicio_de_anio=True)
         API_KEY = '734b605521e7734edc09f38e977fe238'
         fred = Fred(api_key=API_KEY)
@@ -165,15 +165,15 @@ class datosIPC:
                 pass
         return (datos_variacion_interanual, descriptoripc.ipc_usa(datos_variacion_interanual))
 
-    def ipc_mex(self, fecha_hasta="", fecha_desde="") -> list[tuple]:
-        if len(fecha_hasta) == 0:
+    def ipc_mex(self, fecha_final="", fecha_inicio="") -> list[tuple]:
+        if len(fecha_final) == 0:
             FECHA_REPORTE = Jo.hoy(self._FORMATO)
         else:
-            FECHA_REPORTE = fecha_hasta
-        if len(fecha_desde) == 0:
+            FECHA_REPORTE = fecha_final
+        if len(fecha_inicio) == 0:
             FECHA_ANTERIOR = Jo.year_ago(fecha=FECHA_REPORTE)
         else:
-            FECHA_ANTERIOR = fecha_desde
+            FECHA_ANTERIOR = fecha_inicio
         API_KEY = "515963d6-1153-e348-8394-a81acec0d6da"
         #Llamado al API
         URL = f'https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/628222/es/0700/false/BIE/2.0/{API_KEY}?type=json'
