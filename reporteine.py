@@ -17,9 +17,9 @@ from xlsxchef import xlsxChef
 from funcionesjo import hoy
 """
 data := {
-    'nombre_reporte':str,
-    'fecha_desde':str,
-    'fecha_hasta':str,
+    'nombre':str,
+    'fecha_inicio':str,
+    'fecha_final':str,
     'presentacion':str,
     'capitulos':[
         {
@@ -41,11 +41,28 @@ data := {
 }
 """
 class ReporteINE:
-    def __init__(self, nombre_reporte:str, fecha_desde:str, fecha_hasta:str) -> None:
+    """
+    Clase para la creacion de reportes estilo INE.
+
+    Attributes
+    ----------
+    nombre : str
+        nombre del reporte, sera el titulo principal del documento.
+    fecha_inicio : str
+        
+    fecha_final : str
+        
+
+    Methods
+    -------
+    hacer_graficas()
+        
+    """
+    def __init__(self, nombre:str, fecha_inicio:str, fecha_final:str) -> None:
         self._data = {}
-        self._data['nombre_reporte'] = nombre_reporte
-        self._data['fecha_desde'] = fecha_desde
-        self._data['fecha_hasta'] = fecha_hasta
+        self._data['nombre'] = nombre
+        self._data['fecha_inicio'] = fecha_inicio
+        self._data['fecha_final'] = fecha_final
 
     @property
     def data(self):
@@ -55,8 +72,8 @@ class ReporteINE:
     def data(self, new_data: dict):
         self._data.append(new_data)
     
-    def hacer_graficas(self, todas=True, capitulos=tuple) -> None:
+    def hacer_graficas(self) -> None:
         pass
 
-prueba = ReporteINE(nombre_reporte="hola", fecha_desde="hoy", fecha_hasta="01/01/2015")
+prueba = ReporteINE(nombre="hola", fecha_inicio="hoy", fecha_final="01/01/2015")
 print(prueba.data)
