@@ -18,7 +18,7 @@ from funcionesjo import hoy
 """
 data := {
     'nombre':str,
-    'fecha_inicio':str,
+    'fecha_inicial':str,
     'fecha_final':str,
     'presentacion':str,
     'capitulos':[
@@ -58,10 +58,10 @@ class ReporteINE:
     hacer_graficas()
         
     """
-    def __init__(self, nombre:str, fecha_inicio:str, fecha_final:str) -> None:
+    def __init__(self, nombre:str, fecha_inicial:str, fecha_final:str) -> None:
         self._data = {}
         self._data['nombre'] = nombre
-        self._data['fecha_inicio'] = fecha_inicio
+        self._data['fecha_inicio'] = fecha_inicial
         self._data['fecha_final'] = fecha_final
 
     @property
@@ -75,5 +75,5 @@ class ReporteINE:
     def hacer_graficas(self) -> None:
         pass
 
-prueba = ReporteINE(nombre="hola", fecha_inicio="hoy", fecha_final="01/01/2015")
+prueba = ReporteINE(nombre="hola", fecha_inicial="hoy", fecha_final="01/01/2015")
 print(prueba.data)
