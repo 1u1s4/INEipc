@@ -200,4 +200,19 @@ class datosIPC:
                 pass
         return (datos_variacion_interanual, descriptoripc.ipc_mex(datos_variacion_interanual))
 
-# inlfacion America Central
+    def inflacion(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+        FORMATO = "%Y-%m"
+        if len(fecha_final) == 0:
+            FECHA_FINAL = Jo.hoy(FORMATO)
+        else:
+            FECHA_FINAL = fecha_final
+        if len(fecha_inicial) == 0:
+            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
+        else:
+            FECHA_INICIAL = fecha_inicial
+        # descarga de datos
+        # 1996  - col 2
+        # enero - fil 5 
+        book = xlrd.open_workbook("IPC C.A. REP. DOMINICANA Y MÉXICO.xlsx")
+        sh = book.sheet_by_index(0)
+        data = []
