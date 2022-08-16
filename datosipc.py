@@ -229,7 +229,5 @@ class datosIPC:
         ANIO = FECHA_FINAL.split("-")[0][2:4]
         data_salida = [("Pais", "-".join((MES, ANIO)), "-".join((MES_ANTERIOR, ANIO)))]
         for pais in data.keys():
-            data_salida((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
+            data_salida.append((pais.capitalize(), f"{data[pais][MES]:.2f}", f"{data[pais][MES_ANTERIOR]:.2f}"))
         return data_salida
-
-datosIPC().inflacion()
