@@ -1,4 +1,4 @@
-from funcionesjo import mes_anio_by_abreviacion
+from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 
 def variacion(dato: float, dato_antes: float) -> float:
@@ -166,6 +166,25 @@ def ipc_mex(datos: list[tuple[str]]) -> str:
                 {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
                 por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
                 porcentuales en el último año."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
+
+def inflacion(datos: dict[dict[str]], fecha: str) -> str:
+    MES = mes_by_ordinal(fecha.split("-")[1])
+    ANIO = fecha.split("-")[0]
+    inflacion_mes = []
+    for pais in datos.keys():
+        inflacion_mes.append((datos[pais][MES], pais))
+    inflacion_mes.sort()
+    INFLACION_MIN = inflacion_mes[0]
+    INFLACION_MAX = inflacion_mes[-1]
+    MES = mes_by_ordinal(fecha.split("-")[1], abreviado=False)
+    PLANTILLA = f"""Para el mes de {MES} {ANIO}, en Centro América, República
+    Dominicana y México, {INFLACION_MAX[1].capitalize()} presentó la mayor tasa de inflación
+    interanual de {INFLACION_MAX[0]:.2f}%, mientras que {INFLACION_MIN[1].capitalize()} registró
+    la tasa más baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
     PLANTILLA = PLANTILLA.replace("\n", " ")
     PLANTILLA = PLANTILLA.split()
     PLANTILLA = " ".join(PLANTILLA)

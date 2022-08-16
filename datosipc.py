@@ -201,18 +201,35 @@ class datosIPC:
         return (datos_variacion_interanual, descriptoripc.ipc_mex(datos_variacion_interanual))
 
     def inflacion(self, fecha_final="", fecha_inicial="") -> list[tuple]:
-        FORMATO = "%Y-%m"
         if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(FORMATO)
+            FECHA_FINAL = Jo.hoy(self._FORMATO)
         else:
             FECHA_FINAL = fecha_final
         if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
+            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=self._FORMATO)
         else:
             FECHA_INICIAL = fecha_inicial
         # descarga de datos
-        # 1996  - col 2
-        # enero - fil 5 
+        # GT (6,13) -> (6,14)
         book = xlrd.open_workbook("IPC C.A. REP. DOMINICANA Y MÉXICO.xlsx")
         sh = book.sheet_by_index(0)
-        data = []
+        data = {}
+        k = 0
+        for i in range(6, 6 + 4*8, 4):
+            pais = sh.cell_value(rowx=10, colx=2 + k*4)
+            k += 1
+            data_pais = {}
+            for j in range(12):
+                inflacion_ij = sh.cell_value(rowx=12 + j, colx= i - 1)
+                data_pais[Jo.mes_by_ordinal(str(j + 1).rjust(2, "0"))] = inflacion_ij
+            data[pais] = data_pais
+        
+        MES = Jo.mes_by_ordinal(FECHA_FINAL.split("-")[1])
+        MES_ANTERIOR = Jo.mes_by_ordinal(FECHA_FINAL.split("-")[1], mes_anterior=True)
+        ANIO = FECHA_FINAL.split("-")[0][2:4]
+        data_salida = [("Pais", "-".join((MES, ANIO)), "-".join((MES_ANTERIOR, ANIO)))]
+        for pais in data.keys():
+            data_salida((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
+        return data_salida
+
+datosIPC().inflacion()
