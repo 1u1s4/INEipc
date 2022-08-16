@@ -10,7 +10,7 @@ setup(
     python_requires='>=3.9',
     install_requires=[
         'fredapi',
-        'xlrd',
+        'xlrd=1.2.0',
         'prettytable',
         'rpy2',
         'xlsxwriter'
