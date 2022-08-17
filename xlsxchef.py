@@ -1,19 +1,21 @@
 # xlsx_chef.py
 import xlsxwriter
+from datosipc import datosIPC
 
 class xlsxChef:
-    def __init__(self, nombre='XLSXprueba') -> None:
+    def __init__(self, nombre: str = 'XLSXprueba', NoCapitulo: int = 0) -> None:
         self.__workbook = xlsxwriter.Workbook(nombre + '.xlsx')
+        self.__NoCapitulo = NoCapitulo
 
-    def escribir_hoja(self, datos:list, encabezados=(), nombre_hoja="") -> None:
-        worksheet = self.__workbook.add_worksheet(nombre_hoja)
-        col = 0
-        if len(encabezados) == 0:
-            encabezados = range(len(datos[0]))
-        for encabezado in encabezados:
-            worksheet.write(0, col, encabezado)
-            col += 1
-        row = 1
+    def escribir_hoja(self, datos:tuple, ordinal: int, encabezadosXY: bool = True) -> None:
+        ordinal = str(ordinal).rjust(2, "0")
+        worksheet = self.__workbook.add_worksheet(f"{self.__NoCapitulo}_{ordinal}")
+        if encabezadosXY:
+            worksheet.write(0, 0, "x")
+            worksheet.write(0, 1, "y")
+            row = 1
+        else:
+            row = 0
         for fila in datos:
             col = 0
             for celda in fila:
