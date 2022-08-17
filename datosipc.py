@@ -12,7 +12,7 @@ class datosIPC:
     def __init__(self) -> None:
         self._FORMATO = "%Y-%m-%d"
 
-    def indice_precio_alimentos(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def indice_precio_alimentos(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%Y-%m"
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(FORMATO)
@@ -61,9 +61,9 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i, FORMATO)
             except:
                 None
-        return datos_salida
+        return (datos_salida, descriptoripc.indice_precio_alimentos(datos_salida))
 
-    def petroleo(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def petroleo(self, fecha_final="", fecha_inicial="") -> tuple:
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
@@ -101,7 +101,7 @@ class datosIPC:
                 None
         return (data_mean, descriptoripc.petroleo(data_mean))
 
-    def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%d/%m/%Y"
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(FORMATO)
@@ -156,7 +156,7 @@ class datosIPC:
                 None
         return (data_mean, descriptoripc.cambio_del_quetzal(data_mean))
 
-    def tasa_interes(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def tasa_interes(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%Y-%m"
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(FORMATO)
@@ -191,7 +191,7 @@ class datosIPC:
                 data.append((marca_temp, 100*interes))
         return (data, descriptoripc.tasa_de_interes(data))
 
-    def ipc_usa(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def ipc_usa(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(self._FORMATO, inicio_de_mes=True)
         else:
@@ -218,7 +218,7 @@ class datosIPC:
                 pass
         return (datos_variacion_interanual, descriptoripc.ipc_usa(datos_variacion_interanual))
 
-    def ipc_mex(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def ipc_mex(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(self._FORMATO)
         else:
@@ -253,7 +253,7 @@ class datosIPC:
                 pass
         return (datos_variacion_interanual, descriptoripc.ipc_mex(datos_variacion_interanual))
 
-    def inflacion(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+    def inflacion(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(self._FORMATO)
         else:
@@ -283,4 +283,4 @@ class datosIPC:
         data_salida = [("Pais", "-".join((MES, ANIO)), "-".join((MES_ANTERIOR, ANIO)))]
         for pais in data.keys():
             data_salida.append((pais.capitalize(), f"{data[pais][MES]:.2f}", f"{data[pais][MES_ANTERIOR]:.2f}"))
-        return data_salida
+        return(data_salida, descriptoripc.inflacion(data, FECHA_FINAL))
