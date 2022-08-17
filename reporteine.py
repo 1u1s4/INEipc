@@ -18,22 +18,22 @@ from funcionesjo import hoy
 """
 data := {
     'nombre':str,
-    'fecha_inicial':str,
-    'fecha_final':str,
-    'presentacion':str,
+    'fecha_inicial': str,
+    'fecha_final': str,
+    'presentacion': str,
     'capitulos':[
         {
-            'titulo':str,
-            'resumen':str,
+            'titulo': str,
+            'resumen': str,
             'sub_capitulos':[
                 {
-                    'titulo':str,
-                    'titulo_grafico':str,
-                    'descripcion_grafico':str,
-                    'descripcion':str,
-                    'fuente':str,
-                    'tipo_grafico':str,
-                    'data':list[tuple[str, int]]
+                    'titulo': str,
+                    'titulo_grafico': str,
+                    'descripcion_grafico': str,
+                    'descripcion': str,
+                    'fuente': str,
+                    'tipo_grafico': str,
+                    'data: list[tuple[str, int]]
                 }
             ]
         }
@@ -58,19 +58,40 @@ class ReporteINE:
     hacer_graficas()
         
     """
-    def __init__(self, nombre:str, fecha_inicial:str, fecha_final:str) -> None:
-        self._data = {}
-        self._data['nombre'] = nombre
-        self._data['fecha_inicio'] = fecha_inicial
-        self._data['fecha_final'] = fecha_final
+    def __init__(self, nombre: str, fecha_inicial: str, fecha_final: str) -> None:
+        self.__data = {}
+        self.__data['nombre'] = nombre
+        self.__data['fecha_inicio'] = fecha_inicial
+        self.__data['fecha_final'] = fecha_final
+        self.__data['capitulos'] = []
 
-    @property
-    def data(self):
-        return self._data
-    
-    @data.setter
-    def data(self, new_data: dict):
-        self._data.append(new_data)
+    def agregar_capitulo(self, titulo: str, resumen: str = "") -> None:
+        capitulo_nuevo = {}
+        capitulo_nuevo["titulo"] = titulo
+        capitulo_nuevo["resumen"] = resumen
+        capitulo_nuevo["sub_capitulos"] = []
+        self.__data.get('capitulos').append(capitulo_nuevo)
+
+    def agregar_subcapitulo(
+        self,
+        indice_capitulo: str,
+        titulo: str,
+        titulo_grafico: str,
+        descripcion_grafico: str,
+        descripcion: str,
+        fuente: str,
+        tipo_grafico: str,
+        data: tuple
+        ) -> None:
+        sub_cap = {}
+        sub_cap["titulo"] = titulo
+        sub_cap["titulo_grafico"] = titulo_grafico
+        sub_cap["descripcion_grafico"] = descripcion_grafico
+        sub_cap["descripcion"] = descripcion
+        sub_cap["fuente"] = fuente
+        sub_cap["tipo_grafico"] = tipo_grafico
+        sub_cap["data"] = data
+        self.__data.get('capitulos')[indice_capitulo]['sub_capitulos'].append(sub_cap)
     
     def hacer_graficas(self) -> None:
-        pass
+        chef = xlsxChef()
