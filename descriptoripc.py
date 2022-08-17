@@ -3,6 +3,30 @@ from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 def variacion(dato: float, dato_antes: float) -> float:
     return ((dato - dato_antes) / dato_antes) * 100
+# indice_precio_alimentos
+"""
+ejemplo de datos
+('2014-Nov', 75.78947368421052)
+('2014-Dic', 59.29045454545455)
+...
+('2015-Sep', 45.479523809523805)
+('2015-Oct', 46.22363636363636)
+"""
+def indice_precio_alimentos(datos: list[tuple[str]]) -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
+    FECHA_3 = mes_anio_by_abreviacion(datos[-2][0])
+    INDICE = datos[-1][1]
+    VARIACION_1 = variacion(datos[-1][1], datos[0][1])
+    VARIACION_2 = variacion(datos[-1][1], datos[-2][1])
+    PLANTILLA = f"""El índice de precios de los alimentos de la FAO registró en
+                {FECHA_1} un índice de {INDICE:.2f}, lo que representa una
+                variación de {VARIACION_1:.2f}% respecto a {FECHA_2} y de
+                {VARIACION_2:.2f}% respecto a {FECHA_3}."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
 # petroleo
 """
 ejemplo de datos

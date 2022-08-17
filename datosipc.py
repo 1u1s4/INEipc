@@ -53,7 +53,15 @@ class datosIPC:
                 data[fecha_i] = indice_i
             except IndexError:
                 break
-        print(data)
+        datos_salida = []
+        fecha_i = FECHA_INICIAL
+        while fecha_i != FECHA_FINAL:
+            try:
+                datos_salida.append((Jo.anio_mes(fecha_i, FORMATO), data[fecha_i]))
+                fecha_i = Jo.month_after(fecha_i, FORMATO)
+            except:
+                None
+        return datos_salida
 
     def petroleo(self, fecha_final="", fecha_inicial="") -> list[tuple]:
         API_KEY ='734b605521e7734edc09f38e977fe238'
@@ -276,5 +284,3 @@ class datosIPC:
         for pais in data.keys():
             data_salida.append((pais.capitalize(), f"{data[pais][MES]:.2f}", f"{data[pais][MES_ANTERIOR]:.2f}"))
         return data_salida
-
-datosIPC().indice_precio_alimentos()
