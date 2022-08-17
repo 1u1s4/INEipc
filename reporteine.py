@@ -74,6 +74,3 @@ class ReporteINE:
     
     def hacer_graficas(self) -> None:
         pass
-
-prueba = ReporteINE(nombre="hola", fecha_inicial="hoy", fecha_final="01/01/2015")
-print(prueba.data)
