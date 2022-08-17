@@ -2,14 +2,59 @@ import xml.etree.ElementTree as ET
 import requests
 import json
 import xlrd
+from datetime import datetime
 from fredapi import Fred
 import funcionesjo as Jo
 import descriptoripc
+from bs4 import BeautifulSoup
 
 class datosIPC:
     def __init__(self) -> None:
         self._FORMATO = "%Y-%m-%d"
-# FAO
+
+    def indice_precio_alimentos(self, fecha_final="", fecha_inicial="") -> list[tuple]:
+        FORMATO = "%Y-%m"
+        if len(fecha_final) == 0:
+            FECHA_FINAL = Jo.hoy(FORMATO)
+        else:
+            FECHA_FINAL = fecha_final
+        if len(fecha_inicial) == 0:
+            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
+        else:
+            FECHA_INICIAL = fecha_inicial
+        # web scraping para encontrar el link actualizado
+        URL = "https://www.fao.org/worldfoodsituation/foodpricesindex/en/"
+        HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
+        r = requests.get(url=URL, headers=HEADERS)
+        soup = BeautifulSoup(r.content, 'html5lib')
+        for link in soup.find_all('a', href=True):
+            url = link['href']
+            if "Food_price_indices_data_" in url and "xls" in url: 
+                url = f"https://www.fao.org{url}"
+                break
+        # descargar datos
+        DATA_URL = url
+        with open('FFPI.xls', 'wb') as f:
+            r = requests.get(DATA_URL, allow_redirects=True)
+            f.write(r.content)
+            f.close()
+        book = xlrd.open_workbook("FFPI.xls")
+        sh = book.sheet_by_index(0)
+        data = {}
+        anio_de_referencia = sh.cell_value(rowx=1, colx=0)
+        i = 4
+        while True:
+            try:
+                fecha_i = sh.cell_value(rowx=i, colx=0)
+                fecha_i = xlrd.xldate.xldate_as_datetime(fecha_i, 0)
+                fecha_i = datetime.strftime(fecha_i, FORMATO)
+                indice_i = sh.cell_value(rowx=i, colx=1)
+                i += 1
+                data[fecha_i] = indice_i
+            except IndexError:
+                break
+        print(data)
+
     def petroleo(self, fecha_final="", fecha_inicial="") -> list[tuple]:
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
@@ -231,3 +276,5 @@ class datosIPC:
         for pais in data.keys():
             data_salida.append((pais.capitalize(), f"{data[pais][MES]:.2f}", f"{data[pais][MES_ANTERIOR]:.2f}"))
         return data_salida
+
+datosIPC().indice_precio_alimentos()
