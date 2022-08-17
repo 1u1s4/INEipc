@@ -206,9 +206,10 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
     INFLACION_MAX = inflacion_mes[-1]
     MES = mes_by_ordinal(fecha.split("-")[1], abreviado=False)
     PLANTILLA = f"""Para el mes de {MES} {ANIO}, en Centro América, República
-    Dominicana y México, {INFLACION_MAX[1].capitalize()} presentó la mayor tasa de inflación
-    interanual de {INFLACION_MAX[0]:.2f}%, mientras que {INFLACION_MIN[1].capitalize()} registró
-    la tasa más baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
+                Dominicana y México, {INFLACION_MAX[1].capitalize()} presentó
+                la mayor tasa de inflación interanual de {INFLACION_MAX[0]:.2f}%,
+                mientras que {INFLACION_MIN[1].capitalize()} registró la tasa más
+                baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
     PLANTILLA = PLANTILLA.replace("\n", " ")
     PLANTILLA = PLANTILLA.split()
     PLANTILLA = " ".join(PLANTILLA)
