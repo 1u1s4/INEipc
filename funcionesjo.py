@@ -111,8 +111,16 @@ def mes_anio_by_abreviacion(abreviacion: str, capON=False) -> str:
     except:
         return "NaN"
 
-def anio_mes(fecha: str) -> str:
-    return "-".join((fecha.split("-")[0], mes_by_ordinal(fecha.split("-")[1])))
+def anio_mes(fecha: str, formato='%Y-%m-%d') -> str:
+    if "-" in fecha:
+        separador = "-"
+    elif "/" in fecha:
+        separador = "/"
+    formato = formato.replace('%', '').split(separador)
+    fecha = fecha.split(separador)
+    pos_m = formato.index('m')
+    pos_Y = formato.index('Y')
+    return "-".join((fecha[pos_Y], mes_by_ordinal(fecha[pos_m])))
 
 def ultimo_dia_del_mes(fecha:str, formato='%Y-%m-%d') -> str:
     if "-" in fecha:
