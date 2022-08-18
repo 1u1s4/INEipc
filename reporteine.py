@@ -11,7 +11,7 @@ data := {
     'nombre':str,
     'fecha_inicial': str,
     'fecha_final': str,
-    'presentacion': str,
+    'presentacion': str,w
     'capitulos':[
         {
             'titulo': str,
@@ -63,6 +63,11 @@ class ReporteINE:
         os.mkdir(os.path.join(self.__path, "libros"))
         os.mkdir(os.path.join(self.__path, "csv"))
         os.mkdir(os.path.join(self.__path, "csv_cocinado"))
+        os.mkdir(os.path.join(self.__path, "graficas"))
+        # cargar modulo de R
+        devtools = rpackages.importr('devtools')
+        devtools.install_github("1u1s4/funcionesINE")
+        self.__funcionesINE = rpackages.importr('funcionesINE')
 
     @property
     def data(self):
@@ -138,10 +143,7 @@ class ReporteINE:
             cocinado_chef.cerrar_libro()
             csv_chef.cerrar_libro()
     
-    def generar_graficas(self):
-        devtools = rpackages.importr('devtools')
-        devtools.install_github("1u1s4/funcionesINE")
-        funcionesINE = rpackages.importr('funcionesINE')
+    def generar_csv(self):
         ruta = self.__path.replace("\\", "/")
         i = 0
         for capitulo in self.__data['capitulos']:
@@ -151,12 +153,33 @@ class ReporteINE:
             libro_csv = f"{nombre}_csv.xlsx"
             csv_path = os.path.join(self.__path, "csv")
             os.mkdir(os.path.join(csv_path, str(i)))
-            funcionesINE.escribirCSV(
-                funcionesINE.leerLibroNormal(f'{ruta}/libros/{libro_cocinado}'),
+            self.__funcionesINE.escribirCSV(
+                self.__funcionesINE.leerLibroNormal(f'{ruta}/libros/{libro_cocinado}'),
                 ruta=f"{ruta}/csv_cocinado"
                 )
-            funcionesINE.escribirCSV(
-                lista=funcionesINE.leerLibro(ruta=f'{ruta}/libros/{libro_csv}'),
+            self.__funcionesINE.escribirCSV(
+                lista=self.__funcionesINE.leerLibro(ruta=f'{ruta}/libros/{libro_csv}'),
                 ruta=f"{ruta}/csv/{i}"
                 )
-            
+    
+    def hacer_graficas(self):
+        self.__funcionesINE.anual()
+        ruta_tex = self.__path.replace("\\", "/") + "/graficas"
+        i = 0
+        for capitulo in self.__data['capitulos']:
+            i += 1
+            csv_path = os.path.join(self.__path, f"csv\\{i}").replace("\\", "/")
+            datos = self.__funcionesINE.cargaMasiva(csv_path, codificacion='utf-8')
+            sub_capitulos = capitulo["sub_capitulos"]
+            for sub_capitulo in sub_capitulos:
+                indice = sub_capitulos.index(sub_capitulo) + 1
+                if sub_capitulo["tipo_grafico"] == "lineal":
+                    indice_0 = str(indice).rjust(2, "0")
+                    referencia = f"{i}_{indice_0}"
+                    self.__funcionesINE.exportarLatex(
+                        ruta_tex + "/{referencia}.tex",
+                        self.__funcionesINE.graficaLinea(
+                            datos[indice],
+                            rotar="h"
+                        )
+                    )
