@@ -178,7 +178,7 @@ class ReporteINE:
                     referencia = f"{i}_{indice_0}"
                     self.__funcionesINE.exportarLatex(
                         ruta_tex + "/{referencia}.tex",
-                        self.__funcionesINE.graficaLinea(
+                        self.__funcionesINE.graficaLinea(#
                             datos[indice],
                             rotar="h"
                         )
