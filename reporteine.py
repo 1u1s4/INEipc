@@ -1,20 +1,11 @@
-""" # prueba usar R en py
 import imp
 import os
 os.environ["R_HOME"] = r"C:\Program Files\R\R-4.2.1" # change as needed
 import rpy2.robjects.packages as rpackages
 import rpy2.robjects as robjects
-devtools = rpackages.importr('devtools')
-devtools.install_github("1u1s4/funcionesINE")
-funcionesINE = rpackages.importr('funcionesINE')
-ruta = 'C:/Users/laalvarado/Documents/pruebas/'
-funcionesINE.escribirCSV(
-    funcionesINE.leerLibroNormal(f'{ruta}/Libros/pobrezaCocinado.xlsx'),
-    ruta=f"{ruta}CSVENCOVI/"
-    ) """
-
 from xlsxchef import xlsxChef
-from funcionesjo import hoy
+import pathlib
+from datetime import datetime
 """
 data := {
     'nombre':str,
@@ -58,12 +49,24 @@ class ReporteINE:
     hacer_graficas()
         
     """
-    def __init__(self, nombre: str, fecha_inicial: str, fecha_final: str) -> None:
+    def __init__(self, nombre: str, fecha_inicial: str = "", fecha_final: str = "") -> None:
         self.__data = {}
         self.__data['nombre'] = nombre
         self.__data['fecha_inicio'] = fecha_inicial
         self.__data['fecha_final'] = fecha_final
         self.__data['capitulos'] = []
+        # hacer directorio para guardar documentos
+        marca_temporal = datetime.strftime(datetime.today(), "%d-%m-%Y_%H_%M_%S")
+        parent_dir = pathlib.Path().resolve()
+        self.__path = os.path.join(parent_dir, marca_temporal)
+        os.mkdir(self.__path)
+        os.mkdir(os.path.join(self.__path, "libros"))
+        os.mkdir(os.path.join(self.__path, "csv"))
+        os.mkdir(os.path.join(self.__path, "csv_cocinado"))
+
+    @property
+    def data(self):
+        return self.__data
 
     def agregar_capitulo(self, titulo: str, resumen: str = "") -> None:
         capitulo_nuevo = {}
@@ -93,5 +96,67 @@ class ReporteINE:
         sub_cap["data"] = data
         self.__data.get('capitulos')[indice_capitulo]['sub_capitulos'].append(sub_cap)
     
-    def hacer_graficas(self) -> None:
-        chef = xlsxChef()
+    def escribir_libros(self) -> None:
+        i = 0
+        for capitulo in self.__data['capitulos']:
+            i += 1
+            nombre_doc = capitulo["titulo"]
+            csv_chef = xlsxChef(
+                tipo="csv",
+                path=self.__path,
+                nombre=nombre_doc,
+                NoCapitulo=i
+            )
+            cocinado_chef = xlsxChef(
+                tipo="cocinado",
+                path=self.__path,
+                nombre=nombre_doc,
+                NoCapitulo=i
+            )
+            sub_capitulos = capitulo["sub_capitulos"]
+            for sub_capitulo in sub_capitulos:
+                if sub_capitulo["tipo_grafico"] == "lineal":
+                    encabezados = True 
+                    if len(sub_capitulo["data"][0]) > 2:
+                        encabezados = False
+                    k = sub_capitulos.index(sub_capitulo) + 1
+                    csv_chef.escribir_hoja(
+                        datos=sub_capitulo["data"],
+                        ordinal=k,
+                        encabezadosXY=encabezados
+                    )
+                    datos_cocinado = (
+                        sub_capitulo["titulo"],
+                        sub_capitulo["titulo_grafico"],
+                        sub_capitulo["descripcion_grafico"],
+                        sub_capitulo["descripcion"]
+                    )
+                    cocinado_chef.escribir_hoja(
+                        datos=datos_cocinado,
+                        ordinal=k
+                    )
+            cocinado_chef.cerrar_libro()
+            csv_chef.cerrar_libro()
+    
+    def generar_graficas(self):
+        devtools = rpackages.importr('devtools')
+        devtools.install_github("1u1s4/funcionesINE")
+        funcionesINE = rpackages.importr('funcionesINE')
+        ruta = self.__path.replace("\\", "/")
+        i = 0
+        for capitulo in self.__data['capitulos']:
+            i += 1
+            nombre = capitulo['titulo'].title().replace(" ", "")
+            libro_cocinado = f"{nombre}_cocinado.xlsx"
+            libro_csv = f"{nombre}_csv.xlsx"
+            csv_path = os.path.join(self.__path, "csv")
+            os.mkdir(os.path.join(csv_path, str(i)))
+            funcionesINE.escribirCSV(
+                funcionesINE.leerLibroNormal(f'{ruta}/libros/{libro_cocinado}'),
+                ruta=f"{ruta}/csv_cocinado"
+                )
+            funcionesINE.escribirCSV(
+                lista=funcionesINE.leerLibro(ruta=f'{ruta}/libros/{libro_csv}'),
+                ruta=f"{ruta}/csv/{i}"
+                )
+            
