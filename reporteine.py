@@ -24,6 +24,7 @@ data := {
                     'descripcion': str,
                     'fuente': str,
                     'tipo_grafico': str,
+                    'precision': int = 1,
                     'data: list[tuple[str, int]]
                 }
             ]
@@ -89,7 +90,8 @@ class ReporteINE:
         descripcion: str,
         fuente: str,
         tipo_grafico: str,
-        data: tuple
+        data: tuple,
+        precision: int = 1
         ) -> None:
         sub_cap = {}
         sub_cap["titulo"] = titulo
@@ -98,6 +100,7 @@ class ReporteINE:
         sub_cap["descripcion"] = descripcion
         sub_cap["fuente"] = fuente
         sub_cap["tipo_grafico"] = tipo_grafico
+        sub_cap["precision"] = precision
         sub_cap["data"] = data
         self.__data.get('capitulos')[indice_capitulo]['sub_capitulos'].append(sub_cap)
     
@@ -172,14 +175,15 @@ class ReporteINE:
             datos = self.__funcionesINE.cargaMasiva(csv_path, codificacion='utf-8')
             sub_capitulos = capitulo["sub_capitulos"]
             for sub_capitulo in sub_capitulos:
-                indice = sub_capitulos.index(sub_capitulo) + 1
+                indice = sub_capitulos.index(sub_capitulo)
                 if sub_capitulo["tipo_grafico"] == "lineal":
-                    indice_0 = str(indice).rjust(2, "0")
-                    referencia = f"{i}_{indice_0}"
+                    indice_natural = str(indice + 1).rjust(2, "0")
+                    referencia = f"{i}_{indice_natural}"
+                    self.__funcionesINE.cuatroEtiquetas()
                     self.__funcionesINE.exportarLatex(
-                        ruta_tex + "/{referencia}.tex",
+                        ruta_tex + f"/{referencia}.tex",
                         self.__funcionesINE.graficaLinea(#
                             datos[indice],
-                            rotar="h"
+                            precision=sub_capitulo["precision"]
                         )
                     )
