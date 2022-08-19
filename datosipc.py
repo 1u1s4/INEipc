@@ -61,7 +61,7 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i, FORMATO)
             except:
                 None
-        return (datos_salida, descriptoripc.indice_precio_alimentos(datos_salida))
+        return (Jo.invertir_orden(datos_salida), descriptoripc.indice_precio_alimentos(datos_salida))
 
     def petroleo(self, fecha_final="", fecha_inicial="") -> tuple:
         API_KEY ='734b605521e7734edc09f38e977fe238'
@@ -99,7 +99,7 @@ class datosIPC:
                 datos_mes.append(precio)
             except:
                 None
-        return (data_mean, descriptoripc.petroleo(data_mean))
+        return (Jo.invertir_orden(data_mean), descriptoripc.petroleo(data_mean))
 
     def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%d/%m/%Y"
@@ -154,7 +154,7 @@ class datosIPC:
                 datos_mes.append(precio)
             except:
                 None
-        return (data_mean, descriptoripc.cambio_del_quetzal(data_mean))
+        return (Jo.invertir_orden(data_mean), descriptoripc.cambio_del_quetzal(data_mean))
 
     def tasa_interes(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%Y-%m"
@@ -189,7 +189,7 @@ class datosIPC:
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
                 data.append((marca_temp, 100*interes))
-        return (data, descriptoripc.tasa_de_interes(data))
+        return (Jo.invertir_orden(data), descriptoripc.tasa_de_interes(data))
 
     def ipc_usa(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
@@ -216,7 +216,7 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i)
             except:
                 pass
-        return (datos_variacion_interanual, descriptoripc.ipc_usa(datos_variacion_interanual))
+        return (Jo.invertir_orden(datos_variacion_interanual), descriptoripc.ipc_usa(datos_variacion_interanual))
 
     def ipc_mex(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
@@ -251,7 +251,7 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i)
             except:
                 pass
-        return (datos_variacion_interanual, descriptoripc.ipc_mex(datos_variacion_interanual))
+        return(Jo.invertir_orden(datos_variacion_interanual), descriptoripc.ipc_mex(datos_variacion_interanual))
 
     def inflacion(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
