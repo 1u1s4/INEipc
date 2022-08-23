@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: datosIPC
-Version: 1.0
-Summary: Automatizacion de extraccion de datos para el capitulo 1 del IPC.
-Home-page: https://github.com/1u1s4/INE_IPC
-Author: Luis Alfredo Alvarado Rodríguez
-Keywords: development,setup,setuptools
-Requires-Python: >=3.9
