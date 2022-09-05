@@ -13,6 +13,7 @@ setup(
         'xlrd=1.2.0',
         'prettytable',
         'rpy2',
-        'xlsxwriter'
+        'xlsxwriter',
+        'pyodbc'
     ]
 )
