@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 class sqlINE:
-    def __init__(self) -> None:
+    def __init__(self, anio: int) -> None:
         # datos servidor
         DATABASE = 'IPC2010_RN'
         SERVER = '10.0.3.185'
@@ -14,11 +14,6 @@ class sqlINE:
         self.__conexion = pyodbc.connect(
             'DRIVER={ODBC Driver 17 for SQL Server}'
             + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-        )
-        # cargar ponderaciones de las divisiones
-        self.PONDERACIONES_DIV = pd.read_sql(
-            'SELECT DivCod, DivPon FROM IPCP01 WHERE RegCod=00',
-            self.__conexion
         )
         # carga nombre de divisiones
         sql_query = pd.read_sql(
@@ -29,32 +24,41 @@ class sqlINE:
             sql_query['DivCod'].values(),
             [nombre.strip().title() for nombre in sql_query['DivNom'].values()]
         ))
-        
-    def carga_DivInd(self, anio: int, mes: int) -> pd.DataFrame:
-        SELECT = 'SELECT DivCod, DivInd'
-        FROM = 'FROM IPCPH1'
-        WHERE = f'WHERE RegCod=00 AND PerAno={anio} AND PerMes={mes}'
-        query = ' '.join((SELECT, FROM, WHERE))
-        return pd.read_sql(query, self.__conexion)
+        # cargar ponderaciones de las divisiones para una region dada
+        self.DivPon = pd.read_sql(
+            f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
+            self.__conexion
+        )
+        self.DivPon['RegCod'] = self.DivPon['RegCod'].astype('int64')
+        # carga de indices por divicion
+        self.DivInd = pd.read_sql(
+            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={anio - 1} AND PerSem=3',
+            self.__conexion
+        )
+        self.DivInd['RegCod'] = self.DivInd['RegCod'].astype('int64')
+        self.DivInd['DivCod'] = self.DivInd['DivCod'].astype('int64')
 
-    def IPC_NC(self, anio: int, mes: int) -> float:
-        DF_PONDERACIONES = self.PONDERACIONES_DIV["DivPon"]
-        df_indices = self.carga_DivInd(anio, mes)['DivInd']
-        return np.average(a=df_indices, weights=DF_PONDERACIONES)
+    def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
+        PONDERACIONES_REG = self.DivPon[self.DivPon['RegCod'] == RegCod]['DivPon']
+        Qanio = self.DivInd['PerAno'] == anio
+        Qmes = self.DivInd['PerMes'] == mes
+        Qreg = self.DivInd['RegCod'] == RegCod
+        indices = self.DivInd[Qanio & Qmes & Qreg]['DivInd']
+        return np.average(a=indices, weights=PONDERACIONES_REG)
 
-    def inflacion_mensual(self, anio: int, mes: int) -> float:
+    def inflacion_mensual(self, anio: int, mes: int, RegCod: int) -> float:
         if mes == 1:
-            actual = self.IPC_NC(anio, mes)
-            anterior = self.IPC_NC(anio - 1, 12)
+            actual = self.calcular_IPC(anio, mes, RegCod)
+            anterior = self.calcular_IPC(anio - 1, 12, RegCod)
         else:
-            actual = self.IPC_NC(anio, mes)
-            anterior = self.IPC_NC(anio, mes - 1)
+            actual = self.calcular_IPC(anio, mes, RegCod)
+            anterior = self.calcular_IPC(anio, mes - 1, RegCod)
         return 100*(actual/anterior - 1)
 
-    def inflacion_interanual(self, anio: int, mes: int) -> float:
-        actual = self.IPC_NC(anio, mes)
-        anterior = self.IPC_NC(anio - 1, mes)
+    def inflacion_interanual(self, anio: int, mes: int, RegCod: int) -> float:
+        actual = self.calcular_IPC(anio, mes, RegCod)
+        anterior = self.calcular_IPC(anio - 1, mes, RegCod)
         return 100*(actual/anterior - 1)
 
-p = sql_INE()
-print(p.inflacion_interanual(2022, 8))
+p = sqlINE(2022)
+print(p.inflacion_mensual(2022, 8,0))
