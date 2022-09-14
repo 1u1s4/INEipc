@@ -61,4 +61,4 @@ class sqlINE:
         return 100*(actual/anterior - 1)
 
 p = sqlINE(2022)
-print(p.inflacion_mensual(2022, 8,0))
+print(p.inflacion_mensual(2022, 8, 0))
