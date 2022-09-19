@@ -7,6 +7,7 @@ from fredapi import Fred
 import funcionesjo as Jo
 import descriptoripc
 from bs4 import BeautifulSoup
+from sqline import sqlINE
 
 class datosIPC:
     def __init__(self) -> None:
@@ -284,3 +285,6 @@ class datosIPC:
         for pais in data.keys():
             data_salida.append((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
         return(data_salida, descriptoripc.inflacion(data, FECHA_FINAL))
+
+    def ipc_serie_historica(self) -> tuple:
+        
