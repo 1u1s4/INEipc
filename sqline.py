@@ -1,3 +1,4 @@
+import re
 from typing import List
 import warnings
 warnings.filterwarnings("ignore")
@@ -7,6 +8,7 @@ import numpy as np
 
 class sqlINE:
     def __init__(self, anio: int) -> None:
+        self.anio = anio
         # datos servidor
         DATABASE = 'IPC2010_RN'
         SERVER = '10.0.3.185'
@@ -22,7 +24,7 @@ class sqlINE:
             self.__conexion
         ).to_dict()
         self.NOMBRE_DIV = dict(zip(
-            sql_query['DivCod'].values(),
+            [int(i) for i in sql_query['DivCod'].values()],
             [nombre.strip().title() for nombre in sql_query['DivNom'].values()]
         ))
         # ponderaciones de las divisiones
@@ -50,19 +52,23 @@ class sqlINE:
             self.df_GbaInfo[columna] = self.df_GbaInfo[columna].astype('int64')
         # indices por divicion
         self.df_DivInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={anio - 1} AND PerSem=3',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 1} AND PerSem=3',
             self.__conexion
         )
         self.df_DivInd['RegCod'] = self.df_DivInd['RegCod'].astype('int64')
         self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
         # indices por gasto basico
         self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={anio - 1}',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 1}',
             self.__conexion
         )
         columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+
+    def get_nombre_Gba(self, GbaCod: int) -> str:
+        nombre = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
+        return nombre.strip().title()
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
         PONDERACIONES_REG = self.df_DivPon[self.df_DivPon['RegCod'] == RegCod]['DivPon']
@@ -73,11 +79,10 @@ class sqlINE:
         return np.average(a=indices, weights=PONDERACIONES_REG)
 
     def inflacion_mensual(self, anio: int, mes: int, RegCod: int) -> float:
+        actual = self.calcular_IPC(anio, mes, RegCod)
         if mes == 1:
-            actual = self.calcular_IPC(anio, mes, RegCod)
             anterior = self.calcular_IPC(anio - 1, 12, RegCod)
         else:
-            actual = self.calcular_IPC(anio, mes, RegCod)
             anterior = self.calcular_IPC(anio, mes - 1, RegCod)
         return 100*(actual/anterior - 1)
 
@@ -100,13 +105,14 @@ class sqlINE:
             indice_actual = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             if mes == 1:
                 Qanio = self.df_DivInd['PerAno'] == anio - 1
-                ipc_anterior = self.calcular_IPC(anio - 1, mes, RegCod)
+                Qmes = self.df_DivInd['PerMes'] == 12
+                ipc_anterior = self.calcular_IPC(anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_DivInd['PerMes'] == mes - 1
                 ipc_anterior = self.calcular_IPC(anio, mes - 1, RegCod)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
-            incidencias.append((variacion, DivCod))
+            incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 #INCIDENCIAS MALAS
     def incidencia_gasto_basico(self, anio: int, mes: int, RegCod: int):
@@ -120,17 +126,40 @@ class sqlINE:
             indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             if mes == 1:
                 Qanio = self.df_GbaInd['PerAno'] == anio - 1
-                ipc_anterior = self.calcular_IPC(anio - 1, mes, RegCod)
+                Qmes = self.df_GbaInd['PerMes'] == 12
+                ipc_anterior = self.calcular_IPC(anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_GbaInd['PerMes'] == mes - 1
                 ipc_anterior = self.calcular_IPC(anio, mes - 1, RegCod)
             indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
-            nombre_gba = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
-            nombre_gba = nombre_gba.strip().title()
-            incidencias.append((round(variacion,2), nombre_gba))
+            nombre_gba = self.get_nombre_Gba(GbaCod)
+            incidencias.append((variacion, 4, nombre_gba))
         return incidencias
 
-anio = 2022
-p = sqlINE(anio)
-print(sorted(p.incidencia_gasto_basico(anio, 8, 0))[-5:-1])
+    def series_historicas_Gbas(self, mes: int, RegCod: int):
+        series = []
+        for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
+            if mes != 12:
+                Qanio = self.df_GbaInd['PerAno'] == self.anio
+                Qmes = self.df_GbaInd['PerMes'] <= mes
+                Qreg = self.df_GbaInd['RegCod'] == RegCod
+                Qgba = self.df_GbaInd['GbaCod'] == GbaCod
+                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
+                Qmes = self.df_GbaInd['PerMes'] >= mes
+                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                indices = pd.merge(indices2, indices1, how='outer')
+            else:
+                Qanio = self.df_GbaInd['PerAno'] == self.anio
+                Qmes = self.df_GbaInd['PerMes'] <= mes
+                Qreg = self.df_GbaInd['RegCod'] == RegCod
+                Qgba = self.df_GbaInd['GbaCod'] == GbaCod
+                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+            nombre_gba = self.get_nombre_Gba(GbaCod)
+            series.append((nombre_gba, indices))
+        return series
+
+for i in sqlINE(2022).series_historicas_Gbas(8, 0):
+    print(i[0])
+    print(i[1])
