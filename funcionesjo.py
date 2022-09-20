@@ -59,6 +59,8 @@ def date_mini(fecha: str, formato='%Y-%m-%d') -> str: # formato %Y-%m
     return f"{separador}".join((fecha[pos_Y], fecha[pos_m]))
 
 def mes_by_ordinal(ordinal: str, abreviado=True, mes_anterior=False) -> str:
+    if type(ordinal) is int:
+        ordinal = str(ordinal).rjust(2, '0')
     ORDINALES_MES = {
         "01":"Enero",
         "02":"Febrero",
