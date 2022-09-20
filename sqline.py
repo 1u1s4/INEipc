@@ -52,14 +52,14 @@ class sqlINE:
             self.df_GbaInfo[columna] = self.df_GbaInfo[columna].astype('int64')
         # indices por divicion
         self.df_DivInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 1} AND PerSem=3',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 2} AND PerSem=3',
             self.__conexion
         )
         self.df_DivInd['RegCod'] = self.df_DivInd['RegCod'].astype('int64')
         self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
         # indices por gasto basico
         self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 1}',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2}',
             self.__conexion
         )
         columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
@@ -89,6 +89,11 @@ class sqlINE:
     def inflacion_interanual(self, anio: int, mes: int, RegCod: int) -> float:
         actual = self.calcular_IPC(anio, mes, RegCod)
         anterior = self.calcular_IPC(anio - 1, mes, RegCod)
+        return 100*(actual/anterior - 1)
+    
+    def inflacion_acumulada(self, anio: int, mes: int, RegCod: int) -> float:
+        actual = self.calcular_IPC(anio, mes, RegCod)
+        anterior = self.calcular_IPC(anio - 1, 12, RegCod)
         return 100*(actual/anterior - 1)
     
     def poder_adquisitivo(self, anio: int, mes: int, RegCod: int) -> float:
@@ -188,4 +193,29 @@ class sqlINE:
                 serie.append((fecha, ipc))
         return serie
 
-print(sqlINE(2022).series_historicas_Gbas(8,0)[0])
+    def serie_historica_inflacion(self, mes: int, RegCod: int, tipo: str):
+        serie = []
+        if tipo == 'intermensual':
+            funcion = self.inflacion_mensual
+        elif tipo == 'interanual':
+            funcion = self.inflacion_interanual
+        elif tipo == 'acumulada':
+            funcion = self.inflacion_acumulada
+        if mes != 12:
+            for i in range(mes, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                indice = funcion(self.anio - 1, i, RegCod)
+                serie.append((fecha, indice))
+            for i in range(1, mes + 1):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                indice = funcion(self.anio, i, RegCod)
+                serie.append((fecha, indice))
+        else:
+            for i in range(1, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                indice = funcion(self.anio, i, RegCod)
+                serie.append((fecha, indice))
+        return serie
