@@ -1,10 +1,10 @@
-import re
 from typing import List
 import warnings
 warnings.filterwarnings("ignore")
 import pyodbc 
 import pandas as pd
 import numpy as np
+from funcionesjo import mes_by_ordinal
 
 class sqlINE:
     def __init__(self, anio: int) -> None:
@@ -157,9 +157,35 @@ class sqlINE:
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
                 indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
-            series.append((nombre_gba, indices))
+            indices_final = []
+            for i in range(len(indices)):
+                mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
+                anio = indices['PerAno'].iat[i]
+                fecha = f'{mes_abr}-{anio}'
+                indice = indices['GbaInd'].iat[i]
+                indices_final.append((fecha, indice))
+            series.append((nombre_gba, indices_final))
         return series
 
-for i in sqlINE(2022).series_historicas_Gbas(8, 0):
-    print(i[0])
-    print(i[1])
+    def serie_historica_ipc(self, mes: int, RegCod: int):
+        serie = []
+        if mes != 12:
+            for i in range(mes, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                ipc = self.calcular_IPC(self.anio - 1, i, RegCod)
+                serie.append((fecha, ipc))
+            for i in range(1, mes + 1):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                ipc = self.calcular_IPC(self.anio, i, RegCod)
+                serie.append((fecha, ipc))
+        else:
+            for i in range(1, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                ipc = self.calcular_IPC(self.anio, i, RegCod)
+                serie.append((fecha, ipc))
+        return serie
+
+print(sqlINE(2022).series_historicas_Gbas(8,0)[0])
