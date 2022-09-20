@@ -285,6 +285,3 @@ class datosIPC:
         for pais in data.keys():
             data_salida.append((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
         return(data_salida, descriptoripc.inflacion(data, FECHA_FINAL))
-
-    def ipc_serie_historica(self) -> tuple:
-        
