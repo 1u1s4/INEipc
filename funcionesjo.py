@@ -89,7 +89,7 @@ def mes_by_ordinal(ordinal: str, abreviado=True, mes_anterior=False) -> str:
     except:
         return "NaN"
 
-def mes_anio_by_abreviacion(abreviacion: str, capON=False) -> str:
+def mes_anio_by_abreviacion(abreviacion: str, capON: bool=False, MMAA: bool=False) -> str:
     ABREVIATURAS = {
         "Ene":"enero",
         "Feb":"febrero",
@@ -104,8 +104,12 @@ def mes_anio_by_abreviacion(abreviacion: str, capON=False) -> str:
         "Nov":"noviembre",
         "Dic":"diciembre"}
     try:
-        mes = ABREVIATURAS[abreviacion.split("-")[1]]
-        anio = abreviacion.split("-")[0]
+        if MMAA:
+            mes = ABREVIATURAS[abreviacion.split("-")[0]]
+            anio = abreviacion.split("-")[1]
+        else:
+            mes = ABREVIATURAS[abreviacion.split("-")[1]]
+            anio = abreviacion.split("-")[0]
         if capON:
             return f"{mes} {anio}".capitalize()
         else:
