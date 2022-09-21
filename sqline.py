@@ -7,8 +7,9 @@ import numpy as np
 from funcionesjo import mes_by_ordinal
 
 class sqlINE:
-    def __init__(self, anio: int) -> None:
+    def __init__(self, anio: int, mes: int) -> None:
         self.anio = anio
+        self.mes = mes
         # datos servidor
         DATABASE = 'IPC2010_RN'
         SERVER = '10.0.3.185'
@@ -19,13 +20,27 @@ class sqlINE:
             + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
         )
         # nombre de divisiones
+        abr_diviciones = {
+        'Alimentos Y Bebidas No Alcohólicas': 'Alimentos',
+        'Bebidas Alcohólicas Y Tabaco':'Bebidas Alcohólicas',
+        'Prendas De Vestir Y Calzado':'Vestuario',
+        'Vivienda, Agua, Electricidad, Gas Y Otros Combustibles':'Vivienda',
+        'Muebles, Artículos Para El Hogar Y Para La Conservación  Del Hogar':'Muebles',
+        'Salud':'Salud',
+        'Transporte':'Transporte',
+        'Comunicaciones':'Comunicaciones',
+        'Recreación Y Cultura':'Recreación',
+        'Educación':'Educación',
+        'Restaurantes Y Hoteles':'Restaurantes',
+        'Bienes Y Servicios Diversos':'Bienes diversos'
+        }
         sql_query = pd.read_sql(
             'SELECT DivCod, DivNom FROM IPCM01',
             self.__conexion
         ).to_dict()
         self.NOMBRE_DIV = dict(zip(
             [int(i) for i in sql_query['DivCod'].values()],
-            [nombre.strip().title() for nombre in sql_query['DivNom'].values()]
+            [abr_diviciones[nombre.strip().title()] for nombre in sql_query['DivNom'].values()]
         ))
         # ponderaciones de las divisiones
         self.df_DivPon = pd.read_sql(
@@ -99,65 +114,65 @@ class sqlINE:
     def poder_adquisitivo(self, anio: int, mes: int, RegCod: int) -> float:
         return (1 / self.calcular_IPC(anio, mes, RegCod)) * 100
 #INCIDENCIAS MALAS
-    def incidencia_divisiones(self, anio: int, mes: int, RegCod: int) -> List[float]:
+    def incidencia_divisiones(self, RegCod: int) -> List[float]:
         incidencias = []
         for DivCod in range(1, 13):
             ponderacion = self.df_DivPon[(self.df_DivPon['RegCod'] == RegCod) & (self.df_DivPon['DivCod'] == DivCod)]['DivPon'].iloc[0]
-            Qanio = self.df_DivInd['PerAno'] == anio
-            Qmes = self.df_DivInd['PerMes'] == mes
+            Qanio = self.df_DivInd['PerAno'] == self.anio
+            Qmes = self.df_DivInd['PerMes'] == self.mes
             Qreg = self.df_DivInd['RegCod'] == RegCod
             Qdiv = self.df_DivInd['DivCod'] == DivCod
             indice_actual = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
-            if mes == 1:
-                Qanio = self.df_DivInd['PerAno'] == anio - 1
+            if self.mes == 1:
+                Qanio = self.df_DivInd['PerAno'] == self.anio - 1
                 Qmes = self.df_DivInd['PerMes'] == 12
-                ipc_anterior = self.calcular_IPC(anio - 1, 12, RegCod)
+                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
-                Qmes = self.df_DivInd['PerMes'] == mes - 1
-                ipc_anterior = self.calcular_IPC(anio, mes - 1, RegCod)
+                Qmes = self.df_DivInd['PerMes'] == self.mes - 1
+                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 #INCIDENCIAS MALAS
-    def incidencia_gasto_basico(self, mes: int, RegCod: int):
+    def incidencia_gasto_basico(self, RegCod: int):
         incidencias = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
             ponderacion = self.df_GbaPon[(self.df_GbaPon['RegCod'] == RegCod) & (self.df_GbaPon['GbaCod'] == GbaCod)]['GbaPon'].iloc[0]
             Qanio = self.df_GbaInd['PerAno'] == self.anio
-            Qmes = self.df_GbaInd['PerMes'] == mes
+            Qmes = self.df_GbaInd['PerMes'] == self.mes
             Qreg = self.df_GbaInd['RegCod'] == RegCod
             Qgba = self.df_GbaInd['GbaCod'] == GbaCod
             indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
-            if mes == 1:
+            if self.mes == 1:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] == 12
                 ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
-                Qmes = self.df_GbaInd['PerMes'] == mes - 1
-                ipc_anterior = self.calcular_IPC(self.anio, mes - 1, RegCod)
+                Qmes = self.df_GbaInd['PerMes'] == self.mes - 1
+                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             nombre_gba = self.get_nombre_Gba(GbaCod)
             incidencias.append((variacion, 4, nombre_gba))
         return incidencias
 
-    def series_historicas_Gbas(self, mes: int, RegCod: int):
+    def series_historicas_Gbas(self, RegCod: int):
         series = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
-            if mes != 12:
+            if self.mes != 12:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio
-                Qmes = self.df_GbaInd['PerMes'] <= mes
+                Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
                 indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
-                Qmes = self.df_GbaInd['PerMes'] >= mes
+                Qmes = self.df_GbaInd['PerMes'] >= self.mes
                 indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 indices = pd.merge(indices2, indices1, how='outer')
             else:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio
-                Qmes = self.df_GbaInd['PerMes'] <= mes
+                Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
                 indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
@@ -172,15 +187,15 @@ class sqlINE:
             series.append((nombre_gba, indices_final))
         return series
 
-    def serie_historica_ipc(self, mes: int, RegCod: int):
+    def serie_historica_ipc(self, RegCod: int):
         serie = []
-        if mes != 12:
-            for i in range(mes, 13):
+        if self.mes != 12:
+            for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 ipc = self.calcular_IPC(self.anio - 1, i, RegCod)
                 serie.append((fecha, ipc))
-            for i in range(1, mes + 1):
+            for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
                 ipc = self.calcular_IPC(self.anio, i, RegCod)
@@ -193,7 +208,7 @@ class sqlINE:
                 serie.append((fecha, ipc))
         return serie
 
-    def serie_historica_inflacion(self, mes: int, RegCod: int, tipo: str):
+    def serie_historica_inflacion(self, RegCod: int, tipo: str):
         serie = []
         if tipo == 'intermensual':
             funcion = self.inflacion_mensual
@@ -201,13 +216,13 @@ class sqlINE:
             funcion = self.inflacion_interanual
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
-        if mes != 12:
-            for i in range(mes, 13):
+        if self.mes != 12:
+            for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 indice = funcion(self.anio - 1, i, RegCod)
                 serie.append((fecha, indice))
-            for i in range(1, mes + 1):
+            for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
                 indice = funcion(self.anio, i, RegCod)
