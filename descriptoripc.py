@@ -214,3 +214,65 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
     PLANTILLA = PLANTILLA.split()
     PLANTILLA = " ".join(PLANTILLA)
     return PLANTILLA
+
+def serie_historica_ipc(datos) -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    INDICE_1 = datos[-1][1]
+    INDICE_2 = datos[0][1]
+    DIFERENCIA = datos[-1][1] - datos[0][1]
+    if DIFERENCIA < 0:
+        CAMBIO = "se desaceleró"
+        DIFERENCIA *= -1
+    elif DIFERENCIA > 0:
+        CAMBIO = "se aceleró"
+    else:
+        CAMBIO = "cambio"
+    PLANTILLA = f"""El Índice de Precios al Consumidor registró una
+                variación interanual al mes de {FECHA_1} de {INDICE_1:.2f}%. En
+                {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
+                por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
+                porcentuales en el último año."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
+# tipo = intermensual, interanual, acumulada
+def serie_historica_inflacion(datos, tipo: str, nivel: str='nacional') -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    INDICE_1 = datos[-1][1] # mes actual
+    INDICE_2 = datos[-2][1] # mes anterior
+    INDICE_3 = datos[0][1]
+    DIFERENCIA_1 = INDICE_1 - INDICE_2
+    DIFERENCIA_2 = INDICE_1 - INDICE_3
+    if DIFERENCIA_1 > 0:
+        CAMBIO_1 = "un aumento"
+    elif DIFERENCIA_1 < 0:
+        CAMBIO_1 = "una disminución"
+        DIFERENCIA_1 *= -1
+    else:
+        CAMBIO_1 = "un cambio"
+    if DIFERENCIA_2 > 0:
+        CAMBIO_2 = "un aumento"
+    elif DIFERENCIA_2 < 0:
+        CAMBIO_2 = "una disminución"
+        DIFERENCIA_2 *= -1
+    else:
+        CAMBIO_2 = "un cambio"
+
+    PLANTILLA = f"""La variación {tipo} del IPC a nivel {nivel} en {FECHA_1},
+                se ubicó en {INDICE_1:.2f}%. Esta variación representa {CAMBIO_1}
+                en el nivel de precios de {DIFERENCIA_1:.2f} puntos porcentuales
+                respecto al mes anterior ({INDICE_2:.2f}%), y con respecto a la
+                variación alcanzada en {FECHA_2} ({INDICE_3:.2f}%) {CAMBIO_2} de
+                {DIFERENCIA_2:.2f} puntos."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
+
+
+from sqline import sqlINE
+a = sqlINE(2022).incidencia_divisiones(8,0)
+print(a)
