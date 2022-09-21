@@ -272,7 +272,35 @@ def serie_historica_inflacion(datos, tipo: str, nivel: str='nacional') -> str:
     PLANTILLA = " ".join(PLANTILLA)
     return PLANTILLA
 
+def incidencia_divisiones(datos, fecha) -> str:
+    fecha = mes_anio_by_abreviacion(fecha, MMAA=True)
+    datos = sorted(datos, reverse=True)
+    mayor_1 = datos[0]
+    mayor_2 = datos[1]
+    menor = datos[-1]
+    div_1 = mayor_1[1].lower()
+    div_2 = mayor_2[1].lower()
+    div_3 = menor[1].lower()
+    indice_menor = menor[0]
+    if indice_menor < 0.01 and indice_menor > 0:
+        indice_menor = f'{indice_menor:.3f}'
+    elif indice_menor < 0.001 and indice_menor > 0:
+        indice_menor = f'{indice_menor:.4f}'
+    elif indice_menor < 0.0001 and indice_menor > 0:
+        indice_menor = f'{indice_menor:.5f}'
+    else:
+        indice_menor = f'{indice_menor:.2f}'
+    plantilla = f"""De las doce divisiones de gasto que integran el IPC, la de
+                {div_1} ({mayor_1[0]:.2f}%) y {div_2} ({mayor_2[0]:.2f}%),
+                registraron la mayor variación mensual en {fecha}. Por su parte,
+                {div_3} es la división de gasto con menor variación mensual
+                ({indice_menor}%)."""
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 from sqline import sqlINE
-a = sqlINE(2022).incidencia_divisiones(8,0)
+p = sqlINE(2022, 8)
+a = p.incidencia_gasto_basico(0)
 print(a)
