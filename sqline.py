@@ -120,22 +120,22 @@ class sqlINE:
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 #INCIDENCIAS MALAS
-    def incidencia_gasto_basico(self, anio: int, mes: int, RegCod: int):
+    def incidencia_gasto_basico(self, mes: int, RegCod: int):
         incidencias = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
             ponderacion = self.df_GbaPon[(self.df_GbaPon['RegCod'] == RegCod) & (self.df_GbaPon['GbaCod'] == GbaCod)]['GbaPon'].iloc[0]
-            Qanio = self.df_GbaInd['PerAno'] == anio
+            Qanio = self.df_GbaInd['PerAno'] == self.anio
             Qmes = self.df_GbaInd['PerMes'] == mes
             Qreg = self.df_GbaInd['RegCod'] == RegCod
             Qgba = self.df_GbaInd['GbaCod'] == GbaCod
             indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             if mes == 1:
-                Qanio = self.df_GbaInd['PerAno'] == anio - 1
+                Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] == 12
-                ipc_anterior = self.calcular_IPC(anio - 1, 12, RegCod)
+                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_GbaInd['PerMes'] == mes - 1
-                ipc_anterior = self.calcular_IPC(anio, mes - 1, RegCod)
+                ipc_anterior = self.calcular_IPC(self.anio, mes - 1, RegCod)
             indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             nombre_gba = self.get_nombre_Gba(GbaCod)
