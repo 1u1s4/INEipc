@@ -198,7 +198,12 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
                 baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
     return retocar_plantilla(plantilla)
 
-def serie_historica_ipc(datos) -> str:
+def serie_historica_ipc(datos, QGba: bool=False) -> str:
+    if QGba:
+        gba = f' del {datos[0].lower()} '
+        datos = datos[1]
+    else:
+        gba = ' '
     fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
     fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
     if datos[-1][0].split('-')[0] == datos[0][0].split('-')[0]:
@@ -221,7 +226,7 @@ def serie_historica_ipc(datos) -> str:
     else:
         cambio = "igual"
 
-    plantilla = f"""El Índice de Precios al Consumidor a {fecha_1} se ubicó en
+    plantilla = f"""El Índice de Precios al Consumidor{gba}a {fecha_1} se ubicó en
                 {indice_1:.2f}, {cambio} a lo observado en {plantilla_aux}
                 ({indice_2:.2f})."""
     return retocar_plantilla(plantilla)
@@ -317,5 +322,5 @@ def poder_adquisitivo(datos) -> str:
 
 from sqline import sqlINE
 p = sqlINE(2022, 8)
-a = p.serie_historica_ipc_pdr_adq(0)
-print(serie_historica_ipc(a))
+a = p.series_historicas_Gbas(0)
+print(serie_historica_ipc(a[0], True))
