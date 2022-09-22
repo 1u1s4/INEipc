@@ -201,21 +201,29 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
 def serie_historica_ipc(datos) -> str:
     fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
     fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    if datos[-1][0].split('-')[0] == datos[0][0].split('-')[0]:
+        Qmismo_anio = False
+    else:
+        Qmismo_anio = True
+    if Qmismo_anio:
+        plantilla_aux = f'{fecha_2}'
+    else:
+        plantilla_aux = 'el mismo mes del año anterior'
+
     indice_1 = datos[-1][1]
     indice_2 = datos[0][1]
-    diferencia = datos[-1][1] - datos[0][1]
-    if diferencia < 0:
-        cambio = "se desaceleró"
+    diferencia = indice_1 - indice_2
+    if diferencia > 0:
+        cambio = "mayor"
         diferencia *= -1
-    elif diferencia > 0:
-        cambio = "se aceleró"
+    elif diferencia < 0:
+        cambio = "menor"
     else:
-        cambio = "cambio"
-    plantilla = f"""El Índice de Precios al Consumidor registró una
-                variación interanual al mes de {fecha_1} de {indice_1:.2f}%. En
-                {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
-                por lo que este indicador {cambio} {diferencia:.2f} puntos
-                porcentuales en el último año."""
+        cambio = "igual"
+
+    plantilla = f"""El Índice de Precios al Consumidor a {fecha_1} se ubicó en
+                {indice_1:.2f}, {cambio} a lo observado en {plantilla_aux}
+                ({indice_2:.2f})."""
     return retocar_plantilla(plantilla)
 
 # tipo = intermensual, interanual, acumulada
@@ -305,7 +313,9 @@ def poder_adquisitivo(datos) -> str:
                 de {fecha_3} con un valor de {indice_3:.2f}."""
     return retocar_plantilla(plantilla)
 
+
+
 from sqline import sqlINE
 p = sqlINE(2022, 8)
-a = p.serie_historica_ipc_pdr_adq(0, True)
-print(poder_adquisitivo(a))
+a = p.serie_historica_ipc_pdr_adq(0)
+print(serie_historica_ipc(a))
