@@ -320,6 +320,28 @@ def incidencias(datos, fecha: str, Qpositivas: bool=True) -> str:
                 respectivamente.""".format(fecha, *nombres, tipo, *indices)
     return retocar_plantilla(plantilla)
 
+def poder_adquisitivo(datos) -> str:
+    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    FECHA_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    INDICE_1 = datos[-1][1]
+    INDICE_2 = datos[0][1]
+    DIFERENCIA = datos[-1][1] - datos[0][1]
+    if DIFERENCIA < 0:
+        CAMBIO = "se desaceleró"
+        DIFERENCIA *= -1
+    elif DIFERENCIA > 0:
+        CAMBIO = "se aceleró"
+    else:
+        CAMBIO = "cambio"
+    PLANTILLA = f"""El Índice de Precios al Consumidor registró una
+                variación interanual al mes de {FECHA_1} de {INDICE_1:.2f}%. En
+                {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
+                por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
+                porcentuales en el último año."""
+    PLANTILLA = PLANTILLA.replace("\n", " ")
+    PLANTILLA = PLANTILLA.split()
+    PLANTILLA = " ".join(PLANTILLA)
+    return PLANTILLA
 
 from sqline import sqlINE
 p = sqlINE(2022, 8)
