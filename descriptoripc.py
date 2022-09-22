@@ -317,10 +317,3 @@ def poder_adquisitivo(datos) -> str:
                 con un valor de {indice_2:.2f} y el menor se encuentra en el mes
                 de {fecha_3} con un valor de {indice_3:.2f}."""
     return retocar_plantilla(plantilla)
-
-
-
-from sqline import sqlINE
-p = sqlINE(2022, 8)
-a = p.series_historicas_Gbas(0)
-print(serie_historica_ipc(a[0], True))
