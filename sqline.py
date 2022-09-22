@@ -187,24 +187,28 @@ class sqlINE:
             series.append((nombre_gba, indices_final))
         return series
 
-    def serie_historica_ipc(self, RegCod: int):
+    def serie_historica_ipc(self, RegCod: int, Qpdr_adq: bool=False):
         serie = []
+        if Qpdr_adq:
+            funcion = self.poder_adquisitivo
+        else:
+            funcion = self.calcular_IPC
         if self.mes != 12:
             for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
-                ipc = self.calcular_IPC(self.anio - 1, i, RegCod)
+                ipc = funcion(self.anio - 1, i, RegCod)
                 serie.append((fecha, ipc))
             for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                ipc = self.calcular_IPC(self.anio, i, RegCod)
+                ipc = funcion(self.anio, i, RegCod)
                 serie.append((fecha, ipc))
         else:
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                ipc = self.calcular_IPC(self.anio, i, RegCod)
+                ipc = funcion(self.anio, i, RegCod)
                 serie.append((fecha, ipc))
         return serie
 
