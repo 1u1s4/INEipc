@@ -1,5 +1,10 @@
 from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
+def retocar_plantilla(plantilla: str) -> str:
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 def variacion(dato: float, dato_antes: float) -> float:
     return ((dato - dato_antes) / dato_antes) * 100
@@ -300,7 +305,24 @@ def incidencia_divisiones(datos, fecha) -> str:
     plantilla = " ".join(plantilla)
     return plantilla
 
+def incidencias(datos, fecha: str, Qpositivas: bool=True) -> str:
+    datos = sorted(datos, reverse=Qpositivas)[0:5]
+    if Qpositivas:
+        indices = [d[0] for d in datos]
+        tipo = 'variaciones'
+    else:
+        indices = [d[0]*-1 for d in datos]
+        tipo = 'variaciones negativas'
+    nombres = [d[1].lower() for d in datos]
+    plantilla = """Los gastos básicos que registraron mayor alza porcentual mensual
+                en {} fueron: {}, {}, {}, {} y {} todo incluido al exterior con
+                {} de {:.2f}%, {:.2f}%, {:.2f}%, {:.2f}% y {:.2f}%,
+                respectivamente.""".format(fecha, *nombres, tipo, *indices)
+    return retocar_plantilla(plantilla)
+
+
 from sqline import sqlINE
 p = sqlINE(2022, 8)
 a = p.incidencia_gasto_basico(0)
-print(a)
+print(sorted(a)[0:5])
+print(incidencias(a , '', False))
