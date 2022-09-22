@@ -28,10 +28,7 @@ def indice_precio_alimentos(datos: list[tuple[str]]) -> str:
                 {fecha_1} un índice de {indice:.2f}, lo que representa una
                 variación de {variacion_1:.2f}% respecto a {fecha_2} y de
                 {variacion_2:.2f}% respecto a {fecha_3}."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 # petroleo
 """
 ejemplo de datos
@@ -65,10 +62,7 @@ def petroleo(datos: list[tuple[str]]) -> str:
                 una variación de {variacion_1:.2f}% ({signo_1}US${diferencia_1:.2f})
                 respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f}) respecto a {fecha_3}.
                 """
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 # cambio del quetzal
 """
@@ -92,10 +86,7 @@ def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
                 US$1.00, lo que representa una variación
                 de {variacion_1:.2f}% respecto a {fecha_2} y de
                 {variacion_2:.2f}% respecto a {fecha_3}."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 # tasa de interes
 """
@@ -131,10 +122,7 @@ def tasa_de_interes(datos: list[tuple[str]]) -> str:
     en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que representa
     {cambio_1} de {diferencia_1:.2f} puntos porcentuales respecto a {fecha_2}
     y {cambio_2} de {diferencia_2:.2f} puntos porcentuales respecto a {fecha_3}."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 # IPC USA
 """
@@ -163,10 +151,7 @@ def ipc_usa(datos: list[tuple[str]]) -> str:
                 {indice_1:.2f}%. En {fecha_2} la variación interanual se ubicó en
                 {indice_2:.2f}%, por lo que este indicador {cambio} {diferencia:.2f}
                 puntos porcentuales en el último año."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 # IPC MEX
 """
@@ -195,10 +180,7 @@ def ipc_mex(datos: list[tuple[str]]) -> str:
                 {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
                 por lo que este indicador {cambio} {diferencia:.2f} puntos
                 porcentuales en el último año."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 def inflacion(datos: dict[dict[str]], fecha: str) -> str:
     MES = mes_by_ordinal(fecha.split("-")[1])
@@ -215,10 +197,7 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
                 la mayor tasa de inflación interanual de {INFLACION_MAX[0]:.2f}%,
                 mientras que {INFLACION_MIN[1].capitalize()} registró la tasa más
                 baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 def serie_historica_ipc(datos) -> str:
     fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
@@ -238,10 +217,8 @@ def serie_historica_ipc(datos) -> str:
                 {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
                 por lo que este indicador {cambio} {diferencia:.2f} puntos
                 porcentuales en el último año."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
+
 # tipo = intermensual, interanual, acumulada
 def serie_historica_inflacion(datos, tipo: str, nivel: str='nacional') -> str:
     fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
@@ -265,17 +242,13 @@ def serie_historica_inflacion(datos, tipo: str, nivel: str='nacional') -> str:
         diferencia_2 *= -1
     else:
         cambio_2 = "un cambio"
-
     plantilla = f"""La variación {tipo} del IPC a nivel {nivel} en {fecha_1},
                 se ubicó en {indice_1:.2f}%. Esta variación representa {cambio_1}
                 en el nivel de precios de {diferencia_1:.2f} puntos porcentuales
                 respecto al mes anterior ({indice_2:.2f}%), y con respecto a la
                 variación alcanzada en {fecha_2} ({indice_3:.2f}%) {cambio_2} de
                 {diferencia_2:.2f} puntos."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 def incidencia_divisiones(datos, fecha) -> str:
     fecha = mes_anio_by_abreviacion(fecha, MMAA=True)
@@ -300,10 +273,7 @@ def incidencia_divisiones(datos, fecha) -> str:
                 registraron la mayor variación mensual en {fecha}. Por su parte,
                 {div_3} es la división de gasto con menor variación mensual
                 ({indice_menor}%)."""
-    plantilla = plantilla.replace("\n", " ")
-    plantilla = plantilla.split()
-    plantilla = " ".join(plantilla)
-    return plantilla
+    return retocar_plantilla(plantilla)
 
 def incidencias(datos, fecha: str, Qpositivas: bool=True) -> str:
     datos = sorted(datos, reverse=Qpositivas)[0:5]
