@@ -154,7 +154,7 @@ class sqlINE:
             indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             nombre_gba = self.get_nombre_Gba(GbaCod)
-            incidencias.append((variacion, 4, nombre_gba))
+            incidencias.append((variacion, nombre_gba))
         return incidencias
 
     def series_historicas_Gbas(self, RegCod: int):
