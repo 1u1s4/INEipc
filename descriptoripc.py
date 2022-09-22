@@ -18,20 +18,20 @@ ejemplo de datos
 ('2015-Oct', 46.22363636363636)
 """
 def indice_precio_alimentos(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    FECHA_3 = mes_anio_by_abreviacion(datos[-2][0])
-    INDICE = datos[-1][1]
-    VARIACION_1 = variacion(datos[-1][1], datos[0][1])
-    VARIACION_2 = variacion(datos[-1][1], datos[-2][1])
-    PLANTILLA = f"""El índice de precios de los alimentos de la FAO registró en
-                {FECHA_1} un índice de {INDICE:.2f}, lo que representa una
-                variación de {VARIACION_1:.2f}% respecto a {FECHA_2} y de
-                {VARIACION_2:.2f}% respecto a {FECHA_3}."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
+    indice = datos[-1][1]
+    variacion_1 = variacion(datos[-1][1], datos[0][1])
+    variacion_2 = variacion(datos[-1][1], datos[-2][1])
+    plantilla = f"""El índice de precios de los alimentos de la FAO registró en
+                {fecha_1} un índice de {indice:.2f}, lo que representa una
+                variación de {variacion_1:.2f}% respecto a {fecha_2} y de
+                {variacion_2:.2f}% respecto a {fecha_3}."""
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 # petroleo
 """
 ejemplo de datos
@@ -42,33 +42,33 @@ ejemplo de datos
 ('2015-Oct', 46.22363636363636)
 """
 def petroleo(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    FECHA_3 = mes_anio_by_abreviacion(datos[-2][0])
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
     PRECIO = datos[-1][1]
-    DIFERANCIA_1 = datos[-1][1] - datos[0][1]
-    VARIACION_1 = variacion(datos[-1][1], datos[0][1])
-    if DIFERANCIA_1 > 0:
-        SIGNO_1 = ""
+    diferencia_1 = datos[-1][1] - datos[0][1]
+    variacion_1 = variacion(datos[-1][1], datos[0][1])
+    if diferencia_1 > 0:
+        signo_1 = ""
     else:
-        DIFERANCIA_1 = DIFERANCIA_1 * -1
-        SIGNO_1 = "-"
-    DIFERANCIA_2 = datos[-1][1] - datos[-2][1]
-    VARIACION_2 = variacion(datos[-1][1], datos[-2][1])
-    if DIFERANCIA_2 > 0:
-        SIGNO_2 = ""
+        diferencia_1 = diferencia_1 * -1
+        signo_1 = "-"
+    diferencia_2 = datos[-1][1] - datos[-2][1]
+    variacion_2 = variacion(datos[-1][1], datos[-2][1])
+    if diferencia_2 > 0:
+        signo_2 = ""
     else:
-        DIFERANCIA_2 = DIFERANCIA_2 * -1
-        SIGNO_2 = "-"
-    PLANTILLA = f"""El precio internacional del petróleo registró en {FECHA_1}
+        diferencia_2 = diferencia_2 * -1
+        signo_2 = "-"
+    plantilla = f"""El precio internacional del petróleo registró en {fecha_1}
                 un precio medio de US${PRECIO:.2f} por barril, lo que representa
-                una variación de {VARIACION_1:.2f}% ({SIGNO_1}US${DIFERANCIA_1:.2f})
-                respecto a {FECHA_2} y de {VARIACION_2:.2f}% ({SIGNO_2}US${DIFERANCIA_2:.2f}) respecto a {FECHA_3}.
+                una variación de {variacion_1:.2f}% ({signo_1}US${diferencia_1:.2f})
+                respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f}) respecto a {fecha_3}.
                 """
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 # cambio del quetzal
 """
@@ -79,23 +79,23 @@ ejemplo de datos
 ('2022-Jul', 7.739475806451614)
 """
 def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    FECHA_3 = mes_anio_by_abreviacion(datos[-2][0])
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
     PRECIO = datos[-1][1]
-    VARIACION_1 = variacion(datos[-1][1], datos[0][1])
-    VARIACION_2 = variacion(datos[-1][1], datos[-2][1])
-    PLANTILLA = f"""El tipo de cambio de referencia del
+    variacion_1 = variacion(datos[-1][1], datos[0][1])
+    variacion_2 = variacion(datos[-1][1], datos[-2][1])
+    plantilla = f"""El tipo de cambio de referencia del
                 quetzal respecto al dólar de los Estados
-                Unidos de América, registró en {FECHA_1} 
+                Unidos de América, registró en {fecha_1} 
                 un precio medio de Q{PRECIO:.2f} por
                 US$1.00, lo que representa una variación
-                de {VARIACION_1:.2f}% respecto a {FECHA_2} y de
-                {VARIACION_2:.2f}% respecto a {FECHA_3}."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+                de {variacion_1:.2f}% respecto a {fecha_2} y de
+                {variacion_2:.2f}% respecto a {fecha_3}."""
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 # tasa de interes
 """
@@ -107,34 +107,34 @@ def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
 ('2022-Jun', 11.98)
 """
 def tasa_de_interes(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    FECHA_3 = mes_anio_by_abreviacion(datos[-2][0])
-    TASA = datos[-1][1]
-    DIFERENCIA_1 = datos[-1][1] - datos[0][1]
-    DIFERENCIA_2 = datos[-1][1] - datos[-2][1]
-    if DIFERENCIA_1 < 0:
-        CAMBIO_1 = "una disminución"
-        DIFERENCIA_1 *= -1
-    elif DIFERENCIA_1 > 0:
-        CAMBIO_1 = "un aumento"
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
+    tasa = datos[-1][1]
+    diferencia_1 = datos[-1][1] - datos[0][1]
+    diferencia_2 = datos[-1][1] - datos[-2][1]
+    if diferencia_1 < 0:
+        cambio_1 = "una disminución"
+        diferencia_1 *= -1
+    elif diferencia_1 > 0:
+        cambio_1 = "un aumento"
     else:
-        CAMBIO_1 = "un cambio"
-    if DIFERENCIA_2 < 0:
-        CAMBIO_2 = "una disminución"
-        DIFERENCIA_2 *= -1
-    elif DIFERENCIA_2 > 0:
-        CAMBIO_2 = "un aumento"
+        cambio_1 = "un cambio"
+    if diferencia_2 < 0:
+        cambio_2 = "una disminución"
+        diferencia_2 *= -1
+    elif diferencia_2 > 0:
+        cambio_2 = "un aumento"
     else:
-        CAMBIO_2 = "un cambio"
-    PLANTILLA = f"""El promedio ponderado preliminar de la tasa de interés activa
-    en moneda nacional se ubicó en {FECHA_1} en {TASA:.2f}%, lo que representa
-    {CAMBIO_1} de {DIFERENCIA_1:.2f} puntos porcentuales respecto a {FECHA_2}
-    y {CAMBIO_2} de {DIFERENCIA_2:.2f} puntos porcentuales respecto a {FECHA_3}."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+        cambio_2 = "un cambio"
+    plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa
+    en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que representa
+    {cambio_1} de {diferencia_1:.2f} puntos porcentuales respecto a {fecha_2}
+    y {cambio_2} de {diferencia_2:.2f} puntos porcentuales respecto a {fecha_3}."""
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 # IPC USA
 """
@@ -146,27 +146,27 @@ ejemplo de datos
 ('2022-Jun', 8.995220608588127)
 """
 def ipc_usa(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    INDICE_1 = datos[-1][1]
-    INDICE_2 = datos[0][1]
-    DIFERENCIA = datos[-1][1] - datos[0][1]
-    if DIFERENCIA < 0:
-        CAMBIO = "se desaceleró"
-        DIFERENCIA *= -1
-    elif DIFERENCIA > 0:
-        CAMBIO = "se aceleró"
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    indice_1 = datos[-1][1]
+    indice_2 = datos[0][1]
+    diferencia = datos[-1][1] - datos[0][1]
+    if diferencia < 0:
+        cambio = "se desaceleró"
+        diferencia *= -1
+    elif diferencia > 0:
+        cambio = "se aceleró"
     else:
-        CAMBIO = "cambio"
-    PLANTILLA = f"""El Índice de Precios al Consumidor en los Estados Unidos de
-                América registró una variación interanual al mes de {FECHA_1} de
-                {INDICE_1:.2f}%. En {FECHA_2} la variación interanual se ubicó en
-                {INDICE_2:.2f}%, por lo que este indicador {CAMBIO} {DIFERENCIA:.2f}
+        cambio = "cambio"
+    plantilla = f"""El Índice de Precios al Consumidor en los Estados Unidos de
+                América registró una variación interanual al mes de {fecha_1} de
+                {indice_1:.2f}%. En {fecha_2} la variación interanual se ubicó en
+                {indice_2:.2f}%, por lo que este indicador {cambio} {diferencia:.2f}
                 puntos porcentuales en el último año."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 # IPC MEX
 """
@@ -178,27 +178,27 @@ ejemplo de datos
 ('2022-Jun', 8.995220608588127)
 """
 def ipc_mex(datos: list[tuple[str]]) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0])
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0])
-    INDICE_1 = datos[-1][1]
-    INDICE_2 = datos[0][1]
-    DIFERENCIA = datos[-1][1] - datos[0][1]
-    if DIFERENCIA < 0:
-        CAMBIO = "se desaceleró"
-        DIFERENCIA *= -1
-    elif DIFERENCIA > 0:
-        CAMBIO = "se aceleró"
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
+    indice_1 = datos[-1][1]
+    indice_2 = datos[0][1]
+    diferencia = datos[-1][1] - datos[0][1]
+    if diferencia < 0:
+        cambio = "se desaceleró"
+        diferencia *= -1
+    elif diferencia > 0:
+        cambio = "se aceleró"
     else:
-        CAMBIO = "cambio"
-    PLANTILLA = f"""El Índice de Precios al Consumidor en México de registró una
-                variación interanual al mes de {FECHA_1} de {INDICE_1:.2f}%. En
-                {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
-                por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
+        cambio = "cambio"
+    plantilla = f"""El Índice de Precios al Consumidor en México de registró una
+                variación interanual al mes de {fecha_1} de {indice_1:.2f}%. En
+                {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
+                por lo que este indicador {cambio} {diferencia:.2f} puntos
                 porcentuales en el último año."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 def inflacion(datos: dict[dict[str]], fecha: str) -> str:
     MES = mes_by_ordinal(fecha.split("-")[1])
@@ -210,72 +210,72 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
     INFLACION_MIN = inflacion_mes[0]
     INFLACION_MAX = inflacion_mes[-1]
     MES = mes_by_ordinal(fecha.split("-")[1], abreviado=False)
-    PLANTILLA = f"""Para el mes de {MES} {ANIO}, en Centro América, República
+    plantilla = f"""Para el mes de {MES} {ANIO}, en Centro América, República
                 Dominicana y México, {INFLACION_MAX[1].capitalize()} presentó
                 la mayor tasa de inflación interanual de {INFLACION_MAX[0]:.2f}%,
                 mientras que {INFLACION_MIN[1].capitalize()} registró la tasa más
                 baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 def serie_historica_ipc(datos) -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
-    INDICE_1 = datos[-1][1]
-    INDICE_2 = datos[0][1]
-    DIFERENCIA = datos[-1][1] - datos[0][1]
-    if DIFERENCIA < 0:
-        CAMBIO = "se desaceleró"
-        DIFERENCIA *= -1
-    elif DIFERENCIA > 0:
-        CAMBIO = "se aceleró"
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    indice_1 = datos[-1][1]
+    indice_2 = datos[0][1]
+    diferencia = datos[-1][1] - datos[0][1]
+    if diferencia < 0:
+        cambio = "se desaceleró"
+        diferencia *= -1
+    elif diferencia > 0:
+        cambio = "se aceleró"
     else:
-        CAMBIO = "cambio"
-    PLANTILLA = f"""El Índice de Precios al Consumidor registró una
-                variación interanual al mes de {FECHA_1} de {INDICE_1:.2f}%. En
-                {FECHA_2} la variación interanual se ubicó en {INDICE_2:.2f}%,
-                por lo que este indicador {CAMBIO} {DIFERENCIA:.2f} puntos
+        cambio = "cambio"
+    plantilla = f"""El Índice de Precios al Consumidor registró una
+                variación interanual al mes de {fecha_1} de {indice_1:.2f}%. En
+                {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
+                por lo que este indicador {cambio} {diferencia:.2f} puntos
                 porcentuales en el último año."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 # tipo = intermensual, interanual, acumulada
 def serie_historica_inflacion(datos, tipo: str, nivel: str='nacional') -> str:
-    FECHA_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
-    FECHA_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
-    INDICE_1 = datos[-1][1] # mes actual
-    INDICE_2 = datos[-2][1] # mes anterior
-    INDICE_3 = datos[0][1]
-    DIFERENCIA_1 = INDICE_1 - INDICE_2
-    DIFERENCIA_2 = INDICE_1 - INDICE_3
-    if DIFERENCIA_1 > 0:
-        CAMBIO_1 = "un aumento"
-    elif DIFERENCIA_1 < 0:
-        CAMBIO_1 = "una disminución"
-        DIFERENCIA_1 *= -1
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    indice_1 = datos[-1][1] # mes actual
+    indice_2 = datos[-2][1] # mes anterior
+    indice_3 = datos[0][1]
+    diferencia_1 = indice_1 - indice_2
+    diferencia_2 = indice_1 - indice_3
+    if diferencia_1 > 0:
+        cambio_1 = "un aumento"
+    elif diferencia_1 < 0:
+        cambio_1 = "una disminución"
+        diferencia_1 *= -1
     else:
-        CAMBIO_1 = "un cambio"
-    if DIFERENCIA_2 > 0:
-        CAMBIO_2 = "un aumento"
-    elif DIFERENCIA_2 < 0:
-        CAMBIO_2 = "una disminución"
-        DIFERENCIA_2 *= -1
+        cambio_1 = "un cambio"
+    if diferencia_2 > 0:
+        cambio_2 = "un aumento"
+    elif diferencia_2 < 0:
+        cambio_2 = "una disminución"
+        diferencia_2 *= -1
     else:
-        CAMBIO_2 = "un cambio"
+        cambio_2 = "un cambio"
 
-    PLANTILLA = f"""La variación {tipo} del IPC a nivel {nivel} en {FECHA_1},
-                se ubicó en {INDICE_1:.2f}%. Esta variación representa {CAMBIO_1}
-                en el nivel de precios de {DIFERENCIA_1:.2f} puntos porcentuales
-                respecto al mes anterior ({INDICE_2:.2f}%), y con respecto a la
-                variación alcanzada en {FECHA_2} ({INDICE_3:.2f}%) {CAMBIO_2} de
-                {DIFERENCIA_2:.2f} puntos."""
-    PLANTILLA = PLANTILLA.replace("\n", " ")
-    PLANTILLA = PLANTILLA.split()
-    PLANTILLA = " ".join(PLANTILLA)
-    return PLANTILLA
+    plantilla = f"""La variación {tipo} del IPC a nivel {nivel} en {fecha_1},
+                se ubicó en {indice_1:.2f}%. Esta variación representa {cambio_1}
+                en el nivel de precios de {diferencia_1:.2f} puntos porcentuales
+                respecto al mes anterior ({indice_2:.2f}%), y con respecto a la
+                variación alcanzada en {fecha_2} ({indice_3:.2f}%) {cambio_2} de
+                {diferencia_2:.2f} puntos."""
+    plantilla = plantilla.replace("\n", " ")
+    plantilla = plantilla.split()
+    plantilla = " ".join(plantilla)
+    return plantilla
 
 def incidencia_divisiones(datos, fecha) -> str:
     fecha = mes_anio_by_abreviacion(fecha, MMAA=True)
