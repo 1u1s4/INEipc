@@ -60,8 +60,8 @@ def petroleo(datos: list[tuple[str]]) -> str:
     plantilla = f"""El precio internacional del petróleo registró en {fecha_1}
                 un precio medio de US${PRECIO:.2f} por barril, lo que representa
                 una variación de {variacion_1:.2f}% ({signo_1}US${diferencia_1:.2f})
-                respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f}) respecto a {fecha_3}.
-                """
+                respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f})
+                respecto a {fecha_3}."""
     return retocar_plantilla(plantilla)
 
 # cambio del quetzal
@@ -79,13 +79,11 @@ def cambio_del_quetzal(datos: list[tuple[str]]) -> str:
     PRECIO = datos[-1][1]
     variacion_1 = variacion(datos[-1][1], datos[0][1])
     variacion_2 = variacion(datos[-1][1], datos[-2][1])
-    plantilla = f"""El tipo de cambio de referencia del
-                quetzal respecto al dólar de los Estados
-                Unidos de América, registró en {fecha_1} 
-                un precio medio de Q{PRECIO:.2f} por
-                US$1.00, lo que representa una variación
-                de {variacion_1:.2f}% respecto a {fecha_2} y de
-                {variacion_2:.2f}% respecto a {fecha_3}."""
+    plantilla = f"""El tipo de cambio de referencia del quetzal respecto al dólar
+                de los Estados Unidos de América, registró en {fecha_1} un precio
+                medio de Q{PRECIO:.2f} por US$1.00, lo que representa una variación
+                de {variacion_1:.2f}% respecto a {fecha_2} y de {variacion_2:.2f}%
+                respecto a {fecha_3}."""
     return retocar_plantilla(plantilla)
 
 # tasa de interes
@@ -119,9 +117,10 @@ def tasa_de_interes(datos: list[tuple[str]]) -> str:
     else:
         cambio_2 = "un cambio"
     plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa
-    en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que representa
-    {cambio_1} de {diferencia_1:.2f} puntos porcentuales respecto a {fecha_2}
-    y {cambio_2} de {diferencia_2:.2f} puntos porcentuales respecto a {fecha_3}."""
+                en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que
+                representa {cambio_1} de {diferencia_1:.2f} puntos porcentuales
+                respecto a {fecha_2} y {cambio_2} de {diferencia_2:.2f} puntos
+                porcentuales respecto a {fecha_3}."""
     return retocar_plantilla(plantilla)
 
 # IPC USA
