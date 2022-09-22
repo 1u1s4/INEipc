@@ -187,7 +187,7 @@ class sqlINE:
             series.append((nombre_gba, indices_final))
         return series
 
-    def serie_historica_ipc(self, RegCod: int, Qpdr_adq: bool=False):
+    def serie_historica_ipc_pdr_adq(self, RegCod: int, Qpdr_adq: bool=False):
         serie = []
         if Qpdr_adq:
             funcion = self.poder_adquisitivo
