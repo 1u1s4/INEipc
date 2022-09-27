@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "INE_IPC"
+version = "0.0.1"
+authors = [
+  { name="Luis Alfredo Alvarado Rodriguez", email="luisalvaradoar@gmail.com" },
+]
+description = "Datos del reporte mensual IPC"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.10.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/1u1s4/INE_IPC"
+"Bug Tracker" = ""
