@@ -200,7 +200,7 @@ def inflacion(datos: dict[dict[str]], fecha: str) -> str:
 
 def serie_historica_ipc(datos, QGba: bool=False) -> str:
     if QGba:
-        gba = f' del {datos[0].lower()} '
+        gba = f' del gasto basico {datos[0].lower()} '
         datos = datos[1]
     else:
         gba = ' '
