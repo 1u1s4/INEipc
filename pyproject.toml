@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "INE_IPC"
-version = "0.0.1"
+version = "0.3"
 authors = [
   { name="Luis Alfredo Alvarado Rodriguez", email="luisalvaradoar@gmail.com" },
 ]
