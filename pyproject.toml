@@ -20,4 +20,4 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/1u1s4/INE_IPC"
-"Bug Tracker" = ""
+"Bug Tracker" = "https://github.com/1u1s4/INE_IPC/issues"
