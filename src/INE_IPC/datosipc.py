@@ -10,8 +10,11 @@ from bs4 import BeautifulSoup
 from sqline import sqlINE
 
 class datosIPC:
-    def __init__(self) -> None:
+    def __init__(self, mes: int, anio: int) -> None:
         self._FORMATO = "%Y-%m-%d"
+        self.mes = mes
+        self.anio = anio
+        self.SQL = sqlINE(anio, mes)
 
     def indice_precio_alimentos(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%Y-%m"
@@ -285,3 +288,19 @@ class datosIPC:
         for pais in data.keys():
             data_salida.append((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
         return(data_salida, descriptoripc.inflacion(data, FECHA_FINAL))
+
+# para el capitulo 3
+    def serie_IPC(self, RegCod: int, QGba: bool = False):
+        datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod)
+        descripcion = descriptoripc.serie_historica_ipc(datos, QGba)
+        return(datos, descripcion)
+    
+    def serie_inflacion(self, RegCod: int, tipo: str, nivel: str='nacional'):
+        datos = self.SQL.serie_historica_inflacion(RegCod, tipo)
+        descripcion = descriptoripc.serie_historica_inflacion(datos, tipo, nivel)
+        return(datos, descripcion)
+
+    def serie_poder_adquisitivo(self, RegCod: int):
+        datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod, True)
+        descripcion = descriptoripc.poder_adquisitivo(datos)
+        return(datos, descripcion)
