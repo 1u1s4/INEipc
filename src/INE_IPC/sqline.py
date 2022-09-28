@@ -80,6 +80,45 @@ class sqlINE:
         columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+        # fuentes
+        self.df_Fnt = pd.read_sql(
+            f'''SELECT RegCod, DepCod, MunCod, FntZon, FntCod, FntNom, FntDir, TfnCod, FntSts, FntNart, FntAno, FntMes FROM IPC010 WHERE FntAno>={self.anio - 1}''',
+            self.__conexion
+        )
+        columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
+        for columna in columnas:
+            self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
+        # diccionario tipo de fuentes
+        abr_fuentes = {
+            'Sin Tipo De Fuente Asignado': 'Sin tipo',
+            'Mercados Cantonales Y Municipales, (Incluye Carnicerias, Tor': 'Mercados',
+            'Supermercados, Despensas Y Almacenes En Cadena': 'Supermercados',
+            'Hipermercados': 'Hipermercados',
+            'Depositos Y Abarroterias': 'Depositos',
+            'Tiendas No Especializadas (Incluye Miscelaneas Y Tiendas De': 'Tiendas',
+            'Almacenes O Tiendas Especializadas': 'Almacenes',
+            'Restaurantes  O Expendios De Comidas Preparadas En Cadena': 'Restaurantes',
+            'Empresas Especializadas En Prestacion De Servicios': 'Empresas',
+            'Expendios De Gas Propano': 'Expendios de Gas',
+            'Farmacias, Droguerias Y Perfumerias': 'Farmacias',
+            'Hospitales, Clinicas, Centros Y Puestos De Salud, Laboratori': 'Centros de Salud',
+            'Hoteles, Moteles, Hospedajes, Pensiones Y Alojamientos': 'Hoteles',
+            'Colegios, Academias,  Institutos, Universidades Y Otros': 'Centros Educativos',
+            'Otros Establecimientos Especializados En Preparacion De Serv': 'Otros',
+            'Viviendas (Informantes De Alquiler Y Servicio Domestico)': 'Viviendas',
+            'Otros Establecimientos No Especializados En Otro Codigo': 'Otros 2 (?)',
+            'Vivienda Tipo Cuarto De Alquiler': 'Cuarto de Alquiler',
+            'Vivienda Tipo Apartamento De Alquiler': 'Apartamento',
+            'Vivienda Tipo Casa De Alquiler': 'Casa de Alquiler'
+        }
+        sql_query = pd.read_sql(
+            'SELECT TfnCod, TfnNom FROM IPC008',
+            self.__conexion
+        ).to_dict()
+        self.nombre_fuente = dict(zip(
+            [int(i) for i in sql_query['TfnCod'].values()],
+            [abr_fuentes[nombre.strip().title()] for nombre in sql_query['TfnNom'].values()]
+        ))
 
     def get_nombre_Gba(self, GbaCod: int) -> str:
         nombre = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
@@ -238,3 +277,5 @@ class sqlINE:
                 indice = funcion(self.anio, i, RegCod)
                 serie.append((fecha, indice))
         return serie
+
+p = sqlINE(2022, 8)
