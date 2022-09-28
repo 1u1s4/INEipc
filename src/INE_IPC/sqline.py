@@ -113,7 +113,7 @@ class sqlINE:
     
     def poder_adquisitivo(self, anio: int, mes: int, RegCod: int) -> float:
         return (1 / self.calcular_IPC(anio, mes, RegCod)) * 100
-#INCIDENCIAS MALAS
+
     def incidencia_divisiones(self, RegCod: int) -> List[float]:
         incidencias = []
         for DivCod in range(1, 13):
@@ -134,7 +134,7 @@ class sqlINE:
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
-#INCIDENCIAS MALAS
+
     def incidencia_gasto_basico(self, RegCod: int):
         incidencias = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
