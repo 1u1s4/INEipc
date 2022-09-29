@@ -304,3 +304,15 @@ class sqlINE:
                 conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
         return serie
+
+    def desagregacion_fuentes(self):
+        serie = []
+        mes_ = self.df_Fnt['FntMes'] == self.mes
+        anio_ = self.df_Fnt['FntAno'] == self.anio
+        S = 0
+        for i in range(24):
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
+            conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
+            S += conteo
+            serie.append((i, conteo))
+        return serie
