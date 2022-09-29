@@ -278,4 +278,29 @@ class sqlINE:
                 serie.append((fecha, indice))
         return serie
 
-p = sqlINE(2022, 8)
+    def serie_cobertura_fuentes(self):
+        serie = []
+        if self.mes != 12:
+            for i in range(self.mes, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                mes_ = self.df_Fnt['FntMes'] == i
+                anio_ = self.df_Fnt['FntAno'] == self.anio - 1
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
+                serie.append((fecha, conteo))
+            for i in range(1, self.mes + 1):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                mes_ = self.df_Fnt['FntMes'] == i
+                anio_ = self.df_Fnt['FntAno'] == self.anio
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
+                serie.append((fecha, conteo))
+        else:
+            for i in range(1, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                mes_ = self.df_Fnt['FntMes'] == i
+                anio_ = self.df_Fnt['FntAno'] == self.anio
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
+                serie.append((fecha, conteo))
+        return serie
