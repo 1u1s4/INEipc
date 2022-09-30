@@ -217,13 +217,14 @@ class sqlINE:
                 indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
-            for i in range(len(indices)):
-                mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
-                anio = indices['PerAno'].iat[i]
-                fecha = f'{mes_abr}-{anio}'
-                indice = indices['GbaInd'].iat[i]
-                indices_final.append((fecha, indice))
-            series.append((nombre_gba, indices_final))
+            if len(indices) != 0:
+                for i in range(len(indices)):
+                    mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
+                    anio = indices['PerAno'].iat[i]
+                    fecha = f'{mes_abr}-{anio}'
+                    indice = indices['GbaInd'].iat[i]
+                    indices_final.append((fecha, indice))
+                series.append((nombre_gba, indices_final))
         return series
 
     def serie_historica_ipc_pdr_adq(self, RegCod: int, Qpdr_adq: bool=False):
@@ -316,3 +317,7 @@ class sqlINE:
             S += conteo
             serie.append((i, conteo))
         return serie
+    
+    def serie_cobertura_precios(self):
+        datos = pd.read_excel('precios_imputados.xlsx', sheet_name=1)
+        print(datos.info())
