@@ -82,7 +82,10 @@ class sqlINE:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
         # fuentes
         self.df_Fnt = pd.read_sql(
-            f'''SELECT RegCod, DepCod, MunCod, FntZon, FntCod, FntNom, FntDir, TfnCod, FntSts, FntNart, FntAno, FntMes FROM IPC010 WHERE FntAno>={self.anio - 1}''',
+            f'''SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
+                FROM IPC010 A INNER JOIN IPC103 B
+                ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
+                WHERE PerAno >= {self.anio - 1} AND BolNart != 0''',
             self.__conexion
         )
         columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
@@ -285,31 +288,31 @@ class sqlINE:
             for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
-                mes_ = self.df_Fnt['FntMes'] == i
-                anio_ = self.df_Fnt['FntAno'] == self.anio - 1
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio - 1
                 conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
             for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                mes_ = self.df_Fnt['FntMes'] == i
-                anio_ = self.df_Fnt['FntAno'] == self.anio
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio
                 conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
         else:
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                mes_ = self.df_Fnt['FntMes'] == i
-                anio_ = self.df_Fnt['FntAno'] == self.anio
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio
                 conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
         return serie
 
     def desagregacion_fuentes(self):
         serie = []
-        mes_ = self.df_Fnt['FntMes'] == self.mes
-        anio_ = self.df_Fnt['FntAno'] == self.anio
+        mes_ = self.df_Fnt['PerMes'] == self.mes
+        anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 0
         for i in range(24):
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i
