@@ -1,3 +1,4 @@
+from __future__ import print_function
 import xml.etree.ElementTree as ET
 import requests
 import json
@@ -8,6 +9,7 @@ import funcionesjo as Jo
 import descriptoripc
 from bs4 import BeautifulSoup
 from sqline import sqlINE
+import pandas as pd
 
 class datosIPC:
     def __init__(self, mes: int, anio: int) -> None:
@@ -314,3 +316,64 @@ class datosIPC:
             descripcion = descriptoripc.serie_historica_ipc(dt, True)
             salidas.append((NomGba, datos_i, descripcion))
         return salidas
+    
+    def serie_imputacion_precios(self):
+        serie = []
+        df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
+        if self.mes == 12:
+            for i in range(1, 13):
+                mes_abr = Jo.mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                mes_ = df['Mes'] == i
+                anio_ = df['Año'] == self.anio
+                df_i = df[mes_ & anio_].reset_index()
+                suma = 0
+                for j in range(len(df_i)):
+                    try:
+                        precios_espera = int(df_i.loc[j]['Prec_PE'])
+                    except:
+                        precios_espera = 0
+                    try:
+                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
+                    except:
+                        precios_recuperados = 0
+                    suma += precios_espera - precios_recuperados
+                serie.append((fecha, abs(suma)))
+        else:
+            for i in range(self.mes, 13):
+                mes_abr = Jo.mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                mes_ = df['Mes'] == i
+                anio_ = df['Año'] == self.anio - 1
+                df_i = df[mes_ & anio_].reset_index()
+                suma = 0
+                for j in range(len(df_i)):
+                    try:
+                        precios_espera = int(df_i.loc[j]['Prec_PE'])
+                    except:
+                        precios_espera = 0
+                    try:
+                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
+                    except:
+                        precios_recuperados = 0
+                    suma += precios_espera - precios_recuperados
+                serie.append((fecha, abs(suma)))
+            for i in range(1, self.mes + 1):
+                mes_abr = Jo.mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                mes_ = df['Mes'] == i
+                anio_ = df['Año'] == self.anio
+                df_i = df[mes_ & anio_].reset_index()
+                suma = 0
+                for j in range(len(df_i)):
+                    try:
+                        precios_espera = int(df_i.loc[j]['Prec_PE'])
+                    except:
+                        precios_espera = 0
+                    try:
+                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
+                    except:
+                        precios_recuperados = 0
+                    suma += precios_espera - precios_recuperados
+                serie.append((fecha, abs(suma)))
+        return serie
