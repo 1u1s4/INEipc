@@ -317,7 +317,3 @@ class sqlINE:
             S += conteo
             serie.append((i, conteo))
         return serie
-    
-    def serie_cobertura_precios(self):
-        datos = pd.read_excel('precios_imputados.xlsx', sheet_name=1)
-        print(datos.info())
