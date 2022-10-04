@@ -317,6 +317,11 @@ class datosIPC:
             salidas.append((NomGba, datos_i, descripcion))
         return salidas
     
+    def serie_fuentes(self):
+        datos = self.SQL.serie_cobertura_fuentes()
+        descripcion = descriptoripc.cobertura_fuentes(datos)
+        return(datos, descripcion)
+
     def serie_precios(self, Qcobertura: bool=False):
         serie = []
         df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
@@ -397,4 +402,8 @@ class datosIPC:
                     else:
                         suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
-        return serie
+        if Qcobertura:
+            descripcion = descriptoripc.cobertura_precios(serie)
+        else:
+            descripcion = descriptoripc.imputacion_precios(serie)
+        return(serie, descripcion)
