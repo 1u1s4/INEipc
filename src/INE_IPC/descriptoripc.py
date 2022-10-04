@@ -317,3 +317,51 @@ def poder_adquisitivo(datos) -> str:
                 con un valor de {indice_2:.2f} y el menor se encuentra en el mes
                 de {fecha_3} con un valor de {indice_3:.2f}."""
     return retocar_plantilla(plantilla)
+
+def cobertura_fuentes(datos) -> str:
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    indice_1 = datos[-1][1]
+    datos_temp = sorted([d[::-1] for d in datos])
+    maximo = datos_temp[-1]
+    minimo = datos_temp[0]
+    fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
+    fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+    indice_2 = maximo[0]
+    indice_3 = minimo[0]
+    plantilla = f"""La cantidad de fuentes consultadas en {fecha_1} es de {indice_1}.
+                La mayor cantidad de fuentes consultadas fue en el mes de {fecha_2}
+                con una cantidad de {indice_2} y la menor se encuentra en el mes
+                de {fecha_3} con una cantidad de {indice_3}."""
+    return retocar_plantilla(plantilla)
+
+def cobertura_precios(datos) -> str:
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    indice_1 = datos[-1][1]
+    datos_temp = sorted([d[::-1] for d in datos])
+    maximo = datos_temp[-1]
+    minimo = datos_temp[0]
+    fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
+    fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+    indice_2 = maximo[0]
+    indice_3 = minimo[0]
+    plantilla = f"""La cantidad de precios diligenciados en {fecha_1} es de {indice_1}.
+                La mayor cantidad de precios diligenciados fue en el mes de {fecha_2}
+                con una cantidad de {indice_2} y la menor se encuentra en el mes
+                de {fecha_3} con una cantidad de {indice_3}."""
+    return retocar_plantilla(plantilla)
+
+def imputacion_precios(datos) -> str:
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    indice_1 = datos[-1][1]
+    datos_temp = sorted([d[::-1] for d in datos])
+    maximo = datos_temp[-1]
+    minimo = datos_temp[0]
+    fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
+    fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+    indice_2 = maximo[0]
+    indice_3 = minimo[0]
+    plantilla = f"""La cantidad de precios imputados en {fecha_1} es de {indice_1}.
+                La mayor cantidad de imputaciones fue en el mes de {fecha_2}
+                con una cantidad de {indice_2} y la menor se encuentra en el mes
+                de {fecha_3} con una cantidad de {indice_3}."""
+    return retocar_plantilla(plantilla)
