@@ -317,7 +317,7 @@ class datosIPC:
             salidas.append((NomGba, datos_i, descripcion))
         return salidas
     
-    def serie_imputacion_precios(self):
+    def serie_precios(self, Qcobertura: bool=False):
         serie = []
         df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
         if self.mes == 12:
@@ -337,7 +337,14 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
-                    suma += precios_espera - precios_recuperados
+                    if Qcobertura:
+                        try:
+                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                        except:
+                            precios_prediligenciados = 0
+                        suma += precios_prediligenciados
+                    else:
+                        suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
         else:
             for i in range(self.mes, 13):
@@ -356,7 +363,14 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
-                    suma += precios_espera - precios_recuperados
+                    if Qcobertura:
+                        try:
+                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                        except:
+                            precios_prediligenciados = 0
+                        suma +=precios_prediligenciados
+                    else:
+                        suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
             for i in range(1, self.mes + 1):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -374,6 +388,13 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
-                    suma += precios_espera - precios_recuperados
+                    if Qcobertura:
+                        try:
+                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                        except:
+                            precios_prediligenciados = 0
+                        suma +=precios_prediligenciados
+                    else:
+                        suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
         return serie
