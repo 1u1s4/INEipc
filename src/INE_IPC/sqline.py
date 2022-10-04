@@ -74,10 +74,10 @@ class sqlINE:
         self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
         # indices por gasto basico
         self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2}',
+            f'SELECT RegCod, PerAno, PerMes, PerSem, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2}',
             self.__conexion
         )
-        columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
+        columnas = ('RegCod', 'PerAno', 'PerMes', 'PerSem', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
         # fuentes
@@ -207,17 +207,19 @@ class sqlINE:
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                Qsem = self.df_GbaInd['PerSem'] == 3
+                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] >= self.mes
-                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
                 indices = pd.merge(indices2, indices1, how='outer')
             else:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                Qsem = self.df_GbaInd['PerSem'] == 3
+                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             if len(indices) != 0:
