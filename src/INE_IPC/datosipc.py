@@ -407,3 +407,6 @@ class datosIPC:
         else:
             descripcion = descriptoripc.imputacion_precios(serie)
         return(serie, descripcion)
+
+p = datosIPC(10,2022)
+print(p.cambio_quetzal())
