@@ -408,11 +408,8 @@ class datosIPC:
             descripcion = descriptoripc.imputacion_precios(serie)
         return(serie, descripcion)
 
-    def incidencias_divisiones(self):
-        datos = self.SQL.incidencia_divisiones(0)
+    def incidencias_divisiones(self, RegCod: int):
+        datos = self.SQL.incidencia_divisiones(RegCod)
         descripcion = descriptoripc.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
-
-p = datosIPC(8,2022)
-print(p.incidencias_divisiones())
