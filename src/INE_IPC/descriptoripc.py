@@ -365,3 +365,15 @@ def imputacion_precios(datos) -> str:
                 con una cantidad de {indice_2} y la menor se encuentra en el mes
                 de {fecha_3} con una cantidad de {indice_3}."""
     return retocar_plantilla(plantilla)
+
+def incidencia_divisiones(datos) -> str:
+    datos = sorted(datos, reverse=True)
+    maximo1 = datos[0]
+    maximo2 = datos[1]
+    minimo = datos[-1]
+    plantilla = f"""De las doce divisiones de gasto que integran
+                el IPC, la de {maximo1[1].lower()} ({maximo1[0]:.2f}%) y
+                {maximo2[1].lower()} ({maximo2[0]:.2f}%), registraron la mayor
+                incidencia mensual. Por su parte, {minimo[1].lower()} es la división
+                de gasto con menor incidencia mensual ({minimo[0]:.2f}%)."""
+    return retocar_plantilla(plantilla)

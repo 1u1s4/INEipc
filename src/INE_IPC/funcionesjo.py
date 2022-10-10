@@ -153,9 +153,13 @@ def ultimo_dia_del_mes(fecha:str, formato='%Y-%m-%d') -> str:
 def es_bisiesto(anio):
 	return not anio % 4 and (anio % 100 or not anio % 400)
 
-def invertir_orden(data):
+def invertir_orden(data, Qfecha: bool = True):
     data_salida = []
-    for dato in data:
-        fecha = "-".join(dato[0].split("-")[::-1])
-        data_salida.append((fecha, dato[1]))
+    if Qfecha:
+        for dato in data:
+            fecha = "-".join(dato[0].split("-")[::-1])
+            data_salida.append((fecha, dato[1]))
+    else:
+        for dato in data:
+            data_salida.append(dato[::-1])
     return tuple(data_salida)
