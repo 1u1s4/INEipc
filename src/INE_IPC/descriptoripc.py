@@ -372,8 +372,8 @@ def incidencia_divisiones(datos) -> str:
     maximo2 = datos[1]
     minimo = datos[-1]
     plantilla = f"""De las doce divisiones de gasto que integran
-                el IPC, la de {maximo1[1].lower()} ({maximo1[0]:.2f}%) y
-                {maximo2[1].lower()} ({maximo2[0]:.2f}%), registraron la mayor
+                el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):.2f}%) y
+                {maximo2[1].lower()} ({round(maximo2[0], 2):.2f}%), registraron la mayor
                 incidencia mensual. Por su parte, {minimo[1].lower()} es la división
-                de gasto con menor incidencia mensual ({minimo[0]:.2f}%)."""
+                de gasto con menor incidencia mensual ({round(minimo[0], 2):.2f}%)."""
     return retocar_plantilla(plantilla)
