@@ -82,10 +82,10 @@ class sqlINE:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
         # fuentes
         self.df_Fnt = pd.read_sql(
-            f'''SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
+            f"""SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
                 FROM IPC010 A INNER JOIN IPC103 B
                 ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
-                WHERE PerAno >= {self.anio - 1} AND BolNart != 0''',
+                WHERE PerAno >= {self.anio - 1} AND BolNart != 0 AND TfnCod != '  '""",
             self.__conexion
         )
         columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
