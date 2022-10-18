@@ -413,3 +413,5 @@ class datosIPC:
         descripcion = descriptoripc.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
+
+p = da

@@ -322,3 +322,9 @@ class sqlINE:
             S += conteo
             serie.append((i, conteo))
         return serie
+
+p = sqlINE(2022, 9)
+print(p.calcular_IPC(2022, 8, 0))
+print(p.calcular_IPC(2022, 9, 0))
+print(p.inflacion_mensual(2022,9,0))
+print(sum([a[0] for a in p.incidencia_gasto_basico(0)]))
