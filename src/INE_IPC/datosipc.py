@@ -12,7 +12,7 @@ from sqline import sqlINE
 import pandas as pd
 
 class datosIPC:
-    def __init__(self, mes: int, anio: int) -> None:
+    def __init__(self, anio: int, mes: int) -> None:
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
@@ -414,4 +414,8 @@ class datosIPC:
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
 
-p = da
+
+p = datosIPC(2021, 9)
+print(p.serie_fuentes())
+print()
+print(p.serie_precios(Qcobertura=True))
