@@ -320,8 +320,3 @@ class sqlINE:
         invertir = [(i[1] / S * 100, i[0]) for i in serie]
         serie = [i[::-1] for i in sorted(invertir, reverse=True)]
         return serie
-"""
-p = sqlINE(2022, 9)
-print(sorted(p.serie_cobertura_fuentes()))
-print(p.desagregacion_fuentes())
-"""

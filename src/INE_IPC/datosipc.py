@@ -1,4 +1,3 @@
-from __future__ import print_function
 import xml.etree.ElementTree as ET
 import requests
 import json
@@ -413,9 +412,3 @@ class datosIPC:
         descripcion = descriptoripc.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
-
-
-p = datosIPC(2021, 9)
-print(p.serie_fuentes())
-print()
-print(p.serie_precios(Qcobertura=True))
