@@ -80,6 +80,17 @@ class sqlINE:
         columnas = ('RegCod', 'PerAno', 'PerMes', 'PerSem', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+        # fuentes
+        self.df_Fnt = pd.read_sql(
+            f"""SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
+                FROM IPC010 A INNER JOIN IPC103 B
+                ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
+                WHERE PerAno >= {self.anio - 1} AND BolNart != 0 AND TfnCod != '  '""",
+            self.__conexion
+        )
+        columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
+        for columna in columnas:
+            self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
         # diccionario tipo de fuentes
         abr_fuentes = {
             'Sin Tipo De Fuente Asignado': 'Sin tipo',
@@ -98,11 +109,10 @@ class sqlINE:
             'Colegios, Academias,  Institutos, Universidades Y Otros': 'Centros Educativos',
             'Otros Establecimientos Especializados En Preparacion De Serv': 'Otros',
             'Viviendas (Informantes De Alquiler Y Servicio Domestico)': 'Viviendas',
-            'Otros Establecimientos No Especializados En Otro Codigo': 'Otros Establecimientos',
+            'Otros Establecimientos No Especializados En Otro Codigo': 'Otros 2 (?)',
             'Vivienda Tipo Cuarto De Alquiler': 'Cuarto de Alquiler',
             'Vivienda Tipo Apartamento De Alquiler': 'Apartamento',
-            'Vivienda Tipo Casa De Alquiler': 'Casa de Alquiler',
-            'Mercados Cantonales Y Municipales ( Compra De Alimentos )': 'Mercados'
+            'Vivienda Tipo Casa De Alquiler': 'Casa de Alquiler'
         }
         sql_query = pd.read_sql(
             'SELECT TfnCod, TfnNom FROM IPC008',
@@ -274,61 +284,49 @@ class sqlINE:
                 serie.append((fecha, indice))
         return serie
 
-    def fuentes(self, anio: int, mes: int) -> pd.DataFrame:
-        df_Fnt = pd.read_sql(
-            f"""SELECT a.RegCod, a.PerAno, a.PerMes, b.TfnCod
-                FROM IPC104 a 
-                INNER JOIN (SELECT a.FntCod, a.TfnCod, b.BolNum 
-                FROM IPC010 a 
-                INNER JOIN IPC103 b 
-                ON (a.FntCod = b.FntCod AND a.DepCod = b.DepCod AND a.MunCod =b.MunCod) 
-                WHERE b.PerAno = {anio} AND b.PerMes = {mes}) b 
-                ON a.BolNum = b.BolNum WHERE PerAno = {anio} AND PerMes = {mes} AND TfnCod != '  '""",
-            self.__conexion
-        )
-        return df_Fnt
-
     def serie_cobertura_fuentes(self):
         serie = []
         if self.mes != 12:
             for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
-                mes_ = i
-                anio_ = self.anio - 1
-                df_Fnt = self.fuentes(anio_, mes_)
-                conteo = df_Fnt.shape[0]
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio - 1
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
             for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                mes_ = i
-                anio_ = self.anio
-                df_Fnt = self.fuentes(anio_, mes_)
-                conteo = df_Fnt.shape[0]
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
         else:
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
-                mes_ = i
-                anio_ = self.anio
-                df_Fnt = self.fuentes(anio_, mes_)
-                conteo = df_Fnt.shape[0]
+                mes_ = self.df_Fnt['PerMes'] == i
+                anio_ = self.df_Fnt['PerAno'] == self.anio
+                conteo = self.df_Fnt[anio_ & mes_].shape[0]
                 serie.append((fecha, conteo))
         return serie
 
     def desagregacion_fuentes(self):
         serie = []
-        mes_ = self.mes
-        anio_ = self.anio
+        mes_ = self.df_Fnt['PerMes'] == self.mes
+        anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 0
-        df_Fnt = self.fuentes(anio_, mes_)
         for i in range(24):
-            tipo_fuente_ = df_Fnt['TfnCod'] == str(i).rjust(2, '0')
-            conteo = df_Fnt[tipo_fuente_].shape[0]
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
+            conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
             S += conteo
             serie.append((i, conteo))
         invertir = [(i[1] / S * 100, i[0]) for i in serie]
         serie = [i[::-1] for i in sorted(invertir, reverse=True)]
         return serie
+
+p = sqlINE(2022, 9)
+print(p.calcular_IPC(2022, 8, 0))
+print(p.calcular_IPC(2022, 9, 0))
+print(p.inflacion_mensual(2022,9,0))
+print(sum([a[0] for a in p.incidencia_gasto_basico(0)]))
