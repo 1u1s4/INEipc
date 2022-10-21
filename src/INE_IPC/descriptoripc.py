@@ -1,3 +1,4 @@
+from sqline import sqlINE
 from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 def retocar_plantilla(plantilla: str) -> str:
@@ -376,4 +377,28 @@ def incidencia_divisiones(datos) -> str:
                 {maximo2[1].lower()} ({round(maximo2[0], 2):.2f}%), registraron la mayor
                 incidencia mensual. Por su parte, {minimo[1].lower()} es la división
                 de gasto con menor incidencia mensual ({round(minimo[0], 2):.2f}%)."""
+    return retocar_plantilla(plantilla)
+
+def cobertura_fuentes(datos) -> str:
+    datos = [i[::-1] for i in datos]
+    datos = sorted(datos, reverse=True)
+    datos = [i[::-1] for i in datos]
+    maximo = datos[0]
+    fecha1 = mes_anio_by_abreviacion(maximo[0], MMAA=True)
+    minimo = datos[-1]
+    fecha2 = mes_anio_by_abreviacion(minimo[0], MMAA=True)
+    plantilla = f"""El mes en el que mas fuentes se realizaron cotizaciones fue
+                en {fecha1} con un total de {maximo[1]} y con menos fue en
+                {fecha2} con {minimo[1]}."""
+    return retocar_plantilla(plantilla)
+
+def desagregacion_fuentes(datos, mes_ordinal) -> str:
+    mes = mes_by_ordinal(mes_ordinal, abreviado=False).lower()
+    maximo = datos[0][1]
+    fuente_max = datos[0][0].lower()
+    minimo = datos[-1][1]
+    fuente_min = datos[-1][0].lower()
+    plantilla = f"""En el mes de {mes} el tipo de fuente mas consultado fue
+                {fuente_max} ({maximo:.2f}%), y el tipo menos consultado fue
+                {fuente_min} ({minimo:.2f}%)."""
     return retocar_plantilla(plantilla)
