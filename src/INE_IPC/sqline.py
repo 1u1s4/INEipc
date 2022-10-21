@@ -92,36 +92,29 @@ class sqlINE:
         for columna in columnas:
             self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
         # diccionario tipo de fuentes
-        abr_fuentes = {
-            'Sin Tipo De Fuente Asignado': 'Sin tipo',
-            'Mercados Cantonales Y Municipales, (Incluye Carnicerias, Tor': 'Mercados',
-            'Supermercados, Despensas Y Almacenes En Cadena': 'Supermercados',
-            'Hipermercados': 'Hipermercados',
-            'Depositos Y Abarroterias': 'Depositos',
-            'Tiendas No Especializadas (Incluye Miscelaneas Y Tiendas De': 'Tiendas',
-            'Almacenes O Tiendas Especializadas': 'Almacenes',
-            'Restaurantes  O Expendios De Comidas Preparadas En Cadena': 'Restaurantes',
-            'Empresas Especializadas En Prestacion De Servicios': 'Empresas',
-            'Expendios De Gas Propano': 'Expendios de Gas',
-            'Farmacias, Droguerias Y Perfumerias': 'Farmacias',
-            'Hospitales, Clinicas, Centros Y Puestos De Salud, Laboratori': 'Centros de Salud',
-            'Hoteles, Moteles, Hospedajes, Pensiones Y Alojamientos': 'Hoteles',
-            'Colegios, Academias,  Institutos, Universidades Y Otros': 'Centros Educativos',
-            'Otros Establecimientos Especializados En Preparacion De Serv': 'Otros',
-            'Viviendas (Informantes De Alquiler Y Servicio Domestico)': 'Viviendas',
-            'Otros Establecimientos No Especializados En Otro Codigo': 'Otros 2 (?)',
-            'Vivienda Tipo Cuarto De Alquiler': 'Cuarto de Alquiler',
-            'Vivienda Tipo Apartamento De Alquiler': 'Apartamento',
-            'Vivienda Tipo Casa De Alquiler': 'Casa de Alquiler'
+        self.nombre_fuentes = {
+            0: 'Sin tipo',#SIN TIPO DE FUENTE ASIGNADO
+            1: 'Carnicerias',#CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
+            2: 'Supermercados',#SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
+            3: 'Hipermercados',#HIPERMERCADOS
+            4: 'Depositos',#DEPOSITOS Y ABARROTERIAS
+            5: 'Tiendas no Especializadas',#TIENDAS NO ESPECIALIZADAS (INCLUYE MISCELANEAS Y TIENDAS DE
+            6: 'Almacenes',#ALMACENES O TIENDAS ESPECIALIZADAS
+            7: 'Restaurantes',#RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
+            8: 'Empresas',#EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
+            9: 'Expendios de Gas',#EXPENDIOS DE GAS PROPANO
+            10: 'Farmacias',#FARMACIAS, DROGUERIAS Y PERFUMERIAS
+            11: 'Centros de Salud',#HOSPITALES, CLINICAS, CENTROS Y PUESTOS DE SALUD, LABORATORI
+            12: 'Hoteles',#HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
+            13: 'Centros Educativos',#COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
+            14: 'Otros Establecimientos Especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PREPARACION DE SERV
+            15: 'Servicio Domeestico',#SERVICIO DOMESTICO
+            16: 'Otros Establecimientos No Especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
+            20: 'Cuarto de Alquiler',#VIVIENDA TIPO CUARTO DE ALQUILER
+            21: 'Apartamento de Alquiler',#VIVIENDA TIPO APARTAMENTO DE ALQUILER
+            22: 'Casa de Alquiler',#VIVIENDA TIPO CASA DE ALQUILER
+            23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
         }
-        sql_query = pd.read_sql(
-            'SELECT TfnCod, TfnNom FROM IPC008',
-            self.__conexion
-        ).to_dict()
-        self.nombre_fuente = dict(zip(
-            [int(i) for i in sql_query['TfnCod'].values()],
-            [abr_fuentes[nombre.strip().title()] for nombre in sql_query['TfnNom'].values()]
-        ))
 
     def get_nombre_Gba(self, GbaCod: int) -> str:
         nombre = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
@@ -317,16 +310,13 @@ class sqlINE:
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 0
         for i in range(24):
+            if i in (17,18,19): # no existen estos tipos de fuentes
+                continue
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i
             conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
             S += conteo
-            serie.append((i, conteo))
+            nmbr_Fnt = self.nombre_fuentes.get(i)
+            serie.append((nmbr_Fnt, conteo))
         invertir = [(i[1] / S * 100, i[0]) for i in serie]
         serie = [i[::-1] for i in sorted(invertir, reverse=True)]
         return serie
-
-p = sqlINE(2022, 9)
-print(p.calcular_IPC(2022, 8, 0))
-print(p.calcular_IPC(2022, 9, 0))
-print(p.inflacion_mensual(2022,9,0))
-print(sum([a[0] for a in p.incidencia_gasto_basico(0)]))
