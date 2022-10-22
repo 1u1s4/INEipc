@@ -10,3 +10,4 @@ automatizacion_capitulo_1_IPC_INE.egg-info
 main.py
 Temp
 .vscode
+.DS_Store
