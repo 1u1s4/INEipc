@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 import requests
 import json
 import xlrd
-from datetime import datetime
 from fredapi import Fred
 import funcionesjo as Jo
 import descriptoripc
@@ -44,7 +43,6 @@ class datosIPC:
             fecha = Jo.mes_by_ordinal(fecha[1]) + '-' + fecha[0]
             data.append((fecha, indice))
         return(data, descriptoripc.indice_precio_alimentos(data))
-
 
     def petroleo(self, fecha_final="", fecha_inicial="") -> tuple:
         API_KEY ='734b605521e7734edc09f38e977fe238'
