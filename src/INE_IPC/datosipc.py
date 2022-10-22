@@ -31,7 +31,7 @@ class datosIPC:
         URL = "https://www.fao.org/worldfoodsituation/foodpricesindex/en/"
         HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
         r = requests.get(url=URL, headers=HEADERS)
-        soup = BeautifulSoup(r.content, 'html5lib')
+        soup = BeautifulSoup(r.content, 'html.parser')
         for link in soup.find_all('a', href=True):
             url = link['href']
             if "Food_price_indices_data_" in url and "xls" in url: 
@@ -43,30 +43,17 @@ class datosIPC:
             r = requests.get(DATA_URL, allow_redirects=True)
             f.write(r.content)
             f.close()
-        book = xlrd.open_workbook("FFPI.xls")
-        sh = book.sheet_by_index(0)
-        data = {}
-        anio_de_referencia = sh.cell_value(rowx=1, colx=0)
-        i = 4
-        while True:
-            try:
-                fecha_i = sh.cell_value(rowx=i, colx=0)
-                fecha_i = xlrd.xldate.xldate_as_datetime(fecha_i, 0)
-                fecha_i = datetime.strftime(fecha_i, FORMATO)
-                indice_i = sh.cell_value(rowx=i, colx=1)
-                i += 1
-                data[fecha_i] = indice_i
-            except IndexError:
-                break
-        datos_salida = []
-        fecha_i = FECHA_INICIAL
-        while fecha_i != FECHA_FINAL:
-            try:
-                datos_salida.append((Jo.anio_mes(fecha_i, FORMATO), data[fecha_i]))
-                fecha_i = Jo.month_after(fecha_i, FORMATO)
-            except:
-                None
-        return (Jo.invertir_orden(datos_salida), descriptoripc.indice_precio_alimentos(datos_salida))
+        df = pd.read_excel('FFPI.xls', header=2, usecols='A:B')
+        df['Date'] = df['Date'].astype('str')
+        data = []
+        for i in range(12):
+            dato_i = df.iloc[i-13]
+            fecha = dato_i['Date'].split('-')
+            indice = dato_i['Food Price Index']
+            fecha = Jo.mes_by_ordinal(fecha[1]) + '-' + fecha[0]
+            data.append((fecha, indice))
+        return(data, descriptoripc.indice_precio_alimentos(data))
+
 
     def petroleo(self, fecha_final="", fecha_inicial="") -> tuple:
         API_KEY ='734b605521e7734edc09f38e977fe238'
