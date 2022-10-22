@@ -19,9 +19,9 @@ ejemplo de datos
 ('2015-Oct', 46.22363636363636)
 """
 def indice_precio_alimentos(datos: list[tuple[str]]) -> str:
-    fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
-    fecha_2 = mes_anio_by_abreviacion(datos[0][0])
-    fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
+    fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+    fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+    fecha_3 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
     indice = datos[-1][1]
     variacion_1 = variacion(datos[-1][1], datos[0][1])
     variacion_2 = variacion(datos[-1][1], datos[-2][1])
