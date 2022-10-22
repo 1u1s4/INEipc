@@ -17,16 +17,7 @@ class datosIPC:
         self.anio = anio
         self.SQL = sqlINE(anio, mes)
 
-    def indice_precio_alimentos(self, fecha_final="", fecha_inicial="") -> tuple:
-        FORMATO = "%Y-%m"
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(FORMATO)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
-        else:
-            FECHA_INICIAL = fecha_inicial
+    def indice_precio_alimentos(self) -> tuple:
         # web scraping para encontrar el link actualizado
         URL = "https://www.fao.org/worldfoodsituation/foodpricesindex/en/"
         HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
