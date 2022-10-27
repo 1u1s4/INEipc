@@ -388,3 +388,8 @@ class datosIPC:
         descripcion = descriptoripc.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
+    
+    def desagregacion_fuentes(self, mes_ordinal: int):
+        datos = self.SQL.desagregacion_fuentes()
+        descripcion = descriptoripc.desagregacion_fuentes(datos, mes_ordinal)
+        return(datos, descripcion)
