@@ -431,6 +431,3 @@ class datosIPC:
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones."""
         return descriptoripc.retocar_plantilla(introduccion)
-
-p = datosIPC(2022,9)
-print(p.introduccion())
