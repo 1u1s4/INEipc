@@ -407,8 +407,8 @@ class datosIPC:
 
                         Los niveles de inflación más importantes de septiembre de 2022
                         son los siguientes: se registró una inflación mensual de
-                        {inf_mensual:.2f}%, ritmo inflacionario de {inf_interanual:.2f}%
-                        y una inflación acumulada de {inf_acumulada:.2f}%.\\\\\\\\
+                        {inf_mensual:.2f}\%, ritmo inflacionario de {inf_interanual:.2f}\%
+                        y una inflación acumulada de {inf_acumulada:.2f}\%.\\\\\\\\
 
                         Este informe se compone de seis apartados y tres anexos: el
                         primero incluye el número índice y los resultados de las
