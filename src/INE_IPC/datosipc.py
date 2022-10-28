@@ -393,3 +393,44 @@ class datosIPC:
         datos = self.SQL.desagregacion_fuentes()
         descripcion = descriptoripc.desagregacion_fuentes(datos, mes_ordinal)
         return(datos, descripcion)
+
+    def introduccion(self):
+        inf_mensual = self.SQL.inflacion_mensual(self.anio, self.mes, 0)
+        inf_interanual = self.SQL.inflacion_interanual(self.anio, self.mes, 0)
+        inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
+        introduccion = f"""El presente informe mensual, contiene los principales
+                        resultados del Índice de Precios al Consumidor (IPC) del
+                        Instituto Nacional de Estadística (INE). Como indicador
+                        macroeconómico, este dato se utiliza para medir el comportamiento
+                        del nivel general de precios de la economía del país, tomando
+                        como base los precios observados en el mes de referencia.NTR
+
+                        Los niveles de inflación más importantes de septiembre de 2022
+                        son los siguientes: se registró una inflación mensual de
+                        {inf_mensual:.2f}%, ritmo inflacionario de {inf_interanual:.2f}%
+                        y una inflación acumulada de {inf_acumulada:.2f}%.\\\\\\\\
+
+                        Este informe se compone de seis apartados y tres anexos: el
+                        primero incluye el número índice y los resultados de las
+                        inflaciones mensuales, acumuladas e interanuales a nivel
+                        república, en el segundo se exponen las variaciones mensuales
+                        históricas, por región y por división de gasto, en el tercero
+                        se muestran los ritmos inflacionarios históricos, por región
+                        y por división de gasto, en el cuarto se presentan las
+                        principales alzas y bajas de los productos que conforman el
+                        IPC y su incidencia en la inflación mensual; en el quinto se
+                        describen las principales alzas y bajas de los productos que
+                        conforman el IPC y su incidencia en el ritmo inflacionario;
+                        en el sexto se consigna la evolución del poder adquisitivo del
+                        quetzal; anexo 1: tablas de índices e inflaciones por región
+                        y por división de gasto.\\\\\\\\
+
+                        Finalmente, para mayor comprensión del documento, se incluye
+                        un anexo 2 y 3 que contiene el glosario, con la definición de
+                        los principales conceptos relacionados con el IPC y la metodología
+                        de cálculo de las formulas más utilizadas para la obtención
+                        de los diferentes índices y variaciones."""
+        return descriptoripc.retocar_plantilla(introduccion)
+
+p = datosIPC(2022,9)
+print(p.introduccion())
