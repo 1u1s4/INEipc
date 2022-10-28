@@ -398,6 +398,8 @@ class datosIPC:
         inf_mensual = self.SQL.inflacion_mensual(self.anio, self.mes, 0)
         inf_interanual = self.SQL.inflacion_interanual(self.anio, self.mes, 0)
         inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
+        mes = descriptoripc.mes_by_ordinal(self.mes, abreviado=False).lower()
+        fecha = f"{mes} de {self.anio}"
         introduccion = f"""El presente informe mensual, contiene los principales
                         resultados del Índice de Precios al Consumidor (IPC) del
                         Instituto Nacional de Estadística (INE). Como indicador
@@ -405,7 +407,7 @@ class datosIPC:
                         del nivel general de precios de la economía del país, tomando
                         como base los precios observados en el mes de referencia.NTR
 
-                        Los niveles de inflación más importantes de septiembre de 2022
+                        Los niveles de inflación más importantes de {fecha}
                         son los siguientes: se registró una inflación mensual de
                         {inf_mensual:.2f}\%, ritmo inflacionario de {inf_interanual:.2f}\%
                         y una inflación acumulada de {inf_acumulada:.2f}\%.\\\\\\\\
