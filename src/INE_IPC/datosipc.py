@@ -234,37 +234,32 @@ class datosIPC:
                 pass
         return(Jo.invertir_orden(datos_variacion_interanual), descriptoripc.ipc_mex(datos_variacion_interanual))
 
-    def inflacion(self, fecha_final="", fecha_inicial="") -> tuple:
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(self._FORMATO)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=self._FORMATO)
-        else:
-            FECHA_INICIAL = fecha_inicial
-        # descarga de datos
-        # GT (6,13) -> (6,14)
-        book = xlrd.open_workbook("IPC C.A. REP. DOMINICANA Y MÉXICO.xlsx")
-        sh = book.sheet_by_index(0)
-        data = {}
-        k = 0
-        for i in range(6, 6 + 4*8, 4):
-            pais = sh.cell_value(rowx=10, colx=2 + k*4)
-            k += 1
-            data_pais = {}
-            for j in range(12):
-                inflacion_ij = sh.cell_value(rowx=12 + j, colx= i - 1)
-                data_pais[Jo.mes_by_ordinal(str(j + 1).rjust(2, "0"))] = inflacion_ij
-            data[pais] = data_pais
-        
-        MES = Jo.mes_by_ordinal(FECHA_FINAL.split("-")[1])
-        MES_ANTERIOR = Jo.mes_by_ordinal(FECHA_FINAL.split("-")[1], mes_anterior=True)
-        ANIO = FECHA_FINAL.split("-")[0][2:4]
-        data_salida = [("Pais", "-".join((MES, ANIO)), "-".join((MES_ANTERIOR, ANIO)))]
-        for pais in data.keys():
-            data_salida.append((pais.capitalize(), data[pais][MES], data[pais][MES_ANTERIOR]))
-        return(data_salida, descriptoripc.inflacion(data, FECHA_FINAL))
+    def inflacion_CA_RD_MEX(self):
+        paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panama", "Mexico")
+        mes = Jo.mes_by_ordinal(self.mes)
+        data = [("Pais", f"{mes}-{self.anio}", f"{mes}-{self.anio}")]
+        mes_actual = Jo.mes_by_ordinal(self.mes, abreviado=False)
+        mes_anterior = Jo.mes_by_ordinal(self.mes - 1, abreviado=False)
+        for pais in paises:
+            df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
+            # inflacion interanual del mes actual
+            mes_ = df["mes"] == mes_actual
+            anio_ = df["anio"] == self.anio
+            indice_actual = df[mes_ & anio_]["indice"].iloc[0]
+            mes_ = df["mes"] == mes_actual
+            anio_ = df["anio"] == (self.anio - 1)
+            indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
+            inflacion_actual = (indice_actual/indice_anterior - 1) * 100 
+            # inflacion interanual del mes anterior
+            mes_ = df["mes"] == mes_anterior
+            anio_ = df["anio"] == self.anio
+            indice_actual = df[mes_ & anio_]["indice"].iloc[0]
+            mes_ = df["mes"] == mes_anterior
+            anio_ = df["anio"] == (self.anio - 1)
+            indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
+            inflacion_anterior = (indice_actual/indice_anterior - 1) * 100 
+            data.append((pais, inflacion_actual, inflacion_anterior))
+        return data
 
 # para el capitulo 3
     def serie_IPC(self, RegCod: int, QGba: bool = False):
@@ -433,3 +428,6 @@ class datosIPC:
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones."""
         return descriptoripc.retocar_plantilla(introduccion)
+
+p = datosIPC(2022, 5)
+p.inflacion_CA_RD_MEX()
