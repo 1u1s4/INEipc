@@ -259,7 +259,7 @@ class datosIPC:
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_anterior = (indice_actual/indice_anterior - 1) * 100 
             data.append((pais, inflacion_actual, inflacion_anterior))
-        return data
+        return (data, descriptoripc.inflacion(data, mes_actual.lower(), self.anio))
 
 # para el capitulo 3
     def serie_IPC(self, RegCod: int, QGba: bool = False):
@@ -428,6 +428,3 @@ class datosIPC:
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones."""
         return descriptoripc.retocar_plantilla(introduccion)
-
-p = datosIPC(2022, 5)
-p.inflacion_CA_RD_MEX()

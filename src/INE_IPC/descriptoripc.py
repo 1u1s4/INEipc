@@ -182,20 +182,15 @@ def ipc_mex(datos: list[tuple[str]]) -> str:
                 porcentuales en el último año."""
     return retocar_plantilla(plantilla)
 
-def inflacion(datos: dict[dict[str]], fecha: str) -> str:
-    MES = mes_by_ordinal(fecha.split("-")[1])
-    ANIO = fecha.split("-")[0]
-    inflacion_mes = []
-    for pais in datos.keys():
-        inflacion_mes.append((datos[pais][MES], pais))
+def inflacion(datos, mes, anio) -> str:
+    inflacion_mes = [(i[1], i[0]) for i in datos[1::]]
     inflacion_mes.sort()
     INFLACION_MIN = inflacion_mes[0]
     INFLACION_MAX = inflacion_mes[-1]
-    MES = mes_by_ordinal(fecha.split("-")[1], abreviado=False)
-    plantilla = f"""Para el mes de {MES} {ANIO}, en Centro América, República
-                Dominicana y México, {INFLACION_MAX[1].capitalize()} presentó
+    plantilla = f"""Para el mes de {mes} {anio}, en Centro América, República
+                Dominicana y México, {INFLACION_MAX[1]} presentó
                 la mayor tasa de inflación interanual de {INFLACION_MAX[0]:.2f}%,
-                mientras que {INFLACION_MIN[1].capitalize()} registró la tasa más
+                mientras que {INFLACION_MIN[1]} registró la tasa más
                 baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
     return retocar_plantilla(plantilla)
 
