@@ -44,18 +44,12 @@ class datosIPC:
             data.append((fecha, indice))
         return(data, descriptoripc.indice_precio_alimentos(data))
 
-    def petroleo(self, fecha_final="", fecha_inicial="") -> tuple:
+    def petroleo(self) -> tuple:
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(self._FORMATO)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL)
-        else:
-            FECHA_INICIAL = fecha_inicial
+        FECHA_INICIAL = f"{self.anio - 1}-{self.mes}-01"
+        FECHA_FINAL = f"{self.anio}-{self.mes}-01"
         # carga de datos
         data = fred.get_series(
             series_id=SERIES_ID,
