@@ -44,37 +44,46 @@ class datosIPC:
             data.append((fecha, indice))
         return(data, descriptoripc.indice_precio_alimentos(data))
 
-    def petroleo(self) -> tuple:
+    def __petroleo_series_mean(self, anio, mes):
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
-        FECHA_INICIAL = f"{self.anio - 1}-{self.mes}-01"
-        FECHA_FINAL = f"{self.anio}-{self.mes}-01"
+        FECHA_INICIAL = f"{anio}-{mes}-01"
+        if mes in (1, 3, 5, 7, 8, 10, 12):
+            ultimo_dia = 31
+        elif mes == 2:
+            ultimo_dia = 28
+        else:
+            ultimo_dia = 30
+        FECHA_FINAL = f"{anio}-{mes}-{ultimo_dia}"
         # carga de datos
         data = fred.get_series(
             series_id=SERIES_ID,
             observation_start=FECHA_INICIAL,
-            bservation_end=FECHA_FINAL
+            observation_end=FECHA_FINAL
         )
+        data = data.dropna()
+        return data.mean()
+
+    def petroleo(self) -> tuple:
         # extraccion de los datos en el rango de fechas
-        fecha_i = FECHA_INICIAL
-        mes_actual = "-".join((fecha_i.split("-")[0], Jo.mes_by_ordinal(fecha_i.split("-")[1])))
-        datos_mes = []
-        data_mean = []
-        while fecha_i != FECHA_FINAL:
-            fecha_i = Jo.day_after(fecha_i)
-            mes_actual_i = Jo.anio_mes(fecha_i)
-            if mes_actual_i != mes_actual or fecha_i == FECHA_FINAL:
-                mean = sum(datos_mes) / len(datos_mes)
-                data_mean.append((mes_actual, mean))
-                datos_mes = []
-                mes_actual = mes_actual_i
-            try:
-                precio = data.dropna().loc[fecha_i]
-                datos_mes.append(precio)
-            except:
-                None
-        return (Jo.invertir_orden(data_mean), descriptoripc.petroleo(data_mean))
+        data = []
+        if self.mes == 12:
+            for mes in range(1, 13):
+                fecha = f'{self.anio}-{Jo.mes_by_ordinal(mes)}'
+                media = self.__petroleo_series_mean(self.anio, mes)
+                data.append((fecha, media))
+        else:
+            for mes in range(self.mes, 13):
+                fecha = f'{self.anio - 1}-{Jo.mes_by_ordinal(mes)}'
+                media = self.__petroleo_series_mean(self.anio - 1, mes)
+                data.append((fecha, media))
+            for mes in range(1, self.mes + 1):
+                fecha = f'{self.anio}-{Jo.mes_by_ordinal(mes)}'
+                media = self.__petroleo_series_mean(self.anio, mes)
+                data.append((fecha, media))
+            
+        return (data, descriptoripc.petroleo(data))
 
     def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%d/%m/%Y"
