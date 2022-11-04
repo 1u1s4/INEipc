@@ -404,3 +404,13 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def cobertura_precios(self, datos):
+        datos = sorted(datos, key=lambda x: x[1], reverse=True)
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
+        maximo = datos[0]
+        minimo = datos[-1]
+        region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
+        plantilla = f"""En el mes de {mes} {self.anio} la region {region[maximo[0]]}
+                    fue donde mas precios fueron diligenciados con un total de
+                    {maximo[1]} y la region {region[minimo[0]]} fue donde menos precios
+                    fueron diligenciados con un total de {minimo[1]}."""
+        return self.retocar_plantilla(plantilla)

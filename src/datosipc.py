@@ -313,7 +313,8 @@ class datosIPC:
                     precios_prediligenciados = 0
                 suma += precios_prediligenciados
             cobertura.append((i, suma))
-        return cobertura
+        descripcion = self.Descriptor.cobertura_precios(cobertura)
+        return(cobertura, descripcion)
 
     def serie_precios(self, Qcobertura: bool=False):
         serie = []
@@ -452,5 +453,6 @@ class datosIPC:
                         de los diferentes índices y variaciones."""
         return self.Descriptor.retocar_plantilla(introduccion)
 
-p = datosIPC(2022, 10)
-p.cobertura_precios()
+    def cobertura_fuentes(self):
+        datos = self.SQL.cobertura_fuentes()
+        print(datos)
