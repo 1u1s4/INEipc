@@ -4,7 +4,7 @@ import json
 import xlrd
 from fredapi import Fred
 import funcionesjo as Jo
-import descriptoripc
+from descriptoripc import Descriptor
 from bs4 import BeautifulSoup
 from sqline import sqlINE
 import pandas as pd
@@ -15,6 +15,7 @@ class datosIPC:
         self.mes = mes
         self.anio = anio
         self.SQL = sqlINE(anio, mes)
+        self.Descriptor = Descriptor(anio, mes) 
 
     def indice_precio_alimentos(self) -> tuple:
         # web scraping para encontrar el link actualizado
@@ -42,7 +43,7 @@ class datosIPC:
             indice = dato_i['Food Price Index']
             fecha = Jo.mes_by_ordinal(fecha[1]) + '-' + fecha[0]
             data.append((fecha, indice))
-        return(data, descriptoripc.indice_precio_alimentos(data))
+        return(data, self.Descriptor.indice_precio_alimentos(data))
 
     def __petroleo_series_mean(self, anio, mes):
         API_KEY ='734b605521e7734edc09f38e977fe238'
@@ -83,7 +84,7 @@ class datosIPC:
                 media = self.__petroleo_series_mean(self.anio, mes)
                 data.append((fecha, media))
             
-        return (data, descriptoripc.petroleo(data))
+        return (data, self.Descriptor.petroleo(data))
 
     def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%d/%m/%Y"
@@ -138,7 +139,7 @@ class datosIPC:
                 datos_mes.append(precio)
             except:
                 None
-        return (Jo.invertir_orden(data_mean), descriptoripc.cambio_del_quetzal(data_mean))
+        return (Jo.invertir_orden(data_mean), self.Descriptor.cambio_del_quetzal(data_mean))
 
     def tasa_interes(self, fecha_final="", fecha_inicial="") -> tuple:
         FORMATO = "%Y-%m"
@@ -173,7 +174,7 @@ class datosIPC:
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
                 data.append((marca_temp, 100*interes))
-        return (Jo.invertir_orden(data), descriptoripc.tasa_de_interes(data))
+        return (Jo.invertir_orden(data), self.Descriptor.tasa_de_interes(data))
 
     def ipc_usa(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
@@ -200,7 +201,7 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i)
             except:
                 pass
-        return (Jo.invertir_orden(datos_variacion_interanual), descriptoripc.ipc_usa(datos_variacion_interanual))
+        return (Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_usa(datos_variacion_interanual))
 
     def ipc_mex(self, fecha_final="", fecha_inicial="") -> tuple:
         if len(fecha_final) == 0:
@@ -235,7 +236,7 @@ class datosIPC:
                 fecha_i = Jo.month_after(fecha_i)
             except:
                 pass
-        return(Jo.invertir_orden(datos_variacion_interanual), descriptoripc.ipc_mex(datos_variacion_interanual))
+        return(Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_mex(datos_variacion_interanual))
 
     def inflacion_CA_RD_MEX(self):
         paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panama", "Mexico")
@@ -262,22 +263,22 @@ class datosIPC:
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_anterior = (indice_actual/indice_anterior - 1) * 100 
             data.append((pais, inflacion_actual, inflacion_anterior))
-        return (data, descriptoripc.inflacion(data, mes_actual.lower(), self.anio))
+        return (data, self.Descriptor.inflacion(data, mes_actual.lower(), self.anio))
 
 # para el capitulo 3
     def serie_IPC(self, RegCod: int, QGba: bool = False):
         datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod)
-        descripcion = descriptoripc.serie_historica_ipc(datos, QGba)
+        descripcion = self.Descriptor.serie_historica_ipc(datos, QGba)
         return(datos, descripcion)
     
     def serie_inflacion(self, RegCod: int, tipo: str, nivel: str='nacional'):
         datos = self.SQL.serie_historica_inflacion(RegCod, tipo)
-        descripcion = descriptoripc.serie_historica_inflacion(datos, tipo, nivel)
+        descripcion = self.Descriptor.serie_historica_inflacion(datos, tipo, nivel)
         return(datos, descripcion)
 
     def serie_poder_adquisitivo(self, RegCod: int):
         datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod, True)
-        descripcion = descriptoripc.poder_adquisitivo(datos)
+        descripcion = self.Descriptor.poder_adquisitivo(datos)
         return(datos, descripcion)
 
     def series_Gba(self, RegCod: int):
@@ -286,14 +287,33 @@ class datosIPC:
         for dt in datos:
             NomGba = dt[0] 
             datos_i = dt[1]
-            descripcion = descriptoripc.serie_historica_ipc(dt, True)
+            descripcion = self.Descriptor.serie_historica_ipc(dt, True)
             salidas.append((NomGba, datos_i, descripcion))
         return salidas
     
     def serie_fuentes(self):
         datos = self.SQL.serie_cobertura_fuentes()
-        descripcion = descriptoripc.cobertura_fuentes(datos)
+        descripcion = self.Descriptor.cobertura_fuentes(datos)
         return(datos, descripcion)
+
+    def cobertura_precios(self):
+        cobertura = []
+        df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
+        anio_ = df['Año'] == self.anio
+        mes_ = df['Mes'] == self.mes
+        df = df[anio_ & mes_]
+        for i in range(1, 9):
+            region_ = df['Región'] == i
+            df_i = df[region_].reset_index()
+            suma = 0
+            for j in range(len(df_i)):
+                try:
+                    precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                except:
+                    precios_prediligenciados = 0
+                suma += precios_prediligenciados
+            cobertura.append((i, suma))
+        return cobertura
 
     def serie_precios(self, Qcobertura: bool=False):
         serie = []
@@ -376,27 +396,27 @@ class datosIPC:
                         suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
         if Qcobertura:
-            descripcion = descriptoripc.cobertura_precios(serie)
+            descripcion = self.Descriptor.cobertura_precios(serie)
         else:
-            descripcion = descriptoripc.imputacion_precios(serie)
+            descripcion = self.Descriptor.imputacion_precios(serie)
         return(serie, descripcion)
 
     def incidencias_divisiones(self, RegCod: int):
         datos = self.SQL.incidencia_divisiones(RegCod)
-        descripcion = descriptoripc.incidencia_divisiones(datos)
+        descripcion = self.Descriptor.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
     
     def desagregacion_fuentes(self, mes_ordinal: int):
         datos = self.SQL.desagregacion_fuentes()
-        descripcion = descriptoripc.desagregacion_fuentes(datos, mes_ordinal)
+        descripcion = self.Descriptor.desagregacion_fuentes(datos, mes_ordinal)
         return(datos, descripcion)
 
     def introduccion(self):
         inf_mensual = self.SQL.inflacion_mensual(self.anio, self.mes, 0)
         inf_interanual = self.SQL.inflacion_interanual(self.anio, self.mes, 0)
         inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
-        mes = descriptoripc.mes_by_ordinal(self.mes, abreviado=False).lower()
+        mes = self.Descriptor.mes_by_ordinal(self.mes, abreviado=False).lower()
         fecha = f"{mes} de {self.anio}"
         introduccion = f"""El presente informe mensual, contiene los principales
                         resultados del Índice de Precios al Consumidor (IPC) del
@@ -430,4 +450,7 @@ class datosIPC:
                         los principales conceptos relacionados con el IPC y la metodología
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones."""
-        return descriptoripc.retocar_plantilla(introduccion)
+        return self.Descriptor.retocar_plantilla(introduccion)
+
+p = datosIPC(2022, 10)
+p.cobertura_precios()
