@@ -320,3 +320,17 @@ class sqlINE:
         invertir = [(i[1] / S * 100, i[0]) for i in serie]
         serie = [i[::-1] for i in sorted(invertir, reverse=True)]
         return serie
+    
+    def cobertura_fuentes(self):
+        cobertura = []
+        mes_ = self.df_Fnt['PerMes'] == self.mes
+        anio_ = self.df_Fnt['PerAno'] == self.anio
+        for i in range(1, 9):
+            RegCod_ = self.df_Fnt['RegCod'] == i
+            conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
+            cobertura.append((i, conteo))
+        return cobertura
+
+    
+
+p = sqlINE(2022, 9)
