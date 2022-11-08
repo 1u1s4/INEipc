@@ -14,7 +14,7 @@ class sqlINE:
         DATABASE = 'master'
         SERVER = 'INEVSQL01\A'
         USERNAME = 'lmdelgado'
-        PASSWORD = 'Del*/2022'
+        PASSWORD = 'Del/*2022'
         self.__conexion = pyodbc.connect(
             'DRIVER={ODBC Driver 17 for SQL Server}'
             + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
@@ -35,60 +35,160 @@ class sqlINE:
         'Bienes Y Servicios Diversos':'Bienes diversos'
         }
         sql_query = pd.read_sql(
-            'SELECT DivCod, DivNom FROM IPCM01',
+            'SELECT DivCod, DivNom FROM IPC2010_01_RN.dbo.IPCM01',
             self.__conexion
         ).to_dict()
         self.NOMBRE_DIV = dict(zip(
             [int(i) for i in sql_query['DivCod'].values()],
             [abr_diviciones[nombre.strip().title()] for nombre in sql_query['DivNom'].values()]
         ))
-        print(self.NOMBRE_DIV)
+        # ponderaciones de las regiones
+        for i in range(1, 9):
+            df_RegPon = pd.read_sql(
+                f'SELECT RegCod, RegNom, RegPon FROM IPC2010_0{i}_RN.dbo.IPC001',
+                self.__conexion
+            )
+            if i == 1:
+                self.df_RegPon = df_RegPon
+            else:
+                self.df_RegPon = pd.merge(self.df_RegPon, df_RegPon, how='outer')
         # ponderaciones de las divisiones
-        self.df_DivPon = pd.read_sql(
-            f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
-            self.__conexion
-        )
+        for i in range(1, 9):
+            df_DivPon = pd.read_sql(
+                f'SELECT RegCod, DivCod, DivPon FROM IPC2010_0{i}_RN.dbo.IPCP01',
+                self.__conexion
+            )
+            if i == 1:
+                self.df_DivPon = df_DivPon
+            else:
+                self.df_DivPon = pd.merge(self.df_DivPon, df_DivPon, how='outer')
         self.df_DivPon['RegCod'] = self.df_DivPon['RegCod'].astype('int64')
         self.df_DivPon['DivCod'] = self.df_DivPon['DivCod'].astype('int64')
+        # calcular las ponderaciones de las divisiones para la region 0
+        df_DivPonReg0 = {'RegCod':12*[0], 'DivCod':[], 'DivPon':[]}
+        REGPON = self.df_RegPon['RegPon'].to_numpy()
+        for div in range(1, 13):
+            DivCod_ = self.df_DivPon['DivCod'] == div
+            ponderaciones = []
+            for reg in range(1, 9):
+                RegCod_ = self.df_DivPon['RegCod'] == reg
+                ponderaciones.append(self.df_DivPon[DivCod_ & RegCod_]['DivPon'].iloc[0])
+            ponderaciones = np.array(ponderaciones)
+            df_DivPonReg0['DivCod'].append(div)
+            df_DivPonReg0['DivPon'].append(np.dot(ponderaciones, REGPON)/100)
+        df_DivPonReg0 = pd.DataFrame(df_DivPonReg0)
+        self.df_DivPon = pd.merge(self.df_DivPon, df_DivPonReg0, how='outer').sort_values(by=['RegCod', 'DivCod']).reset_index(drop=True)
         # ponderaciones de los gastos basicos
-        self.df_GbaPon = pd.read_sql(
-            f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPCP05',
-            self.__conexion
-        )
+        for i in range(1, 9):
+            df_GbaPon = pd.read_sql(
+                f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPC2010_0{i}_RN.dbo.IPCP05',
+                self.__conexion
+            )
+            if i == 1:
+                self.df_GbaPon = df_GbaPon
+            else:
+                self.df_GbaPon = pd.merge(self.df_GbaPon, df_GbaPon, how='outer')
         self.df_GbaPon['RegCod'] = self.df_GbaPon['RegCod'].astype('int64')
         self.df_GbaPon['DivCod'] = self.df_GbaPon['DivCod'].astype('int64')
         self.df_GbaPon['GbaCod'] = self.df_GbaPon['GbaCod'].astype('int64')
+        # calcular las ponderaciones de los gastos basicos para la region 0
+        codigos_gba = set(self.df_GbaPon['GbaCod'].to_list())
+        n = len(codigos_gba)
+        df_GbaPonReg0 = {'RegCod':n*[0], 'DivCod':[], 'GbaCod':[], 'GbaPon':[]}
+        for gba in codigos_gba:
+            GbaCod_ = self.df_GbaPon['GbaCod'] == gba
+            div = self.df_GbaPon[GbaCod_]['DivCod'].iloc[0]
+            ponderaciones = []
+            for reg in range(1, 9):
+                RegCod_ = self.df_GbaPon['RegCod'] == reg
+                ponderaciones.append(self.df_GbaPon[GbaCod_ & RegCod_]['GbaPon'].iloc[0])
+            ponderaciones = np.array(ponderaciones)
+            df_GbaPonReg0['DivCod'].append(div)
+            df_GbaPonReg0['GbaCod'].append(gba)
+            df_GbaPonReg0['GbaPon'].append(np.dot(ponderaciones, REGPON)/100)
+        df_GbaPonReg0 = pd.DataFrame(df_GbaPonReg0)
+        self.df_GbaPon = pd.merge(self.df_GbaPon, df_GbaPonReg0, how='outer').reset_index(drop=True)
         # informacion gastos basicos
         self.df_GbaInfo = pd.read_sql(
-            'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPCM05',
+            'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPC2010_01_RN.dbo.IPCM05',
             self.__conexion
         )
         columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInfo[columna] = self.df_GbaInfo[columna].astype('int64')
         # indices por divicion
-        self.df_DivInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 2} AND PerSem=3',
-            self.__conexion
-        )
+        for i in range(1, 9):
+            df_DivInd = pd.read_sql(
+                f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPC2010_0{i}_RN.dbo.IPCPH1 WHERE PerAno>={self.anio - 2} AND PerSem=3',
+                self.__conexion
+            )
+            if i == 1:
+                self.df_DivInd = df_DivInd
+            else:
+                self.df_DivInd = pd.merge(self.df_DivInd, df_DivInd, how='outer')
         self.df_DivInd['RegCod'] = self.df_DivInd['RegCod'].astype('int64')
         self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
+        df_DivIndReg0 = {'RegCod':[], 'PerAno':[], 'PerMes':[], 'DivCod':[], 'DivInd':[]}
+        for anio in range(self.anio - 2, self.anio + 1):
+            anio_ = self.df_DivInd["PerAno"] == anio
+            for mes in range(1, 12):
+                mes_ = self.df_DivInd["PerMes"] == mes
+                for division in range(1, 12):
+                    div_ = self.df_DivInd["DivCod"] == division
+                    indices = self.df_DivInd[anio_ & mes_ & div_]['DivInd']
+                    if len(indices) != 0:                    
+                        df_DivIndReg0['RegCod'].append(0)
+                        df_DivIndReg0['PerAno'].append(anio)
+                        df_DivIndReg0['PerMes'].append(mes)
+                        df_DivIndReg0['DivCod'].append(division)
+                        df_DivIndReg0['DivInd'].append(np.dot(REGPON, indices)/100)
+        df_DivIndReg0 = pd.DataFrame(df_DivIndReg0)
+        self.df_DivInd = pd.merge(self.df_DivInd, df_DivIndReg0, how='outer').reset_index(drop=True)
         # indices por gasto basico
-        self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, PerSem, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2}',
-            self.__conexion
-        )
-        columnas = ('RegCod', 'PerAno', 'PerMes', 'PerSem', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
+        for i in range(1, 9):
+            df_GbaInd = pd.read_sql(
+                f'SELECT RegCod, PerAno, PerMes, DivCod, GbaCod, GbaInd FROM IPC2010_0{i}_RN.dbo.IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
+                self.__conexion
+            )
+            if i == 1:
+                self.df_GbaInd = df_GbaInd
+            else:
+                self.df_GbaInd = pd.merge(self.df_GbaInd, df_GbaInd, how='outer')
+        columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'GbaCod')
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+        df_GbaIndReg0 = {'RegCod':[], 'PerAno':[], 'PerMes':[], 'DivCod':[], 'GbaCod':[], 'GbaInd':[]}
+        for anio in range(self.anio - 2, self.anio + 1):
+            anio_ = self.df_GbaInd["PerAno"] == anio
+            for mes in range(1, 12):
+                mes_ = self.df_GbaInd["PerMes"] == mes
+                for gba in codigos_gba:
+                    gba_ = self.df_GbaInd["GbaCod"] == gba
+                    indices = self.df_GbaInd[anio_ & mes_ & gba_]['GbaInd']
+                    print(self.df_GbaInd[anio_ & mes_ & gba_], gba)
+                    if len(indices) != 0:                    
+                        df_GbaIndReg0['RegCod'].append(0)
+                        df_GbaIndReg0['DivCod'].append(0)
+                        df_GbaIndReg0['PerAno'].append(anio)
+                        df_GbaIndReg0['PerMes'].append(mes)
+                        df_GbaIndReg0['GbaCod'].append(gba)
+                        df_GbaIndReg0['GbaInd'].append(np.dot(REGPON, indices)/100)
+        df_GbaIndReg0 = pd.DataFrame(df_GbaIndReg0)
+        self.df_GbaInd = pd.merge(self.df_GbaInd, df_GbaIndReg0, how='outer').reset_index(drop=True)
+        print(self.df_GbaInd)
         # fuentes
-        self.df_Fnt = pd.read_sql(
-            f"""SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
-                FROM IPC010 A INNER JOIN IPC103 B
-                ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
-                WHERE PerAno >= {self.anio - 1} AND BolNart != 0 AND TfnCod != '  '""",
-            self.__conexion
-        )
+        for i in range(1, 9):
+            df_Fnt = pd.read_sql(
+                f"""SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
+                    FROM IPC2010_0{i}_RN.dbo.IPC010 A INNER JOIN IPC2010_0{i}_RN.dbo.IPC103 B
+                    ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
+                    WHERE PerAno >= {self.anio - 1} AND BolNart != 0 AND TfnCod != '  '""",
+                self.__conexion
+            )
+            if i == 1:
+                self.df_Fnt = df_Fnt
+            else:
+                self.df_Fnt = pd.merge(self.df_Fnt, df_Fnt, how='outer')
         columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
         for columna in columnas:
             self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
@@ -201,19 +301,17 @@ class sqlINE:
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                Qsem = self.df_GbaInd['PerSem'] == 3
-                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] >= self.mes
-                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 indices = pd.merge(indices2, indices1, how='outer')
             else:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                Qsem = self.df_GbaInd['PerSem'] == 3
-                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             if len(indices) != 0:
@@ -331,3 +429,5 @@ class sqlINE:
             conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
             cobertura.append((i, conteo))
         return cobertura
+
+p = sqlINE(2022,10)
