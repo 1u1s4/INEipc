@@ -37,7 +37,7 @@ class datosIPC:
         df = pd.read_excel('FFPI.xls', header=2, usecols='A:B')
         df['Date'] = df['Date'].astype('str')
         data = []
-        for i in range(12):
+        for i in range(13):
             dato_i = df.iloc[i-13]
             fecha = dato_i['Date'].split('-')
             indice = dato_i['Food Price Index']
@@ -242,8 +242,8 @@ class datosIPC:
         paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panama", "Mexico")
         mes = Jo.mes_by_ordinal(self.mes)
         data = [("Pais", f"{mes}-{self.anio}", f"{mes}-{self.anio}")]
-        mes_actual = Jo.mes_by_ordinal(self.mes, abreviado=False)
-        mes_anterior = Jo.mes_by_ordinal(self.mes - 1, abreviado=False)
+        mes_actual = Jo.mes_by_ordinal(self.mes - 1, abreviado=False)
+        mes_anterior = Jo.mes_by_ordinal(self.mes - 2, abreviado=False)
         for pais in paises:
             df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
             # inflacion interanual del mes actual
