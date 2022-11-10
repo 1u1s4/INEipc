@@ -201,10 +201,10 @@ class Descriptor:
 
     def serie_historica_ipc(self, datos, QGba: bool=False) -> str:
         if QGba:
-            gba = f' del gasto basico {datos[0].lower()} '
+            gba = f'gasto basico {datos[0].lower()}'
             datos = datos[1]
         else:
-            gba = ' '
+            gba = 'Índice de Precios al Consumidor'
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         if datos[-1][0].split('-')[0] == datos[0][0].split('-')[0]:
@@ -226,8 +226,7 @@ class Descriptor:
             cambio = "menor"
         else:
             cambio = "igual"
-
-        plantilla = f"""El Índice de Precios al Consumidor{gba}a {fecha_1} se ubicó en
+        plantilla = f"""El {gba} a {fecha_1} se ubicó en
                     {indice_1:.2f}, {cambio} a lo observado en {plantilla_aux}
                     ({indice_2:.2f})."""
         return self.retocar_plantilla(plantilla)
