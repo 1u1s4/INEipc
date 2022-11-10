@@ -397,7 +397,7 @@ class datosIPC:
                         suma += precios_espera - precios_recuperados
                 serie.append((fecha, abs(suma)))
         if Qcobertura:
-            descripcion = self.Descriptor.cobertura_precios(serie)
+            descripcion = self.Descriptor.serie_precios(serie)
         else:
             descripcion = self.Descriptor.imputacion_precios(serie)
         return(serie, descripcion)
@@ -408,16 +408,16 @@ class datosIPC:
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
     
-    def desagregacion_fuentes(self, mes_ordinal: int):
+    def desagregacion_fuentes(self):
         datos = self.SQL.desagregacion_fuentes()
-        descripcion = self.Descriptor.desagregacion_fuentes(datos, mes_ordinal)
+        descripcion = self.Descriptor.desagregacion_fuentes(datos, self.mes)
         return(datos, descripcion)
 
     def introduccion(self):
         inf_mensual = self.SQL.inflacion_mensual(self.anio, self.mes, 0)
         inf_interanual = self.SQL.inflacion_interanual(self.anio, self.mes, 0)
         inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
-        mes = self.Descriptor.mes_by_ordinal(self.mes, abreviado=False).lower()
+        mes = Jo.mes_by_ordinal(self.mes, abreviado=False).lower()
         fecha = f"{mes} de {self.anio}"
         introduccion = f"""El presente informe mensual, contiene los principales
                         resultados del Índice de Precios al Consumidor (IPC) del

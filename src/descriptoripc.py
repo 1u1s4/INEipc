@@ -334,7 +334,7 @@ class Descriptor:
                     de {fecha_3} con una cantidad de {indice_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def cobertura_precios(self, datos) -> str:
+    def serie_precios(self, datos) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
