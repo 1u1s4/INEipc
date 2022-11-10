@@ -81,14 +81,32 @@ class sqlINE:
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
         # fuentes
-        self.df_Fnt = pd.read_sql(
-            f"""SELECT B.RegCod, B.PerAno, B.PerMes, B.DepCod, B.MunCod, A.TfnCod, B.BolNart
-                FROM IPC010 A INNER JOIN IPC103 B
-                ON A.FntCod = B.FntCod AND A.RegCod = B.RegCod AND A.DepCod = B.DepCod AND A.MunCod = B.MunCod
-                WHERE PerAno >= {self.anio - 1} AND BolNart != 0 AND TfnCod != '  '""",
-            self.__conexion
+        conexion_auxiliar = pyodbc.connect(
+            'DRIVER={ODBC Driver 17 for SQL Server}'
+            + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
         )
-        columnas = ('RegCod', 'DepCod', 'TfnCod', 'MunCod')
+        for rg in range(1, 9):
+            df_Fnt = pd.read_sql(
+                f"""SELECT a.RegCod, a.PerAno, a.PerMes, b.TfnCod,b.BolNart 
+                    FROM IPC2010_0{rg}_RN.dbo.IPC104 a 
+                    INNER JOIN (SELECT a.FntCod, a.FntNom, a.TfnCod, b.BolNum, b.RegCod, b.BolNart
+                    FROM IPC2010_0{rg}_RN.dbo.IPC010 a 
+                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC103 b 
+                    ON (a.FntCod = b.FntCod AND a.DepCod = b.DepCod AND a.MunCod =b.MunCod) 
+                    WHERE b.PerAno >= {self.anio - 1}) b 
+                    ON a.BolNum = b.BolNum 
+                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC007 c ON 
+                    a.ArtCod = c.ArtCod
+                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC008 d ON
+                    b.TfnCod = d.TfnCod
+                    WHERE PerAno >= {self.anio - 1} AND b.TfnCod != '  '""",
+                conexion_auxiliar
+            )
+            if rg == 1:
+                self.df_Fnt = df_Fnt
+            else:
+                self.df_Fnt = pd.merge(self.df_Fnt, df_Fnt, how='outer')
+        columnas = ('RegCod','TfnCod')
         for columna in columnas:
             self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
         # diccionario tipo de fuentes
@@ -330,3 +348,7 @@ class sqlINE:
             conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
             cobertura.append((i, conteo))
         return cobertura
+
+p = sqlINE(2022, 10)
+for i in p.desagregacion_fuentes():
+    print(i)
