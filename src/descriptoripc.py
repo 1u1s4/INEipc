@@ -30,7 +30,15 @@ class Descriptor:
         indice = datos[-1][1]
         variacion_1 = self.variacion(datos[-1][1], datos[0][1])
         variacion_2 = self.variacion(datos[-1][1], datos[-2][1])
-        plantilla = f"""El índice de precios de los alimentos de la FAO registró en
+        nota_1 = '''\\footnote{El índice de precios de los alimentos de la FAO es una medida
+                    de la variación mensual de los precios internacionales de
+                    una canasta de productos alimenticios. Consiste en el promedio
+                    de los índices de precios de cinco grupos de productos básicos,
+                    ponderado con las cuotas medias de exportación de cada uno
+                    de los grupos para 2002-2004.}'''
+        nota_2 = '''\\footnote{Organización de las Naciones Unidas para la
+                    Alimentación y la Agricultura.}'''
+        plantilla = f"""El índice de precios de los alimentos{nota_1} de la FAO{nota_2} registró en
                     {fecha_1} un índice de {indice:.2f}, lo que representa una
                     variación de {variacion_1:.2f}% respecto a {fecha_2} y de
                     {variacion_2:.2f}% respecto a {fecha_3}."""
@@ -318,7 +326,7 @@ class Descriptor:
                     de {fecha_3} con un valor de {indice_3:.2f}."""
         return self.retocar_plantilla(plantilla)
 
-    def cobertura_fuentes(self, datos) -> str:
+    def serie_fuentes(self, datos) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
@@ -379,16 +387,23 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def cobertura_fuentes(self, datos) -> str:
-        datos = [i[::-1] for i in datos]
-        datos = sorted(datos, reverse=True)
-        datos = [i[::-1] for i in datos]
+        datos = sorted(datos, key=lambda x: x[1], reverse=True)
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
-        fecha1 = mes_anio_by_abreviacion(maximo[0], MMAA=True)
         minimo = datos[-1]
-        fecha2 = mes_anio_by_abreviacion(minimo[0], MMAA=True)
-        plantilla = f"""El mes en el que mas fuentes se realizaron cotizaciones fue
-                    en {fecha1} con un total de {maximo[1]} y con menos fue en
-                    {fecha2} con {minimo[1]}."""
+        nota = '''\\footnote{Guatemala se encuentra organizada en 8 regiones; La región I
+                o Metropolitana está conformada por el departamento de Guatemala,
+                la región II o Norte por Alta Verapaz y Baja Verapaz, la región III
+                o Nororiental por Chiquimula, El Progreso, Izabal y Zacapa, la región
+                IV o Suroriental por Jutiapa, Jalapa y Santa Rosa, la región V o Central
+                por Chimaltenango, Sacatepéquez y Escuintla, la región VI o Suroccidental 
+                por Quetzaltenango, Retalhuleu, San Marcos, Suchitepéquez, Sololá y Totonicapán,
+                la región VII o Noroccidental por Huehuetenango y Quiché y la región VIII por Petén.}'''
+        region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
+        plantilla = f"""En el mes de {mes} {self.anio} la región{nota} {region[maximo[0]]}
+                    fue donde mas fuentes fueron consultadas con un total de
+                    {maximo[1]} y la región {region[minimo[0]]} fue donde menos fuentes
+                    fueron consultadas con un total de {minimo[1]}."""
         return self.retocar_plantilla(plantilla)
 
     def desagregacion_fuentes(self, datos, mes_ordinal) -> str:
