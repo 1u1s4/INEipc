@@ -457,6 +457,3 @@ class datosIPC:
         datos = self.SQL.cobertura_fuentes()
         descripcion = self.Descriptor.cobertura_fuentes(datos)
         return(datos, descripcion)
-
-p = datosIPC(2022,10)
-print(p.cobertura_fuentes())
