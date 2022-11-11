@@ -71,7 +71,9 @@ class Descriptor:
         else:
             diferencia_2 = diferencia_2 * -1
             signo_2 = "-"
-        plantilla = f"""El precio internacional del petróleo registró en {fecha_1}
+        nota = """\\footnote{Se refiere al crudo West Texas Intermediate (WTI)
+                    producido en Texas y el sur de Oklahoma}"""
+        plantilla = f"""El precio internacional del petróleo{nota} registró en {fecha_1}
                     un precio medio de US${PRECIO:.2f} por barril, lo que representa
                     una variación de {variacion_1:.2f}% ({signo_1}US${diferencia_1:.2f})
                     respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f})
@@ -93,7 +95,12 @@ class Descriptor:
         PRECIO = datos[-1][1]
         variacion_1 = self.variacion(datos[-1][1], datos[0][1])
         variacion_2 = self.variacion(datos[-1][1], datos[-2][1])
-        plantilla = f"""El tipo de cambio de referencia del quetzal respecto al dólar
+        nota = """\\footnote{El tipo de cambio de referencia lo calcula el Banco
+                    de Guatemala con la información que las instituciones que
+                    constituyen el Mercado Institucional de Divisas le proporcionan,
+                    relativa al monto de divisas compradas y al monto de divisas
+                    vendidas y sus respectivas equivalencias en moneda nacional.}"""
+        plantilla = f"""El tipo de cambio de referencia{nota} del quetzal respecto al dólar
                     de los Estados Unidos de América, registró en {fecha_1} un precio
                     medio de Q{PRECIO:.2f} por US$1.00, lo que representa una variación
                     de {variacion_1:.2f}% respecto a {fecha_2} y de {variacion_2:.2f}%
@@ -130,7 +137,11 @@ class Descriptor:
             cambio_2 = "un aumento"
         else:
             cambio_2 = "un cambio"
-        plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa
+        nota = """\\footnote{Es el porcentaje que las instituciones bancarias,
+                    de acuerdo con las condiciones de mercado y las disposiciones
+                    del banco central, cobran por los diferentes tipos de servicios
+                    de crédito a los usuarios de los mismos.}"""
+        plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa{nota}
                     en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que
                     representa {cambio_1} de {diferencia_1:.2f} puntos porcentuales
                     respecto a {fecha_2} y {cambio_2} de {diferencia_2:.2f} puntos
@@ -159,8 +170,11 @@ class Descriptor:
             cambio = "se aceleró"
         else:
             cambio = "cambio"
+        nota = """\\footnote{Para mayor información sobre el indice de precios
+                    al consumidor de los Estados Unidos, visite
+                    \\url{http://www.bls.gov/cpi}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en los Estados Unidos de
-                    América registró una variación interanual al mes de {fecha_1} de
+                    América{nota} registró una variación interanual al mes de {fecha_1} de
                     {indice_1:.2f}%. En {fecha_2} la variación interanual se ubicó en
                     {indice_2:.2f}%, por lo que este indicador {cambio} {diferencia:.2f}
                     puntos porcentuales en el último año."""
@@ -188,7 +202,9 @@ class Descriptor:
             cambio = "se aceleró"
         else:
             cambio = "cambio"
-        plantilla = f"""El Índice de Precios al Consumidor en México de registró una
+        nota = """\\footnote{Para mayor información sobre el índice de precios
+                    al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
+        plantilla = f"""El Índice de Precios al Consumidor en México{nota} de registró una
                     variación interanual al mes de {fecha_1} de {indice_1:.2f}%. En
                     {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
                     por lo que este indicador {cambio} {diferencia:.2f} puntos
