@@ -473,3 +473,10 @@ class datosIPC:
             datos.append((reg, indice))
         descripcion = self.Descriptor.inflacion_interanual_regiones(datos)
         return(datos, descripcion)
+
+    def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True):
+        incidencias = sorted(self.SQL.incidencia_gasto_basico(RegCod), reverse=Qpositiva)
+        incidencias = [i[::-1] for i in incidencias]
+        top5 = incidencias[0:5]
+        descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
+        return(top5, descripcion)

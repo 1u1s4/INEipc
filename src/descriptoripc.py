@@ -472,3 +472,19 @@ class Descriptor:
                     {self.region[minimo[0]]} presentó la menor inflación interanual,
                     de {minimo[1]:.2f}"""
         return self.retocar_plantilla(plantilla)
+    
+    def incidencias_gba(self, datos, Qpositiva: bool = True):
+        if Qpositiva:
+            signo = 'positiva'
+        else:
+            signo = 'negativa'
+        textos = []
+        for d in datos:
+            gba = d[0]
+            indice = d[1]
+            tx = f"{gba} ({indice:.2f}%)"
+            textos.append(tx)
+        plantilla = """Los cinco principales gastos básicos que
+                    registran la mayor incidencia {} mensual
+                    se encuentran: {}, {}, {}, {} y {}.""".format(signo, *textos)
+        return self.retocar_plantilla(plantilla)
