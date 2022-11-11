@@ -239,7 +239,7 @@ class datosIPC:
         return(Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_mex(datos_variacion_interanual))
 
     def inflacion_CA_RD_MEX(self):
-        paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panama", "Mexico")
+        paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
         mes = Jo.mes_by_ordinal(self.mes)
         data = [("Pais", f"{mes}-{self.anio}", f"{mes}-{self.anio}")]
         mes_actual = Jo.mes_by_ordinal(self.mes - 1, abreviado=False)
@@ -424,14 +424,14 @@ class datosIPC:
                         Instituto Nacional de Estadística (INE). Como indicador
                         macroeconómico, este dato se utiliza para medir el comportamiento
                         del nivel general de precios de la economía del país, tomando
-                        como base los precios observados en el mes de referencia.NTR
+                        como base los precios observados en el mes de referencia.\\\\\\\\
 
                         Los niveles de inflación más importantes de {fecha}
                         son los siguientes: se registró una inflación mensual de
                         {inf_mensual:.2f}\%, ritmo inflacionario de {inf_interanual:.2f}\%
                         y una inflación acumulada de {inf_acumulada:.2f}\%.\\\\\\\\
 
-                        Este informe se compone de seis apartados y tres anexos: el
+                        Este informe se compone de once apartados y tres anexos: el
                         primero incluye el número índice y los resultados de las
                         inflaciones mensuales, acumuladas e interanuales a nivel
                         república, en el segundo se exponen las variaciones mensuales
@@ -447,10 +447,11 @@ class datosIPC:
                         y por división de gasto.\\\\\\\\
 
                         Finalmente, para mayor comprensión del documento, se incluye
-                        un anexo 2 y 3 que contiene el glosario, con la definición de
-                        los principales conceptos relacionados con el IPC y la metodología
+                        un anexo contiene el glosario, con la definición de
+                        los principales conceptos relacionados con el IPC, la metodología
                         de cálculo de las formulas más utilizadas para la obtención
-                        de los diferentes índices y variaciones."""
+                        de los diferentes índices y variaciones, y la evolución del IPC de
+                        cada gasto básico"""
         return self.Descriptor.retocar_plantilla(introduccion)
 
     def cobertura_fuentes(self):

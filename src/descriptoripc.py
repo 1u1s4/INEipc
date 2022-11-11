@@ -421,7 +421,7 @@ class Descriptor:
         minimo = datos[-1]
         region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
         plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {region[maximo[0]]}
-                    fue donde mas fuentes fueron consultadas con un total de
+                    fue donde más fuentes fueron consultadas con un total de
                     {maximo[1]} y la región {region[minimo[0]]} fue donde menos fuentes
                     fueron consultadas con un total de {minimo[1]}."""
         return self.retocar_plantilla(plantilla)
@@ -432,7 +432,7 @@ class Descriptor:
         fuente_max = datos[0][0].lower()
         minimo = datos[-1][1]
         fuente_min = datos[-1][0].lower()
-        plantilla = f"""En el mes de {mes} el tipo de fuente mas consultado fue
+        plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
                     {fuente_max} ({maximo:.2f}%), y el tipo menos consultado fue
                     {fuente_min} ({minimo:.2f}%)."""
         return self.retocar_plantilla(plantilla)
@@ -443,7 +443,7 @@ class Descriptor:
         maximo = datos[0]
         minimo = datos[-1]
         plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {self.region[maximo[0]]}
-                    fue donde mas precios fueron diligenciados con un total de
+                    fue donde más precios fueron diligenciados con un total de
                     {maximo[1]} y la región {self.region[minimo[0]]} fue donde menos precios
                     fueron diligenciados con un total de {minimo[1]}."""
         return self.retocar_plantilla(plantilla)
