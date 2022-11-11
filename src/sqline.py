@@ -295,7 +295,7 @@ class sqlINE:
                 serie.append((fecha, indice))
         return serie
 
-    def serie_cobertura_fuentes(self):
+    def serie_fuentes(self):
         serie = []
         if self.mes != 12:
             for i in range(self.mes, 13):
