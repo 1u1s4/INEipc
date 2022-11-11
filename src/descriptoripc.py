@@ -5,6 +5,18 @@ class Descriptor:
     def __init__(self, anio: int, mes: int) -> None:
         self.mes = mes
         self.anio = anio
+        self.region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
+        self.__notaReg = '''\\footnote{Guatemala se encuentra organizada en 8
+                            regiones; La región I o Metropolitana está conformada
+                            por el departamento de Guatemala, la región II o Norte
+                            por Alta Verapaz y Baja Verapaz, la región III o Nororiental
+                            por Chiquimula, El Progreso, Izabal y Zacapa, la región
+                            IV o Suroriental por Jutiapa, Jalapa y Santa Rosa,
+                            la región V o Central por Chimaltenango, Sacatepéquez
+                            y Escuintla, la región VI o Suroccidental por Quetzaltenango,
+                            Retalhuleu, San Marcos, Suchitepéquez, Sololá y Totonicapán,
+                            la región VII o Noroccidental por Huehuetenango y
+                            Quiché y la región VIII por Petén.}'''
 
     def retocar_plantilla(self, plantilla: str) -> str:
         plantilla = plantilla.replace("\n", " ")
@@ -407,16 +419,8 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
         minimo = datos[-1]
-        nota = '''\\footnote{Guatemala se encuentra organizada en 8 regiones; La región I
-                o Metropolitana está conformada por el departamento de Guatemala,
-                la región II o Norte por Alta Verapaz y Baja Verapaz, la región III
-                o Nororiental por Chiquimula, El Progreso, Izabal y Zacapa, la región
-                IV o Suroriental por Jutiapa, Jalapa y Santa Rosa, la región V o Central
-                por Chimaltenango, Sacatepéquez y Escuintla, la región VI o Suroccidental 
-                por Quetzaltenango, Retalhuleu, San Marcos, Suchitepéquez, Sololá y Totonicapán,
-                la región VII o Noroccidental por Huehuetenango y Quiché y la región VIII por Petén.}'''
         region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
-        plantilla = f"""En el mes de {mes} {self.anio} la región{nota} {region[maximo[0]]}
+        plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {region[maximo[0]]}
                     fue donde mas fuentes fueron consultadas con un total de
                     {maximo[1]} y la región {region[minimo[0]]} fue donde menos fuentes
                     fueron consultadas con un total de {minimo[1]}."""
@@ -438,9 +442,33 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
         minimo = datos[-1]
-        region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
-        plantilla = f"""En el mes de {mes} {self.anio} la región {region[maximo[0]]}
+        plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {self.region[maximo[0]]}
                     fue donde mas precios fueron diligenciados con un total de
-                    {maximo[1]} y la región {region[minimo[0]]} fue donde menos precios
+                    {maximo[1]} y la región {self.region[minimo[0]]} fue donde menos precios
                     fueron diligenciados con un total de {minimo[1]}."""
+        return self.retocar_plantilla(plantilla)
+    
+    def ipc_regiones(self, datos):
+        datos = sorted(datos, key=lambda x: x[1], reverse=True)
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
+        maximo = datos[0]
+        minimo = datos[-1]
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
+        plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg} {self.region[maximo[0]]}
+                    presentó el mayor índice de precios al consumidor, el cual fue
+                    de {maximo[1]:.2f}, mientras que la región {self.region[minimo[0]]}
+                    presentó el índice más bajo, de {minimo[1]:.2f}"""
+        return self.retocar_plantilla(plantilla)
+
+    def inflacion_interanual_regiones(self, datos):
+        datos = sorted(datos, key=lambda x: x[1], reverse=True)
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
+        maximo = datos[0]
+        minimo = datos[-1]
+        mes = mes_by_ordinal(self.mes, abreviado=False).lower()
+        plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
+                    {self.region[maximo[0]]} presentó la mayor inflación interanual,
+                    la cual fue de {maximo[1]:.2f}, mientras que la región
+                    {self.region[minimo[0]]} presentó la menor inflación interanual,
+                    de {minimo[1]:.2f}"""
         return self.retocar_plantilla(plantilla)

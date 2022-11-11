@@ -457,3 +457,19 @@ class datosIPC:
         datos = self.SQL.cobertura_fuentes()
         descripcion = self.Descriptor.cobertura_fuentes(datos)
         return(datos, descripcion)
+
+    def ipc_regiones(self):
+        datos = []
+        for reg in range(1, 9):
+            indice = self.SQL.calcular_IPC(self.anio, self.mes, reg)
+            datos.append((reg, indice))
+        descripcion = self.Descriptor.ipc_regiones(datos)
+        return(datos, descripcion)
+
+    def inflacion_interanual_regiones(self):
+        datos = []
+        for reg in range(1, 9):
+            indice = self.SQL.inflacion_interanual(self.anio, self.mes, reg)
+            datos.append((reg, indice))
+        descripcion = self.Descriptor.inflacion_interanual_regiones(datos)
+        return(datos, descripcion)
