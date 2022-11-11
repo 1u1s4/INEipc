@@ -292,8 +292,8 @@ class datosIPC:
         return salidas
     
     def serie_fuentes(self):
-        datos = self.SQL.serie_cobertura_fuentes()
-        descripcion = self.Descriptor.cobertura_fuentes(datos)
+        datos = self.SQL.serie_fuentes()
+        descripcion = self.Descriptor.serie_fuentes(datos)
         return(datos, descripcion)
 
     def cobertura_precios(self):
@@ -455,4 +455,8 @@ class datosIPC:
 
     def cobertura_fuentes(self):
         datos = self.SQL.cobertura_fuentes()
-        print(datos)
+        descripcion = self.Descriptor.cobertura_fuentes(datos)
+        return(datos, descripcion)
+
+p = datosIPC(2022,10)
+print(p.cobertura_fuentes())
