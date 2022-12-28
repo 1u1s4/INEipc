@@ -419,6 +419,11 @@ class datosIPC:
         inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
         mes = Jo.mes_by_ordinal(self.mes, abreviado=False).lower()
         fecha = f"{mes} de {self.anio}"
+        firma = """\\begin{center}
+                    \\textbf{Brenda Izabel Miranda Consuegra}\\\\
+                    Gerente Tecnico\\\\
+                    Instituto Nacional de Estadística
+                    \\end{center}"""
         introduccion = f"""El presente informe mensual, contiene los principales
                         resultados del Índice de Precios al Consumidor (IPC) del
                         Instituto Nacional de Estadística (INE). Como indicador
@@ -451,7 +456,8 @@ class datosIPC:
                         los principales conceptos relacionados con el IPC, la metodología
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones, y la evolución del IPC de
-                        cada gasto básico"""
+                        cada gasto básico.
+                        {firma}"""
         return self.Descriptor.retocar_plantilla(introduccion)
 
     def cobertura_fuentes(self):
