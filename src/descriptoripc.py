@@ -430,10 +430,10 @@ class Descriptor:
         mes = mes_by_ordinal(mes_ordinal, abreviado=False).lower()
         maximo = datos[0][1]
         fuente_max = datos[0][0].lower()
-        minimo = datos[-1][1]
-        fuente_min = datos[-1][0].lower()
+        minimo = datos[1][1]
+        fuente_min = datos[1][0].lower()
         plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
-                    {fuente_max} ({maximo:,.2f}%), y el tipo menos consultado fue
+                    {fuente_max} ({maximo:,.2f}%), y el tipo segundo más consultado fue
                     {fuente_min} ({minimo:,.2f}%)."""
         return self.retocar_plantilla(plantilla)
 
