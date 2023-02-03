@@ -126,7 +126,7 @@ class sqlINE:
             12: 'Hoteles',#HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
             13: 'Centros Educativos',#COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
             14: 'Otros Establecimientos Especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PREPARACION DE SERV
-            15: 'Servicio Domeestico',#SERVICIO DOMESTICO
+            15: 'Servicio Domestico',#SERVICIO DOMESTICO
             16: 'Otros Establecimientos No Especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
             20: 'Cuarto de Alquiler',#VIVIENDA TIPO CUARTO DE ALQUILER
             21: 'Apartamento de Alquiler',#VIVIENDA TIPO APARTAMENTO DE ALQUILER
@@ -337,7 +337,13 @@ class sqlINE:
             serie.append((nmbr_Fnt, conteo))
         invertir = [(i[1] / S * 100, i[0]) for i in serie]
         serie = [i[::-1] for i in sorted(invertir, reverse=True)]
-        return serie
+        # hacer pareto
+        acumulado = 0
+        for i, fuente in enumerate(serie):
+            acumulado += fuente[1]
+            if acumulado >= 80:
+                break
+        return serie[0:i + 1]
     
     def cobertura_fuentes(self):
         cobertura = []
