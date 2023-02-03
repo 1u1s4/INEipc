@@ -12,9 +12,9 @@ class sqlINE:
         self.mes = mes
         # datos servidor
         DATABASE = 'IPC2010_RN'
-        SERVER = '10.0.3.185'
-        USERNAME = 'laalvarado'
-        PASSWORD = 'Abc$2022'
+        SERVER = '10.0.0.3'
+        USERNAME = 'lmdelgado'
+        PASSWORD = 'Del/*2022'
         self.__conexion = pyodbc.connect(
             'DRIVER={ODBC Driver 17 for SQL Server}'
             + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
@@ -100,13 +100,13 @@ class sqlINE:
                     INNER JOIN IPC2010_0{rg}_RN.dbo.IPC008 d ON
                     b.TfnCod = d.TfnCod
                     WHERE PerAno >= {self.anio - 1} AND b.TfnCod != '  '""",
-                conexion_auxiliar
+                self.__conexion
             )
             if rg == 1:
                 self.df_Fnt = df_Fnt
             else:
                 self.df_Fnt = pd.merge(self.df_Fnt, df_Fnt, how='outer')
-        columnas = ('RegCod','TfnCod')
+        columnas = ('RegCod','TfnCod', 'PerAno', 'PerMes')
         for columna in columnas:
             self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
         # diccionario tipo de fuentes
@@ -326,7 +326,7 @@ class sqlINE:
         serie = []
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
-        S = 0
+        S = 1
         for i in range(24):
             if i in (17,18,19): # no existen estos tipos de fuentes
                 continue
