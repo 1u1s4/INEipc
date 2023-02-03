@@ -8,6 +8,7 @@ from descriptoripc import Descriptor
 from bs4 import BeautifulSoup
 from sqline import sqlINE
 import pandas as pd
+import numpy as np
 
 class datosIPC:
     def __init__(self, anio: int, mes: int) -> None:
@@ -319,6 +320,10 @@ class datosIPC:
     def serie_precios(self, Qcobertura: bool=False):
         serie = []
         df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
+        df['Prec_PE'] = pd.to_numeric(df['Prec_PE'], errors='coerce')
+        df['Prec_Recup'] = pd.to_numeric(df['Prec_Recup'], errors='coerce')
+        df['Prec_Pre'] = pd.to_numeric(df['Prec_Pre'], errors='coerce')
+        df = df.replace(np.nan, 0, regex=True)
         if self.mes == 12:
             for i in range(1, 13):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -326,28 +331,14 @@ class datosIPC:
                 mes_ = df['Mes'] == i
                 anio_ = df['Año'] == self.anio
                 df_i = df[mes_ & anio_].reset_index()
-                suma = 0
-                for j in range(len(df_i)):
-                    try:
-                        precios_espera = int(df_i.loc[j]['Prec_PE'])
-                    except:
-                        precios_espera = 0
-                    try:
-                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
-                    except:
-                        precios_recuperados = 0
-                    try:
-                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                    except:
-                        precios_prediligenciados = 0
-                    if Qcobertura:
-                        suma += precios_prediligenciados
-                    else:
-                        suma += precios_espera - precios_recuperados
+                precios_espera = df_i['Prec_PE'].sum()
+                precios_recuperados = df_i['Prec_Recup'].sum()
+                precios_prediligenciados = df_i['Prec_Pre'].sum()
                 if Qcobertura:
-                    serie.append((fecha, abs(suma)))
+                    serie.append((fecha, precios_prediligenciados))
                 else:
-                    serie.append((fecha, abs(suma)/precios_prediligenciados))
+                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                    serie.append((fecha, d))
         else:
             for i in range(self.mes, 13):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -355,56 +346,28 @@ class datosIPC:
                 mes_ = df['Mes'] == i
                 anio_ = df['Año'] == self.anio - 1
                 df_i = df[mes_ & anio_].reset_index()
-                suma = 0
-                for j in range(len(df_i)):
-                    try:
-                        precios_espera = int(df_i.loc[j]['Prec_PE'])
-                    except:
-                        precios_espera = 0
-                    try:
-                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
-                    except:
-                        precios_recuperados = 0
-                    try:
-                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                    except:
-                        precios_prediligenciados = 0
-                    if Qcobertura:
-                        suma +=precios_prediligenciados
-                    else:
-                        suma += precios_espera - precios_recuperados
+                precios_espera = df_i['Prec_PE'].sum()
+                precios_recuperados = df_i['Prec_Recup'].sum()
+                precios_prediligenciados = df_i['Prec_Pre'].sum()
                 if Qcobertura:
-                    serie.append((fecha, abs(suma)))
+                    serie.append((fecha, precios_prediligenciados))
                 else:
-                    serie.append((fecha, abs(suma)/precios_prediligenciados))
+                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                    serie.append((fecha, d))
             for i in range(1, self.mes + 1):
                 mes_abr = Jo.mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
                 mes_ = df['Mes'] == i
                 anio_ = df['Año'] == self.anio
                 df_i = df[mes_ & anio_].reset_index()
-                suma = 0
-                for j in range(len(df_i)):
-                    try:
-                        precios_espera = int(df_i.loc[j]['Prec_PE'])
-                    except:
-                        precios_espera = 0
-                    try:
-                        precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
-                    except:
-                        precios_recuperados = 0
-                    try:
-                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                    except:
-                        precios_prediligenciados = 0
-                    if Qcobertura:
-                        suma += precios_prediligenciados
-                    else:
-                        suma += precios_espera - precios_recuperados
+                precios_espera = df_i['Prec_PE'].sum()
+                precios_recuperados = df_i['Prec_Recup'].sum()
+                precios_prediligenciados = df_i['Prec_Pre'].sum()
                 if Qcobertura:
-                    serie.append((fecha, abs(suma)))
+                    serie.append((fecha, precios_prediligenciados))
                 else:
-                    serie.append((fecha, abs(suma)/precios_prediligenciados))
+                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                    serie.append((fecha, d))
         if Qcobertura:
             descripcion = self.Descriptor.serie_precios(serie)
         else:
