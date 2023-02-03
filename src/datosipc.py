@@ -436,27 +436,26 @@ class datosIPC:
                         {inf_mensual:.2f}\%, ritmo inflacionario de {inf_interanual:.2f}\%
                         y una inflación acumulada de {inf_acumulada:.2f}\%.\\\\\\\\
 
-                        Este informe se compone de once apartados y tres anexos: el
-                        primero incluye el número índice y los resultados de las
-                        inflaciones mensuales, acumuladas e interanuales a nivel
-                        república, en el segundo se exponen las variaciones mensuales
-                        históricas, por región y por división de gasto, en el tercero
-                        se muestran los ritmos inflacionarios históricos, por región
-                        y por división de gasto, en el cuarto se presentan las
-                        principales alzas y bajas de los productos que conforman el
-                        IPC y su incidencia en la inflación mensual; en el quinto se
-                        describen las principales alzas y bajas de los productos que
-                        conforman el IPC y su incidencia en el ritmo inflacionario;
-                        en el sexto se consigna la evolución del poder adquisitivo del
-                        quetzal; anexo 1: tablas de índices e inflaciones por región
-                        y por división de gasto.\\\\\\\\
+                        Este informe del IPC está compuesto de 11 apartados y 3 anexos.
+                        En el primer apartado se incluyen los detalles del operativo de
+                        campo, incluyendo la cobertura de fuentes y precios, la imputación
+                        de precios y la desagregación de fuentes. En el segundo apartado,
+                        se abordaron las variables exógenas, incluyendo el precio internacional
+                        de los alimentos, el precio del petróleo, el cambio del quetzal,
+                        la tasa de interés, entre otros. En el tercer apartado se presentan
+                        los resultados del IPC, incluyendo la evolución del IPC, su cambio
+                        anual, acumulado y mensual, además de las incidencias mensuales
+                        por división de gasto básico y los bienes con mayor impacto en
+                        el cambio mensual. Los apartados 4 a 11 incluyen resultados del
+                        IPC para las regiones I a VIII.\\\\\\\\
 
                         Finalmente, para mayor comprensión del documento, se incluye
                         un anexo contiene el glosario, con la definición de
                         los principales conceptos relacionados con el IPC, la metodología
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones, y la evolución del IPC de
-                        cada gasto básico.
+                        cada gasto básico. Y por último un anexo con las series históricas anuales
+                        para cada gasto básico a nivel nacional.
                         {firma}"""
         return self.Descriptor.retocar_plantilla(introduccion)
 
@@ -487,3 +486,6 @@ class datosIPC:
         top5 = incidencias[0:5]
         descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
         return(top5, descripcion)
+
+p = datosIPC(2023, 1)
+print(p.cobertura_fuentes())
