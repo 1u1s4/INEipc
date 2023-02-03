@@ -336,15 +336,18 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
+                    try:
+                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                    except:
+                        precios_prediligenciados = 0
                     if Qcobertura:
-                        try:
-                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                        except:
-                            precios_prediligenciados = 0
                         suma += precios_prediligenciados
                     else:
                         suma += precios_espera - precios_recuperados
-                serie.append((fecha, abs(suma)))
+                if Qcobertura:
+                    serie.append((fecha, abs(suma)))
+                else:
+                    serie.append((fecha, abs(suma)/precios_prediligenciados))
         else:
             for i in range(self.mes, 13):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -362,15 +365,18 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
+                    try:
+                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                    except:
+                        precios_prediligenciados = 0
                     if Qcobertura:
-                        try:
-                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                        except:
-                            precios_prediligenciados = 0
                         suma +=precios_prediligenciados
                     else:
                         suma += precios_espera - precios_recuperados
-                serie.append((fecha, abs(suma)))
+                if Qcobertura:
+                    serie.append((fecha, abs(suma)))
+                else:
+                    serie.append((fecha, abs(suma)/precios_prediligenciados))
             for i in range(1, self.mes + 1):
                 mes_abr = Jo.mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
@@ -387,15 +393,18 @@ class datosIPC:
                         precios_recuperados = int(df_i.loc[j]['Prec_Recup'])
                     except:
                         precios_recuperados = 0
+                    try:
+                        precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
+                    except:
+                        precios_prediligenciados = 0
                     if Qcobertura:
-                        try:
-                            precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                        except:
-                            precios_prediligenciados = 0
-                        suma +=precios_prediligenciados
+                        suma += precios_prediligenciados
                     else:
                         suma += precios_espera - precios_recuperados
-                serie.append((fecha, abs(suma)))
+                if Qcobertura:
+                    serie.append((fecha, abs(suma)))
+                else:
+                    serie.append((fecha, abs(suma)/precios_prediligenciados))
         if Qcobertura:
             descripcion = self.Descriptor.serie_precios(serie)
         else:
@@ -488,4 +497,4 @@ class datosIPC:
         return(top5, descripcion)
 
 p = datosIPC(2023, 1)
-print(p.cobertura_fuentes())
+print(p.serie_precios())
