@@ -51,9 +51,9 @@ class Descriptor:
         nota_2 = '''\\footnote{Organización de las Naciones Unidas para la
                     Alimentación y la Agricultura.}'''
         plantilla = f"""El índice de precios de los alimentos{nota_1} de la FAO{nota_2} registró en
-                    {fecha_1} un índice de {indice:.2f}, lo que representa una
-                    variación de {variacion_1:.2f}% respecto a {fecha_2} y de
-                    {variacion_2:.2f}% respecto a {fecha_3}."""
+                    {fecha_1} un índice de {indice:,.2f}, lo que representa una
+                    variación de {variacion_1:,.2f}% respecto a {fecha_2} y de
+                    {variacion_2:,.2f}% respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
     # petroleo
     """
@@ -86,9 +86,9 @@ class Descriptor:
         nota = """\\footnote{Se refiere al crudo West Texas Intermediate (WTI)
                     producido en Texas y el sur de Oklahoma}"""
         plantilla = f"""El precio internacional del petróleo{nota} registró en {fecha_1}
-                    un precio medio de US${PRECIO:.2f} por barril, lo que representa
-                    una variación de {variacion_1:.2f}% ({signo_1}US${diferencia_1:.2f})
-                    respecto a {fecha_2} y de {variacion_2:.2f}% ({signo_2}US${diferencia_2:.2f})
+                    un precio medio de US${PRECIO:,.2f} por barril, lo que representa
+                    una variación de {variacion_1:,.2f}% ({signo_1}US${diferencia_1:,.2f})
+                    respecto a {fecha_2} y de {variacion_2:,.2f}% ({signo_2}US${diferencia_2:,.2f})
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
@@ -114,8 +114,8 @@ class Descriptor:
                     vendidas y sus respectivas equivalencias en moneda nacional.}"""
         plantilla = f"""El tipo de cambio de referencia{nota} del quetzal respecto al dólar
                     de los Estados Unidos de América, registró en {fecha_1} un precio
-                    medio de Q{PRECIO:.2f} por US$1.00, lo que representa una variación
-                    de {variacion_1:.2f}% respecto a {fecha_2} y de {variacion_2:.2f}%
+                    medio de Q{PRECIO:,.2f} por US$1.00, lo que representa una variación
+                    de {variacion_1:,.2f}% respecto a {fecha_2} y de {variacion_2:,.2f}%
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
@@ -154,9 +154,9 @@ class Descriptor:
                     del banco central, cobran por los diferentes tipos de servicios
                     de crédito a los usuarios de los mismos.}"""
         plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa{nota}
-                    en moneda nacional se ubicó en {fecha_1} en {tasa:.2f}%, lo que
-                    representa {cambio_1} de {diferencia_1:.2f} puntos porcentuales
-                    respecto a {fecha_2} y {cambio_2} de {diferencia_2:.2f} puntos
+                    en moneda nacional se ubicó en {fecha_1} en {tasa:,.2f}%, lo que
+                    representa {cambio_1} de {diferencia_1:,.2f} puntos porcentuales
+                    respecto a {fecha_2} y {cambio_2} de {diferencia_2:,.2f} puntos
                     porcentuales respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
@@ -187,8 +187,8 @@ class Descriptor:
                     \\url{http://www.bls.gov/cpi}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en los Estados Unidos de
                     América{nota} registró una variación interanual al mes de {fecha_1} de
-                    {indice_1:.2f}%. En {fecha_2} la variación interanual se ubicó en
-                    {indice_2:.2f}%, por lo que este indicador {cambio} {diferencia:.2f}
+                    {indice_1:,.2f}%. En {fecha_2} la variación interanual se ubicó en
+                    {indice_2:,.2f}%, por lo que este indicador {cambio} {diferencia:,.2f}
                     puntos porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
 
@@ -217,9 +217,9 @@ class Descriptor:
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en México{nota} de registró una
-                    variación interanual al mes de {fecha_1} de {indice_1:.2f}%. En
-                    {fecha_2} la variación interanual se ubicó en {indice_2:.2f}%,
-                    por lo que este indicador {cambio} {diferencia:.2f} puntos
+                    variación interanual al mes de {fecha_1} de {indice_1:,.2f}%. En
+                    {fecha_2} la variación interanual se ubicó en {indice_2:,.2f}%,
+                    por lo que este indicador {cambio} {diferencia:,.2f} puntos
                     porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
 
@@ -230,9 +230,9 @@ class Descriptor:
         INFLACION_MAX = inflacion_mes[-1]
         plantilla = f"""Para el mes de {mes} {anio}, en Centro América, República
                     Dominicana y México, {INFLACION_MAX[1]} presentó
-                    la mayor tasa de inflación interanual de {INFLACION_MAX[0]:.2f}%,
+                    la mayor tasa de inflación interanual de {INFLACION_MAX[0]:,.2f}%,
                     mientras que {INFLACION_MIN[1]} registró la tasa más
-                    baja con un nivel de {INFLACION_MIN[0]:.2f}%."""
+                    baja con un nivel de {INFLACION_MIN[0]:,.2f}%."""
         return self.retocar_plantilla(plantilla)
 
     def serie_historica_ipc(self, datos, QGba: bool=False) -> str:
@@ -263,8 +263,8 @@ class Descriptor:
         else:
             cambio = "igual"
         plantilla = f"""El {gba} a {fecha_1} se ubicó en
-                    {indice_1:.2f}, {cambio} a lo observado en {plantilla_aux}
-                    ({indice_2:.2f})."""
+                    {indice_1:,.2f}, {cambio} a lo observado en {plantilla_aux}
+                    ({indice_2:,.2f})."""
         return self.retocar_plantilla(plantilla)
 
     # tipo = intermensual, interanual, acumulada
@@ -291,11 +291,11 @@ class Descriptor:
         else:
             cambio_2 = "un cambio"
         plantilla = f"""La variación {tipo} del IPC a nivel {nivel} en {fecha_1},
-                    se ubicó en {indice_1:.2f}%. Esta variación representa {cambio_1}
-                    en el nivel de precios de {diferencia_1:.2f} puntos porcentuales
-                    respecto al mes anterior ({indice_2:.2f}%), y con respecto a la
-                    variación alcanzada en {fecha_2} ({indice_3:.2f}%) {cambio_2} de
-                    {diferencia_2:.2f} puntos."""
+                    se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
+                    en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
+                    respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
+                    variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
+                    {diferencia_2:,.2f} puntos."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos, fecha) -> str:
@@ -309,15 +309,15 @@ class Descriptor:
         div_3 = menor[1].lower()
         indice_menor = menor[0]
         if indice_menor < 0.01 and indice_menor > 0:
-            indice_menor = f'{indice_menor:.3f}'
+            indice_menor = f'{indice_menor:,.3f}'
         elif indice_menor < 0.001 and indice_menor > 0:
-            indice_menor = f'{indice_menor:.4f}'
+            indice_menor = f'{indice_menor:,.4f}'
         elif indice_menor < 0.0001 and indice_menor > 0:
-            indice_menor = f'{indice_menor:.5f}'
+            indice_menor = f'{indice_menor:,.5f}'
         else:
-            indice_menor = f'{indice_menor:.2f}'
+            indice_menor = f'{indice_menor:,.2f}'
         plantilla = f"""De las doce divisiones de gasto que integran el IPC, la de
-                    {div_1} ({mayor_1[0]:.2f}%) y {div_2} ({mayor_2[0]:.2f}%),
+                    {div_1} ({mayor_1[0]:,.2f}%) y {div_2} ({mayor_2[0]:,.2f}%),
                     registraron la mayor variación mensual en {fecha}. Por su parte,
                     {div_3} es la división de gasto con menor variación mensual
                     ({indice_menor}%)."""
@@ -334,7 +334,7 @@ class Descriptor:
         nombres = [d[1].lower() for d in datos]
         plantilla = """Los gastos básicos que registraron mayor alza porcentual mensual
                     en {} fueron: {}, {}, {}, {} y {} todo incluido al exterior con
-                    {} de {:.2f}%, {:.2f}%, {:.2f}%, {:.2f}% y {:.2f}%,
+                    {} de {:,.2f}%, {:,.2f}%, {:,.2f}%, {:,.2f}% y {:,.2f}%,
                     respectivamente.""".format(fecha, *nombres, tipo, *indices)
         return self.retocar_plantilla(plantilla)
 
@@ -348,10 +348,10 @@ class Descriptor:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""El poder adquisitivo del quetzal a {fecha_1} es de {indice_1:.2f}.
+        plantilla = f"""El poder adquisitivo del quetzal a {fecha_1} es de {indice_1:,.2f}.
                     El mayor valor adquisitivo se encuentra en el mes de {fecha_2}
-                    con un valor de {indice_2:.2f} y el menor se encuentra en el mes
-                    de {fecha_3} con un valor de {indice_3:.2f}."""
+                    con un valor de {indice_2:,.2f} y el menor se encuentra en el mes
+                    de {fecha_3} con un valor de {indice_3:,.2f}."""
         return self.retocar_plantilla(plantilla)
 
     def serie_fuentes(self, datos) -> str:
@@ -408,10 +408,10 @@ class Descriptor:
         maximo2 = datos[1]
         minimo = datos[-1]
         plantilla = f"""De las doce divisiones de gasto que integran
-                    el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):.2f}%) y
-                    {maximo2[1].lower()} ({round(maximo2[0], 2):.2f}%), registraron la mayor
+                    el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
+                    {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
                     incidencia mensual. Por su parte, {minimo[1].lower()} es la división
-                    de gasto con menor incidencia mensual ({round(minimo[0], 2):.2f}%)."""
+                    de gasto con menor incidencia mensual ({round(minimo[0], 2):,.2f}%)."""
         return self.retocar_plantilla(plantilla)
 
     def cobertura_fuentes(self, datos) -> str:
@@ -433,8 +433,8 @@ class Descriptor:
         minimo = datos[-1][1]
         fuente_min = datos[-1][0].lower()
         plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
-                    {fuente_max} ({maximo:.2f}%), y el tipo menos consultado fue
-                    {fuente_min} ({minimo:.2f}%)."""
+                    {fuente_max} ({maximo:,.2f}%), y el tipo menos consultado fue
+                    {fuente_min} ({minimo:,.2f}%)."""
         return self.retocar_plantilla(plantilla)
 
     def cobertura_precios(self, datos):
@@ -456,8 +456,8 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg} {self.region[maximo[0]]}
                     presentó el mayor índice de precios al consumidor, el cual fue
-                    de {maximo[1]:.2f}, mientras que la región {self.region[minimo[0]]}
-                    presentó el índice más bajo, de {minimo[1]:.2f}"""
+                    de {maximo[1]:,.2f}, mientras que la región {self.region[minimo[0]]}
+                    presentó el índice más bajo, de {minimo[1]:,.2f}"""
         return self.retocar_plantilla(plantilla)
 
     def inflacion_interanual_regiones(self, datos):
@@ -468,9 +468,9 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
                     {self.region[maximo[0]]} presentó la mayor inflación interanual,
-                    la cual fue de {maximo[1]:.2f}, mientras que la región
+                    la cual fue de {maximo[1]:,.2f}, mientras que la región
                     {self.region[minimo[0]]} presentó la menor inflación interanual,
-                    de {minimo[1]:.2f}"""
+                    de {minimo[1]:,.2f}"""
         return self.retocar_plantilla(plantilla)
     
     def incidencias_gba(self, datos, Qpositiva: bool = True):
@@ -482,7 +482,7 @@ class Descriptor:
         for d in datos:
             gba = d[0]
             indice = d[1]
-            tx = f"{gba} ({indice:.2f}%)"
+            tx = f"{gba} ({indice:,.2f}%)"
             textos.append(tx)
         plantilla = """Los cinco principales gastos básicos que
                     registran la mayor incidencia {} mensual
