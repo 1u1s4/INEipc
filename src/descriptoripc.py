@@ -364,10 +364,10 @@ class Descriptor:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""La cantidad de fuentes consultadas en {fecha_1} es de {indice_1}.
+        plantilla = f"""La cantidad de fuentes consultadas en {fecha_1} es de {indice_1:,}.
                     La mayor cantidad de fuentes consultadas fue en el mes de {fecha_2}
-                    con una cantidad de {indice_2} y la menor se encuentra en el mes
-                    de {fecha_3} con una cantidad de {indice_3}."""
+                    con una cantidad de {indice_2:,} y la menor se encuentra en el mes
+                    de {fecha_3} con una cantidad de {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
 
     def serie_precios(self, datos) -> str:
@@ -380,10 +380,10 @@ class Descriptor:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""La cantidad de precios diligenciados en {fecha_1} es de {indice_1}.
+        plantilla = f"""La cantidad de precios diligenciados en {fecha_1} es de {indice_1:,}.
                     La mayor cantidad de precios diligenciados fue en el mes de {fecha_2}
-                    con una cantidad de {indice_2} y la menor se encuentra en el mes
-                    de {fecha_3} con una cantidad de {indice_3}."""
+                    con una cantidad de {indice_2:,} y la menor se encuentra en el mes
+                    de {fecha_3} con una cantidad de {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
 
     def imputacion_precios(self, datos) -> str:
@@ -396,10 +396,10 @@ class Descriptor:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""La cantidad de precios imputados en {fecha_1} es de {indice_1}.
-                    La mayor cantidad de imputaciones fue en el mes de {fecha_2}
-                    con una cantidad de {indice_2} y la menor se encuentra en el mes
-                    de {fecha_3} con una cantidad de {indice_3}."""
+        plantilla = f"""El porcentaje de precios imputados en {fecha_1} es de {indice_1:.2f}%.
+                    El mayor porcentaje de imputaciones fue en el mes de {fecha_2}
+                    con una cantidad de {indice_2:.2f}% y el menor se encuentra en el mes
+                    de {fecha_3} con una cantidad de {indice_3:.2f}%."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos) -> str:
@@ -422,8 +422,8 @@ class Descriptor:
         region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
         plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {region[maximo[0]]}
                     fue donde más fuentes fueron consultadas con un total de
-                    {maximo[1]} y la región {region[minimo[0]]} fue donde menos fuentes
-                    fueron consultadas con un total de {minimo[1]}."""
+                    {maximo[1]:,} y la región {region[minimo[0]]} fue donde menos fuentes
+                    fueron consultadas con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
 
     def desagregacion_fuentes(self, datos, mes_ordinal) -> str:
