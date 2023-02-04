@@ -100,7 +100,7 @@ class sqlINE:
                     INNER JOIN IPC2010_0{rg}_RN.dbo.IPC008 d ON
                     b.TfnCod = d.TfnCod
                     WHERE PerAno >= {self.anio - 1} AND b.TfnCod != '  '""",
-                self.__conexion
+                conexion_auxiliar
             )
             if rg == 1:
                 self.df_Fnt = df_Fnt
@@ -196,7 +196,10 @@ class sqlINE:
             Qmes = self.df_GbaInd['PerMes'] == self.mes
             Qreg = self.df_GbaInd['RegCod'] == RegCod
             Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-            indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+            try:
+                indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+            except:
+                pass
             if self.mes == 1:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] == 12
@@ -204,7 +207,10 @@ class sqlINE:
             else:
                 Qmes = self.df_GbaInd['PerMes'] == self.mes - 1
                 ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
-            indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+            try:
+                indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+            except:
+                pass
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             nombre_gba = self.get_nombre_Gba(GbaCod)
             incidencias.append((variacion, nombre_gba))
@@ -354,3 +360,5 @@ class sqlINE:
             conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
             cobertura.append((i, conteo))
         return cobertura
+
+p = sqlINE(2023, 1)
