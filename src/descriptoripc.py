@@ -235,10 +235,12 @@ class Descriptor:
                     baja con un nivel de {INFLACION_MIN[0]:,.2f}%."""
         return self.retocar_plantilla(plantilla)
 
-    def serie_historica_ipc(self, datos, QGba: bool=False) -> str:
+    def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False) -> str:
         if QGba:
-            gba = f'gasto basico {datos[0].lower()}'
+            gba = f'índice del gasto basico {datos[0].lower()}'
             datos = datos[1]
+        elif QReg:
+            gba = 'número índice'
         else:
             gba = 'Índice de Precios al Consumidor'
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
@@ -268,7 +270,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     # tipo = intermensual, interanual, acumulada
-    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='nacional') -> str:
+    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional') -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         indice_1 = datos[-1][1] # mes actual
@@ -290,7 +292,7 @@ class Descriptor:
             diferencia_2 *= -1
         else:
             cambio_2 = "un cambio"
-        plantilla = f"""La variación {tipo} del IPC a nivel {nivel} en {fecha_1},
+        plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                     se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
                     en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
                     respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
@@ -341,17 +343,10 @@ class Descriptor:
     def poder_adquisitivo(self, datos) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         indice_1 = datos[-1][1]
-        datos_temp = sorted([d[::-1] for d in datos])
-        maximo = datos_temp[-1]
-        minimo = datos_temp[0]
-        fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
-        fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
-        indice_2 = maximo[0]
-        indice_3 = minimo[0]
-        plantilla = f"""El poder adquisitivo del quetzal a {fecha_1} es de {indice_1:,.2f}.
-                    El mayor valor adquisitivo se encuentra en el mes de {fecha_2}
-                    con un valor de {indice_2:,.2f} y el menor se encuentra en el mes
-                    de {fecha_3} con un valor de {indice_3:,.2f}."""
+        perdida = 1 - indice_1
+        plantilla = f"""El quetzal ha perdido {perdida:,.2f} centavos en poder adquisitivo
+                    respecto a diciembre de 2010, esto es, un quetzal de diciembre 2010 es
+                    equivalente a {indice_1:,.2f} centavos de {fecha_1}."""
         return self.retocar_plantilla(plantilla)
 
     def serie_fuentes(self, datos) -> str:
