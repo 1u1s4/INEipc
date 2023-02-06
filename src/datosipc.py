@@ -87,16 +87,10 @@ class datosIPC:
             
         return (data, self.Descriptor.petroleo(data))
 
-    def cambio_quetzal(self, fecha_final="", fecha_inicial="") -> tuple:
+    def cambio_quetzal(self) -> tuple:
         FORMATO = "%d/%m/%Y"
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(FORMATO)
-        else:
-            FECHA_FINAL = Jo.ultimo_dia_del_mes(fecha=fecha_final, formato=FORMATO)
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO, inicio_de_mes=True)
-        else:
-            FECHA_INICIAL = fecha_inicial
+        FECHA_FINAL = f"28/{self.mes}/{self.anio}"
+        FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO, inicio_de_mes=True)
         # SOAP request URL
         URL = "http://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
         PAYLOAD = """<?xml version="1.0" encoding="utf-8"?>
@@ -122,7 +116,7 @@ class datosIPC:
         root = tree.getroot()
         # analisis de los datos
         fecha_i = FECHA_INICIAL
-        mes_actual = "-".join((fecha_i.split("/")[2], Jo.mes_by_ordinal(fecha_i.split("/")[1])))
+        mes_actual = "-".join((fecha_i.split("/")[2], Jo.mes_by_ordinal(int(fecha_i.split("/")[1]))))
         datos_mes = []
         data_mean = []
         i = 0
@@ -458,3 +452,6 @@ class datosIPC:
         top5 = incidencias[0:5]
         descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
         return(top5, descripcion)
+
+p = datosIPC(2023, 1)
+print(p.cambio_quetzal())
