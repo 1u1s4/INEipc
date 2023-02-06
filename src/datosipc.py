@@ -158,7 +158,7 @@ class datosIPC:
         sh = book.sheet_by_index(0)
         data = []
         COL = int(FECHA_INICIAL.split("-")[0]) - 1994
-        for i in range(int(FECHA_INICIAL.split("-")[1]) + 4, 12 + 5):
+        for i in range(int(FECHA_INICIAL.split("-")[1]) + 3, 12 + 5):
             marca_temp = FECHA_INICIAL.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
@@ -452,3 +452,6 @@ class datosIPC:
         top5 = incidencias[0:5]
         descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
         return(top5, descripcion)
+
+p = datosIPC(2023, 1)
+print(p.tasa_interes())
