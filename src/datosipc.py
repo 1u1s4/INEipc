@@ -452,6 +452,3 @@ class datosIPC:
         top5 = incidencias[0:5]
         descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
         return(top5, descripcion)
-
-p = datosIPC(2023, 1)
-print(p.cambio_quetzal())
