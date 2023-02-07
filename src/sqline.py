@@ -360,5 +360,3 @@ class sqlINE:
             conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
             cobertura.append((i, conteo))
         return cobertura
-
-p = sqlINE(2023, 1)
