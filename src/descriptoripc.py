@@ -216,7 +216,7 @@ class Descriptor:
             cambio = "cambio"
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
-        plantilla = f"""El Índice de Precios al Consumidor en México{nota} registró una
+        plantilla = f"""El Índice de Precios al Consumidor en México{nota} se registró una
                     variación interanual al mes de {fecha_1} de {indice_1:,.2f}%. En
                     {fecha_2} la variación interanual se ubicó en {indice_2:,.2f}%,
                     por lo que este indicador {cambio} {diferencia:,.2f} puntos
@@ -270,7 +270,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     # tipo = intermensual, interanual, acumulada
-    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional') -> str:
+    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         indice_1 = datos[-1][1] # mes actual
@@ -292,12 +292,23 @@ class Descriptor:
             diferencia_2 *= -1
         else:
             cambio_2 = "un cambio"
-        plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                    se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
-                    en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
-                    respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
-                    variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
-                    {diferencia_2:,.2f} puntos."""
+        if tipo == "interanual":
+            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+                        se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
+                        en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
+                        respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
+                        variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
+                        {diferencia_2:,.2f} puntos."""
+        elif tipo == "acumulada":
+            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+                        se ubicó en {indice_1:,.2f}%. Y la de {fecha_2} se
+                        presento en {indice_3:,.2f}%."""
+        else:
+            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+                        se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
+                        en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
+                        respecto al mes anterior ({indice_2:,.2f}%), y la de {fecha_2} se
+                        presento en {indice_3:,.2f}%."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos, fecha) -> str:
@@ -428,7 +439,7 @@ class Descriptor:
         minimo = datos[1][1]
         fuente_min = datos[1][0].lower()
         plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
-                    {fuente_max} ({maximo:,.2f}%), y el segundo tipo más consultado fue
+                    {fuente_max} ({maximo:,.2f}%), y el segundo más consultado fue
                     {fuente_min} ({minimo:,.2f}%)."""
         return self.retocar_plantilla(plantilla)
 
