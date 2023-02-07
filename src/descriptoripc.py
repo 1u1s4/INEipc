@@ -216,7 +216,7 @@ class Descriptor:
             cambio = "cambio"
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
-        plantilla = f"""El Índice de Precios al Consumidor en México{nota} de registró una
+        plantilla = f"""El Índice de Precios al Consumidor en México{nota} registró una
                     variación interanual al mes de {fecha_1} de {indice_1:,.2f}%. En
                     {fecha_2} la variación interanual se ubicó en {indice_2:,.2f}%,
                     por lo que este indicador {cambio} {diferencia:,.2f} puntos
@@ -428,7 +428,7 @@ class Descriptor:
         minimo = datos[1][1]
         fuente_min = datos[1][0].lower()
         plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
-                    {fuente_max} ({maximo:,.2f}%), y el tipo segundo más consultado fue
+                    {fuente_max} ({maximo:,.2f}%), y el segundo tipo más consultado fue
                     {fuente_min} ({minimo:,.2f}%)."""
         return self.retocar_plantilla(plantilla)
 
