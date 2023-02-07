@@ -236,9 +236,8 @@ class datosIPC:
     def inflacion_CA_RD_MEX(self):
         paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
         mes = Jo.mes_by_ordinal(self.mes)
-        data = [("Pais", f"{mes}-{self.anio}", f"{mes}-{self.anio}")]
-        mes_actual = Jo.mes_by_ordinal(self.mes - 1, abreviado=False)
-        mes_anterior = Jo.mes_by_ordinal(self.mes - 2, abreviado=False)
+        data = [("Pais", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
+        mes_actual = Jo.mes_by_ordinal(self.mes, abreviado=False)
         for pais in paises:
             df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
             # inflacion interanual del mes actual
@@ -249,15 +248,15 @@ class datosIPC:
             anio_ = df["anio"] == (self.anio - 1)
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_actual = (indice_actual/indice_anterior - 1) * 100 
-            # inflacion interanual del mes anterior
-            mes_ = df["mes"] == mes_anterior
-            anio_ = df["anio"] == self.anio
-            indice_actual = df[mes_ & anio_]["indice"].iloc[0]
-            mes_ = df["mes"] == mes_anterior
+            # inflacion interanual del anio anterior
+            mes_ = df["mes"] == mes_actual
             anio_ = df["anio"] == (self.anio - 1)
+            indice_actual = df[mes_ & anio_]["indice"].iloc[0]
+            mes_ = df["mes"] == mes_actual
+            anio_ = df["anio"] == (self.anio - 2)
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_anterior = (indice_actual/indice_anterior - 1) * 100 
-            data.append((pais, inflacion_actual, inflacion_anterior))
+            data.append((pais, inflacion_anterior, inflacion_actual))
         return (data, self.Descriptor.inflacion(data, mes_actual.lower(), self.anio))
 
 # para el capitulo 3
