@@ -7,7 +7,8 @@ import numpy as np
 from funcionesjo import mes_by_ordinal
 
 class sqlINE:
-    def __init__(self, anio: int, mes: int) -> None:
+    def __init__(self, anio: int, mes: int, QdbAux: bool=False) -> None:
+        self.__QdbAux = QdbAux
         self.anio = anio
         self.mes = mes
         # datos servidor
@@ -81,10 +82,13 @@ class sqlINE:
         for columna in columnas:
             self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
         # fuentes
-        conexion_auxiliar = pyodbc.connect(
-            'DRIVER={ODBC Driver 17 for SQL Server}'
-            + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
-        )
+        if self.__QdbAux:
+            conexion_auxiliar = pyodbc.connect(
+                'DRIVER={ODBC Driver 17 for SQL Server}'
+                + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
+            )
+        else:
+            conexion_auxiliar = self.__conexion
         for rg in range(1, 9):
             df_Fnt = pd.read_sql(
                 f"""SELECT a.RegCod, a.PerAno, a.PerMes, b.TfnCod,b.BolNart 
