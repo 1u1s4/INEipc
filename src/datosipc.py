@@ -11,11 +11,11 @@ import pandas as pd
 import numpy as np
 
 class datosIPC:
-    def __init__(self, anio: int, mes: int) -> None:
+    def __init__(self, anio: int, mes: int, QdbAux: bool=False) -> None:
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
-        self.SQL = sqlINE(anio, mes)
+        self.SQL = sqlINE(anio, mes, QdbAux)
         self.Descriptor = Descriptor(anio, mes) 
 
     def indice_precio_alimentos(self) -> tuple:
