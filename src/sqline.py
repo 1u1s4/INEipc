@@ -75,7 +75,7 @@ class sqlINE:
         self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
         # indices por gasto basico
         self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, PerSem, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2}',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
             self.__conexion
         )
         columnas = ('RegCod', 'PerAno', 'PerMes', 'PerSem', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
