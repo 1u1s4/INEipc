@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from sqline import sqlINE
 import pandas as pd
 import numpy as np
+import calendar
 
 class datosIPC:
     def __init__(self, anio: int, mes: int, QdbAux: bool=False) -> None:
@@ -50,14 +51,9 @@ class datosIPC:
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
-        FECHA_INICIAL = f"{anio}-{mes}-01"
-        if mes in (1, 3, 5, 7, 8, 10, 12):
-            ultimo_dia = 31
-        elif mes == 2:
-            ultimo_dia = 28
-        else:
-            ultimo_dia = 30
-        FECHA_FINAL = f"{anio}-{mes}-{ultimo_dia}"
+        FECHA_INICIAL = f"{anio}-{mes:02}-01"
+        ultimo_dia = calendar.monthrange(anio, mes)[1]
+        FECHA_FINAL = f"{anio}-{mes:02}-{ultimo_dia}"
         # carga de datos
         data = fred.get_series(
             series_id=SERIES_ID,
@@ -415,7 +411,7 @@ class datosIPC:
                         IPC para las regiones I a VIII.\\\\\\\\
 
                         Finalmente, para mayor comprensión del documento, se incluye
-                        un anexo contiene el glosario, con la definición de
+                        un anexo que contiene el glosario, con la definición de
                         los principales conceptos relacionados con el IPC, la metodología
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones, y la evolución del IPC de
