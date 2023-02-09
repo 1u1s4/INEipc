@@ -48,31 +48,27 @@ class sqlINE:
             f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
             self.__conexion
         )
-        self.df_DivPon['RegCod'] = self.df_DivPon['RegCod'].astype('int64')
-        self.df_DivPon['DivCod'] = self.df_DivPon['DivCod'].astype('int64')
+        self.df_DivPon = self.df_DivPon.astype({'RegCod': 'int64', 'DivCod': 'int64'})
         # ponderaciones de los gastos basicos
         self.df_GbaPon = pd.read_sql(
             f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPCP05',
             self.__conexion
         )
-        self.df_GbaPon['RegCod'] = self.df_GbaPon['RegCod'].astype('int64')
-        self.df_GbaPon['DivCod'] = self.df_GbaPon['DivCod'].astype('int64')
-        self.df_GbaPon['GbaCod'] = self.df_GbaPon['GbaCod'].astype('int64')
+        columnas = ("RegCod", "DivCod", "GbaCod")
+        self.df_GbaPon = self.df_GbaPon.astype(dict.fromkeys(columnas, "int64"))
         # informacion gastos basicos
         self.df_GbaInfo = pd.read_sql(
             'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPCM05',
             self.__conexion
         )
         columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
-        for columna in columnas:
-            self.df_GbaInfo[columna] = self.df_GbaInfo[columna].astype('int64')
+        self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
         # indices por divicion
         self.df_DivInd = pd.read_sql(
             f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 2} AND PerSem=3',
             self.__conexion
         )
-        self.df_DivInd['RegCod'] = self.df_DivInd['RegCod'].astype('int64')
-        self.df_DivInd['DivCod'] = self.df_DivInd['DivCod'].astype('int64')
+        self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
         # indices por gasto basico
         self.df_GbaInd = pd.read_sql(
             f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
@@ -111,8 +107,7 @@ class sqlINE:
             else:
                 self.df_Fnt = pd.merge(self.df_Fnt, df_Fnt, how='outer')
         columnas = ('RegCod','TfnCod', 'PerAno', 'PerMes')
-        for columna in columnas:
-            self.df_Fnt[columna] = self.df_Fnt[columna].astype('int64')
+        self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"))
         # diccionario tipo de fuentes
         self.nombre_fuentes = {
             0: 'Sin tipo',#SIN TIPO DE FUENTE ASIGNADO
