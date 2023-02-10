@@ -85,29 +85,12 @@ class sqlINE:
             )
         else:
             conexion_auxiliar = self.__conexion
-        for rg in range(1, 9):
-            df_Fnt = pd.read_sql(
-                f"""SELECT a.RegCod, a.PerAno, a.PerMes, b.TfnCod,b.BolNart 
-                    FROM IPC2010_0{rg}_RN.dbo.IPC104 a 
-                    INNER JOIN (SELECT a.FntCod, a.FntNom, a.TfnCod, b.BolNum, b.RegCod, b.BolNart
-                    FROM IPC2010_0{rg}_RN.dbo.IPC010 a 
-                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC103 b 
-                    ON (a.FntCod = b.FntCod AND a.DepCod = b.DepCod AND a.MunCod =b.MunCod) 
-                    WHERE b.PerAno >= {self.anio - 1}) b 
-                    ON a.BolNum = b.BolNum 
-                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC007 c ON 
-                    a.ArtCod = c.ArtCod
-                    INNER JOIN IPC2010_0{rg}_RN.dbo.IPC008 d ON
-                    b.TfnCod = d.TfnCod
-                    WHERE PerAno >= {self.anio - 1} AND b.TfnCod != '  '""",
-                conexion_auxiliar
-            )
-            if rg == 1:
-                self.df_Fnt = df_Fnt
-            else:
-                self.df_Fnt = pd.merge(self.df_Fnt, df_Fnt, how='outer')
-        columnas = ('RegCod','TfnCod', 'PerAno', 'PerMes')
-        self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"))
+        with open("query_fuentes.txt", "r") as f:
+            query = f.read()
+        query = query.replace("param_anio", f"{self.anio - 1}")
+        self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
+        columnas = ('RegCod', 'MunCod', 'DepCod', 'TfnCod', 'PerAno', 'PerMes')
+        self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
         # diccionario tipo de fuentes
         self.nombre_fuentes = {
             0: 'Sin tipo',#SIN TIPO DE FUENTE ASIGNADO
@@ -300,7 +283,7 @@ class sqlINE:
                 serie.append((fecha, indice))
         return serie
 
-    def serie_fuentes(self):
+    def serie_fuentes_precios(self, Qfuentes: bool = True):
         serie = []
         if self.mes != 12:
             for i in range(self.mes, 13):
@@ -308,23 +291,29 @@ class sqlINE:
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio - 1
-                conteo = self.df_Fnt[anio_ & mes_].shape[0]
-                serie.append((fecha, conteo))
+                conteo = self.df_Fnt[anio_ & mes_]
+                if Qfuentes:
+                    conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+                serie.append((fecha, conteo.shape[0]))
             for i in range(1, self.mes + 1):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio
-                conteo = self.df_Fnt[anio_ & mes_].shape[0]
-                serie.append((fecha, conteo))
+                conteo = self.df_Fnt[anio_ & mes_]
+                if Qfuentes:
+                    conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+                serie.append((fecha, conteo.shape[0]))
         else:
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio
-                conteo = self.df_Fnt[anio_ & mes_].shape[0]
-                serie.append((fecha, conteo))
+                conteo = self.df_Fnt[anio_ & mes_]
+                if Qfuentes:
+                    conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+                serie.append((fecha, conteo.shape[0]))
         return serie
 
     def desagregacion_fuentes(self):
@@ -350,12 +339,14 @@ class sqlINE:
                 break
         return serie[0:i + 1]
     
-    def cobertura_fuentes(self):
+    def cobertura_fuentes_precios(self, Qfuentes: bool = True):
         cobertura = []
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
         for i in range(1, 9):
             RegCod_ = self.df_Fnt['RegCod'] == i
-            conteo = self.df_Fnt[anio_ & mes_ & RegCod_].shape[0]
-            cobertura.append((i, conteo))
+            conteo = self.df_Fnt[anio_ & mes_ & RegCod_]
+            if Qfuentes:
+                conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+            cobertura.append((i, conteo.shape[0]))
         return cobertura
