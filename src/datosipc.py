@@ -286,7 +286,12 @@ class datosIPC:
         descripcion = self.Descriptor.serie_fuentes(datos)
         return(datos, descripcion)
 
-    def serie_precios(self, Qcobertura: bool=False):
+    def serie_precios(self):
+        datos = self.SQL.serie_fuentes_precios(False)
+        descripcion = self.Descriptor.serie_precios(datos)
+        return(datos, descripcion)
+
+    def serie_imputacion(self):
         serie = []
         df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
         df['Prec_PE'] = pd.to_numeric(df['Prec_PE'], errors='coerce')
@@ -303,11 +308,8 @@ class datosIPC:
                 precios_espera = df_i['Prec_PE'].sum()
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
-                if Qcobertura:
-                    serie.append((fecha, precios_prediligenciados))
-                else:
-                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
-                    serie.append((fecha, d))
+                d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                serie.append((fecha, d))
         else:
             for i in range(self.mes, 13):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -318,11 +320,8 @@ class datosIPC:
                 precios_espera = df_i['Prec_PE'].sum()
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
-                if Qcobertura:
-                    serie.append((fecha, precios_prediligenciados))
-                else:
-                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
-                    serie.append((fecha, d))
+                d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                serie.append((fecha, d))
             for i in range(1, self.mes + 1):
                 mes_abr = Jo.mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
@@ -332,15 +331,9 @@ class datosIPC:
                 precios_espera = df_i['Prec_PE'].sum()
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
-                if Qcobertura:
-                    serie.append((fecha, precios_prediligenciados))
-                else:
-                    d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
-                    serie.append((fecha, d))
-        if Qcobertura:
-            descripcion = self.Descriptor.serie_precios(serie)
-        else:
-            descripcion = self.Descriptor.imputacion_precios(serie)
+                d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                serie.append((fecha, d))
+        descripcion = self.Descriptor.imputacion_precios(serie)
         return(serie, descripcion)
 
     def incidencias_divisiones(self, RegCod: int):
