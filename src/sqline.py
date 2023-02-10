@@ -89,7 +89,7 @@ class sqlINE:
             query = f.read()
         query = query.replace("param_anio", f"{self.anio - 1}")
         self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
-        columnas = ('RegCod', 'MunCod', 'DepCod', 'TfnCod', 'PerAno', 'PerMes')
+        columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
         self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
         # diccionario tipo de fuentes
         self.nombre_fuentes = {
@@ -324,7 +324,7 @@ class sqlINE:
         for i in range(24):
             if i in (17,18,19): # no existen estos tipos de fuentes
                 continue
-            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
             conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
             S += conteo
             nmbr_Fnt = self.nombre_fuentes.get(i)
