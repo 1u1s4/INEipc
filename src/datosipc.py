@@ -282,29 +282,9 @@ class datosIPC:
         return salidas
     
     def serie_fuentes(self):
-        datos = self.SQL.serie_fuentes()
+        datos = self.SQL.serie_fuentes_precios()
         descripcion = self.Descriptor.serie_fuentes(datos)
         return(datos, descripcion)
-
-    def cobertura_precios(self):
-        cobertura = []
-        df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
-        anio_ = df['Año'] == self.anio
-        mes_ = df['Mes'] == self.mes
-        df = df[anio_ & mes_]
-        for i in range(1, 9):
-            region_ = df['Región'] == i
-            df_i = df[region_].reset_index()
-            suma = 0
-            for j in range(len(df_i)):
-                try:
-                    precios_prediligenciados = int(df_i.loc[j]['Prec_Pre'])
-                except:
-                    precios_prediligenciados = 0
-                suma += precios_prediligenciados
-            cobertura.append((i, suma))
-        descripcion = self.Descriptor.cobertura_precios(cobertura)
-        return(cobertura, descripcion)
 
     def serie_precios(self, Qcobertura: bool=False):
         serie = []
@@ -421,9 +401,14 @@ class datosIPC:
         return self.Descriptor.retocar_plantilla(introduccion)
 
     def cobertura_fuentes(self):
-        datos = self.SQL.cobertura_fuentes()
+        datos = self.SQL.cobertura_fuentes_precios()
         descripcion = self.Descriptor.cobertura_fuentes(datos)
         return(datos, descripcion)
+
+    def cobertura_precios(self):
+        cobertura = self.SQL.cobertura_fuentes_precios(False)
+        descripcion = self.Descriptor.cobertura_precios(cobertura)
+        return(cobertura, descripcion)
 
     def ipc_regiones(self):
         datos = []
