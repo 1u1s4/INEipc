@@ -309,6 +309,8 @@ class datosIPC:
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
                 d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                if d == np.nan:
+                    d = 0
                 serie.append((fecha, d))
         else:
             for i in range(self.mes, 13):
@@ -321,6 +323,8 @@ class datosIPC:
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
                 d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                if d == np.nan:
+                    d = 0
                 serie.append((fecha, d))
             for i in range(1, self.mes + 1):
                 mes_abr = Jo.mes_by_ordinal(i)
@@ -332,6 +336,8 @@ class datosIPC:
                 precios_recuperados = df_i['Prec_Recup'].sum()
                 precios_prediligenciados = df_i['Prec_Pre'].sum()
                 d = (precios_espera - precios_recuperados) / precios_prediligenciados * 100
+                if d == np.nan:
+                    d = 0
                 serie.append((fecha, d))
         descripcion = self.Descriptor.imputacion_precios(serie)
         return(serie, descripcion)
