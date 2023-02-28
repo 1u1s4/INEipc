@@ -65,7 +65,7 @@ class sqlINE:
         self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
         # indices por divicion
         self.df_DivInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerAno>={self.anio - 2} AND PerSem=3',
+            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerSem=3',
             self.__conexion
         )
         self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
@@ -350,3 +350,28 @@ class sqlINE:
                 conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
             cobertura.append((i, conteo.shape[0]))
         return cobertura
+
+    def serie_historica(self, tipo: str, Qtabla: bool=False):
+        serie = []
+        funcion = self.inflacion_mensual if tipo == 'intermensual' else self.inflacion_interanual
+        anio_inf = 2011 if tipo == 'intermensual' else 2012
+        for anio in range(anio_inf, self.anio):
+            for mes in range(1, 13):
+                indice = funcion(anio, mes, 0)
+                if Qtabla:
+                    mes_abr = mes_by_ordinal(mes, False)
+                    serie.append((anio, mes_abr, indice))
+                else:
+                    mes_abr = mes_by_ordinal(mes)
+                    fecha = f'{mes_abr}-{anio}'
+                    serie.append((fecha, indice))
+        for mes in range(1, self.mes + 1):
+                indice = funcion(anio, mes, 0)
+                if Qtabla:
+                    mes_abr = mes_by_ordinal(mes, False)
+                    serie.append((anio, mes_abr, indice))
+                else:
+                    mes_abr = mes_by_ordinal(mes)
+                    fecha = f'{mes_abr}-{anio}'
+                    serie.append((fecha, indice))
+        return serie
