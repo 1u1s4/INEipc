@@ -206,19 +206,19 @@ class sqlINE:
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                Qsem = self.df_GbaInd['PerSem'] == 3
-                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                #Qsem = self.df_GbaInd['PerSem'] == 3
+                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] >= self.mes
-                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
                 indices = pd.merge(indices2, indices1, how='outer')
             else:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio
                 Qmes = self.df_GbaInd['PerMes'] <= self.mes
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
-                Qsem = self.df_GbaInd['PerSem'] == 3
-                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba & Qsem][['PerAno','PerMes','GbaInd']]
+                #Qsem = self.df_GbaInd['PerSem'] == 3
+                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             if len(indices) != 0:
@@ -355,23 +355,34 @@ class sqlINE:
         serie = []
         funcion = self.inflacion_mensual if tipo == 'intermensual' else self.inflacion_interanual
         anio_inf = 2011 if tipo == 'intermensual' else 2012
+        J = 0 # para corregir las etiquetas
         for anio in range(anio_inf, self.anio):
             for mes in range(1, 13):
+                J += 1
                 indice = funcion(anio, mes, 0)
                 if Qtabla:
                     mes_abr = mes_by_ordinal(mes, False)
                     serie.append((anio, mes_abr, indice))
                 else:
-                    mes_abr = mes_by_ordinal(mes)
-                    fecha = f'{mes_abr}-{anio}'
+                    if mes == 1 or mes == 6:
+                        mes_abr = mes_by_ordinal(mes)
+                        fecha = f'{mes_abr}-{anio}'
+                    else:
+                        fecha = "\u200B" * J
                     serie.append((fecha, indice))
         for mes in range(1, self.mes + 1):
-                indice = funcion(anio, mes, 0)
+                J += 1
+                indice = funcion(self.anio, mes, 0)
                 if Qtabla:
                     mes_abr = mes_by_ordinal(mes, False)
-                    serie.append((anio, mes_abr, indice))
+                    serie.append((self.anio, mes_abr, indice))
                 else:
+                    if mes == 1 or mes == 6 or mes == self.mes:
+                        mes_abr = mes_by_ordinal(mes)
+                        fecha = f'{mes_abr}-{anio}'
+                    else:
+                        fecha = "\u200B" * J
                     mes_abr = mes_by_ordinal(mes)
-                    fecha = f'{mes_abr}-{anio}'
+                    fecha = f'{mes_abr}-{self.anio}'
                     serie.append((fecha, indice))
         return serie
