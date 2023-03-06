@@ -189,15 +189,9 @@ class datosIPC:
                 pass
         return (Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_usa(datos_variacion_interanual))
 
-    def ipc_mex(self, fecha_final="", fecha_inicial="") -> tuple:
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(self._FORMATO)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL)
-        else:
-            FECHA_INICIAL = fecha_inicial
+    def ipc_mex(self) -> tuple:
+        FECHA_FINAL = Jo.month_before(f"{self.anio}-{self.mes}-01")
+        FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato="%Y-%m-%d")
         API_KEY = "515963d6-1153-e348-8394-a81acec0d6da"
         #Llamado al API
         URL = f'https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/628222/es/0700/false/BIE/2.0/{API_KEY}?type=json'
