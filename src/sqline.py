@@ -264,30 +264,23 @@ class sqlINE:
             funcion = self.inflacion_interanual
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
-        if tipo == 'interanual':
-            for anio in range(2012, self.anio + 1):
-                mes_abr = mes_by_ordinal(self.mes)
-                fecha = f'{mes_abr}-{anio}'
-                indice = funcion(anio, self.mes, RegCod)
+        if self.mes != 12:
+            for i in range(self.mes, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                indice = funcion(self.anio - 1, i, RegCod)
+                serie.append((fecha, indice))
+            for i in range(1, self.mes + 1):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                indice = funcion(self.anio, i, RegCod)
                 serie.append((fecha, indice))
         else:
-            if self.mes != 12:
-                for i in range(self.mes, 13):
-                    mes_abr = mes_by_ordinal(i)
-                    fecha = f'{mes_abr}-{self.anio - 1}'
-                    indice = funcion(self.anio - 1, i, RegCod)
-                    serie.append((fecha, indice))
-                for i in range(1, self.mes + 1):
-                    mes_abr = mes_by_ordinal(i)
-                    fecha = f'{mes_abr}-{self.anio}'
-                    indice = funcion(self.anio, i, RegCod)
-                    serie.append((fecha, indice))
-            else:
-                for i in range(1, 13):
-                    mes_abr = mes_by_ordinal(i)
-                    fecha = f'{mes_abr}-{self.anio}'
-                    indice = funcion(self.anio, i, RegCod)
-                    serie.append((fecha, indice))
+            for i in range(1, 13):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                indice = funcion(self.anio, i, RegCod)
+                serie.append((fecha, indice))
         return serie
 
     def serie_fuentes_precios(self, Qfuentes: bool = True):
