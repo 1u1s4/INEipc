@@ -167,19 +167,14 @@ class datosIPC:
                 data.append((marca_temp, 100*interes))
         return (Jo.invertir_orden(data), self.Descriptor.tasa_de_interes(data))
 
-    def ipc_usa(self, fecha_final="", fecha_inicial="") -> tuple:
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(self._FORMATO, inicio_de_mes=True)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL)
-        else:
-            FECHA_INICIAL = fecha_inicial
+    def ipc_usa(self) -> tuple:
+        FECHA_FINAL = Jo.month_before(f"{self.anio}-{self.mes:0>2}-01")
+        FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL)
         FECHA_INICIAL_INICIAL = Jo.year_ago(fecha=FECHA_INICIAL, inicio_de_anio=True)
+
         API_KEY = '734b605521e7734edc09f38e977fe238'
         fred = Fred(api_key=API_KEY)
-        data = fred.get_series('CPIAUCSL', observation_start=FECHA_INICIAL_INICIAL, observation_end=FECHA_FINAL)
+        data = fred.get_series('CPIAUCNS', observation_start=FECHA_INICIAL_INICIAL, observation_end=FECHA_FINAL)
         fecha_i = FECHA_INICIAL
         datos_variacion_interanual = []
         for i in range(13):
