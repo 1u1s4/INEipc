@@ -12,11 +12,11 @@ import numpy as np
 import calendar
 
 class datosIPC:
-    def __init__(self, anio: int, mes: int, QdbAux: bool=False) -> None:
+    def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
-        self.SQL = sqlINE(anio, mes, QdbAux)
+        self.SQL = sqlINE(anio, mes, QdbAux, dbBackup)
         self.Descriptor = Descriptor(anio, mes) 
 
     def indice_precio_alimentos(self) -> tuple:
