@@ -113,8 +113,8 @@ class Descriptor:
                     relativa al monto de divisas compradas y al monto de divisas
                     vendidas y sus respectivas equivalencias en moneda nacional.}"""
         plantilla = f"""El tipo de cambio de referencia{nota} del quetzal respecto al dólar
-                    de los Estados Unidos de América, registró en {fecha_1} un precio
-                    medio de Q{PRECIO:,.2f} por US$1.00, lo que representa una variación
+                    de los Estados Unidos de América, registró en {fecha_1} un tipo de cambio
+                    promedio de Q{PRECIO:,.2f} por US$1.00, lo que representa una variación
                     de {variacion_1:,.2f}% respecto a {fecha_2} y de {variacion_2:,.2f}%
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
@@ -154,7 +154,7 @@ class Descriptor:
                     del banco central, cobran por los diferentes tipos de servicios
                     de crédito a los usuarios de los mismos.}"""
         plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa{nota}
-                    en moneda nacional se ubicó en {fecha_1} en {tasa:,.2f}%, lo que
+                    en moneda nacional se ubicó en {fecha_1} en {tasa:,.2f}%,
                     representa {cambio_1} de {diferencia_1:,.2f} puntos porcentuales
                     respecto a {fecha_2} y {cambio_2} de {diferencia_2:,.2f} puntos
                     porcentuales respecto a {fecha_3}."""
