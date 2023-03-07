@@ -186,10 +186,10 @@ class sqlINE:
             if self.mes == 1:
                 Qanio = self.df_DivInd['PerAno'] == self.anio - 1
                 Qmes = self.df_DivInd['PerMes'] == 12
-                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, 0)
+                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_DivInd['PerMes'] == self.mes - 1
-                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, 0)
+                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
