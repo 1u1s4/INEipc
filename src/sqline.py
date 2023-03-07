@@ -161,10 +161,10 @@ class sqlINE:
             if self.mes == 1:
                 Qanio = self.df_DivInd['PerAno'] == self.anio - 1
                 Qmes = self.df_DivInd['PerMes'] == 12
-                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
+                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, 0)
             else:
                 Qmes = self.df_DivInd['PerMes'] == self.mes - 1
-                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
+                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, 0)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
@@ -264,7 +264,7 @@ class sqlINE:
             funcion = self.inflacion_interanual
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
-        if tipo == 'interanual':
+        if tipo == 'acumulada':
             for anio in range(2012, self.anio + 1):
                 mes_abr = mes_by_ordinal(self.mes)
                 fecha = f'{mes_abr}-{anio}'
