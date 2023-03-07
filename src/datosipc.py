@@ -350,7 +350,7 @@ class datosIPC:
         fecha = f"{mes} de {self.anio}"
         firma = """\\begin{center}
                     \\textbf{Brenda Izabel Miranda Consuegra}\\\\
-                    Gerente Tecnico\\\\
+                    Gerente\\\\
                     Instituto Nacional de Estadística
                     \\end{center}"""
         introduccion = f"""El presente informe mensual, contiene los principales
@@ -372,10 +372,10 @@ class datosIPC:
                         se abordaron las variables exógenas, incluyendo el precio internacional
                         de los alimentos, el precio del petróleo, el cambio del quetzal,
                         la tasa de interés, entre otros. En el tercer apartado se presentan
-                        los resultados del IPC, incluyendo la evolución del IPC, su cambio
-                        anual, acumulado y mensual, además de las incidencias mensuales
+                        los resultados del IPC, incluyendo la evolución del IPC, su variación
+                        anual, acumulada y mensual, además de las incidencias mensuales
                         por división de gasto básico y los bienes con mayor impacto en
-                        el cambio mensual. Los apartados 4 a 11 incluyen resultados del
+                        la variación mensual. Los apartados 4 a 11 incluyen resultados del
                         IPC para las regiones I a VIII.\\\\\\\\
 
                         Finalmente, para mayor comprensión del documento, se incluye
