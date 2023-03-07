@@ -4,94 +4,15 @@ warnings.filterwarnings("ignore")
 import pyodbc 
 import pandas as pd
 import numpy as np
+import os
 from funcionesjo import mes_by_ordinal
 
 class sqlINE:
-    def __init__(self, anio: int, mes: int, QdbAux: bool=False) -> None:
+    def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
         self.__QdbAux = QdbAux
         self.anio = anio
         self.mes = mes
-        # datos servidor
-        DATABASE = 'IPC2010_RN'
-        SERVER = '10.0.0.3'
-        USERNAME = 'lmdelgado'
-        PASSWORD = 'Del/*2022'
-        self.__conexion = pyodbc.connect(
-            'DRIVER={ODBC Driver 17 for SQL Server}'
-            + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-        )
-        # nombre de divisiones
-        abr_diviciones = {
-        'Alimentos Y Bebidas No Alcohólicas': 'Alimentos',
-        'Bebidas Alcohólicas Y Tabaco':'Bebidas Alcohólicas',
-        'Prendas De Vestir Y Calzado':'Vestuario',
-        'Vivienda, Agua, Electricidad, Gas Y Otros Combustibles':'Vivienda',
-        'Muebles, Artículos Para El Hogar Y Para La Conservación  Del Hogar':'Muebles',
-        'Salud':'Salud',
-        'Transporte':'Transporte',
-        'Comunicaciones':'Comunicaciones',
-        'Recreación Y Cultura':'Recreación',
-        'Educación':'Educación',
-        'Restaurantes Y Hoteles':'Restaurantes',
-        'Bienes Y Servicios Diversos':'Bienes diversos'
-        }
-        sql_query = pd.read_sql(
-            'SELECT DivCod, DivNom FROM IPCM01',
-            self.__conexion
-        ).to_dict()
-        self.NOMBRE_DIV = dict(zip(
-            [int(i) for i in sql_query['DivCod'].values()],
-            [abr_diviciones[nombre.strip().title()] for nombre in sql_query['DivNom'].values()]
-        ))
-        # ponderaciones de las divisiones
-        self.df_DivPon = pd.read_sql(
-            f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
-            self.__conexion
-        )
-        self.df_DivPon = self.df_DivPon.astype({'RegCod': 'int64', 'DivCod': 'int64'})
-        # ponderaciones de los gastos basicos
-        self.df_GbaPon = pd.read_sql(
-            f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPCP05',
-            self.__conexion
-        )
-        columnas = ("RegCod", "DivCod", "GbaCod")
-        self.df_GbaPon = self.df_GbaPon.astype(dict.fromkeys(columnas, "int64"))
-        # informacion gastos basicos
-        self.df_GbaInfo = pd.read_sql(
-            'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPCM05',
-            self.__conexion
-        )
-        columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
-        self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
-        # indices por divicion
-        self.df_DivInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerSem=3',
-            self.__conexion
-        )
-        self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
-        # indices por gasto basico
-        self.df_GbaInd = pd.read_sql(
-            f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
-            self.__conexion
-        )
-        columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
-        for columna in columnas:
-            self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
-        # fuentes
-        if self.__QdbAux:
-            conexion_auxiliar = pyodbc.connect(
-                'DRIVER={ODBC Driver 17 for SQL Server}'
-                + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
-            )
-        else:
-            conexion_auxiliar = self.__conexion
-        with open("query_fuentes.txt", "r") as f:
-            query = f.read()
-        query = query.replace("param_anio", f"{self.anio - 1}")
-        self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
-        columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
-        self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
-        # diccionario tipo de fuentes
+       # diccionario tipo de fuentes
         self.nombre_fuentes = {
             0: 'Sin tipo',#SIN TIPO DE FUENTE ASIGNADO
             1: 'Carnicerias',#CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
@@ -115,6 +36,110 @@ class sqlINE:
             22: 'Casa de Alquiler',#VIVIENDA TIPO CASA DE ALQUILER
             23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
         }
+        if dbBackup:
+            self.df_DivInd = pd.read_feather('db_b/df_DivInd.feather')
+            self.df_DivPon = pd.read_feather('db_b/df_DivPon.feather')
+            self.df_GbaInd = pd.read_feather('db_b/df_GbaInd.feather')
+            self.df_GbaPon = pd.read_feather('db_b/df_GbaPon.feather')
+            self.df_GbaInfo = pd.read_feather('db_b/df_GbaInfo.feather')
+            self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
+            self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
+        else:
+            # datos servidor
+            DATABASE = 'IPC2010_RN'
+            SERVER = '10.0.0.3'
+            USERNAME = 'lmdelgado'
+            PASSWORD = 'Del/*2022'
+            self.__conexion = pyodbc.connect(
+                'DRIVER={ODBC Driver 17 for SQL Server}'
+                + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+            )
+            self.df_DivNom = pd.read_sql(
+                'SELECT DivCod, DivNom FROM IPCM01',
+                self.__conexion
+            )
+            # ponderaciones de las divisiones
+            self.df_DivPon = pd.read_sql(
+                f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
+                self.__conexion
+            )
+            self.df_DivPon = self.df_DivPon.astype({'RegCod': 'int64', 'DivCod': 'int64'})
+            # ponderaciones de los gastos basicos
+            self.df_GbaPon = pd.read_sql(
+                f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPCP05',
+                self.__conexion
+            )
+            columnas = ("RegCod", "DivCod", "GbaCod")
+            self.df_GbaPon = self.df_GbaPon.astype(dict.fromkeys(columnas, "int64"))
+            # informacion gastos basicos
+            self.df_GbaInfo = pd.read_sql(
+                'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPCM05',
+                self.__conexion
+            )
+            columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
+            self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
+            # indices por divicion
+            self.df_DivInd = pd.read_sql(
+                f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerSem=3',
+                self.__conexion
+            )
+            self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
+            # indices por gasto basico
+            self.df_GbaInd = pd.read_sql(
+                f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
+                self.__conexion
+            )
+            columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
+            for columna in columnas:
+                self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+            # fuentes
+            if self.__QdbAux:
+                conexion_auxiliar = pyodbc.connect(
+                    'DRIVER={ODBC Driver 17 for SQL Server}'
+                    + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
+                )
+            else:
+                conexion_auxiliar = self.__conexion
+            with open("query_fuentes.txt", "r") as f:
+                query = f.read()
+            query = query.replace("param_anio", f"{self.anio - 1}")
+            self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
+            columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
+            self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
+        # fin de carga de datos 
+        # nombre de divisiones
+        abr_diviciones = {
+            'Alimentos Y Bebidas No Alcohólicas': 'Alimentos',
+            'Bebidas Alcohólicas Y Tabaco':'Bebidas Alcohólicas',
+            'Prendas De Vestir Y Calzado':'Vestuario',
+            'Vivienda, Agua, Electricidad, Gas Y Otros Combustibles':'Vivienda',
+            'Muebles, Artículos Para El Hogar Y Para La Conservación  Del Hogar':'Muebles',
+            'Salud':'Salud',
+            'Transporte':'Transporte',
+            'Comunicaciones':'Comunicaciones',
+            'Recreación Y Cultura':'Recreación',
+            'Educación':'Educación',
+            'Restaurantes Y Hoteles':'Restaurantes',
+            'Bienes Y Servicios Diversos':'Bienes diversos'
+        }
+        df_DivNom_dic = self.df_DivNom.to_dict()
+        self.NOMBRE_DIV = dict(zip(
+            [int(i) for i in df_DivNom_dic['DivCod'].values()],
+            [abr_diviciones[nombre.strip().title()] for nombre in df_DivNom_dic['DivNom'].values()]
+        ))
+
+    def hacer_db_backup(self):
+        # Comprobamos si la carpeta db_b existe
+        if not os.path.exists("db_b"):
+            # Si no existe, la creamos
+            os.makedirs("db_b")
+        self.df_DivInd.to_feather('db_b/df_DivInd.feather')
+        self.df_DivPon.to_feather('db_b/df_DivPon.feather')
+        self.df_GbaInd.to_feather('db_b/df_GbaInd.feather')
+        self.df_GbaPon.to_feather('db_b/df_GbaPon.feather')
+        self.df_GbaInfo.to_feather('db_b/df_GbaInfo.feather')
+        self.df_DivNom.to_feather('db_b/df_DivNom.feather')
+        self.df_Fnt.to_feather('db_b/df_Fnt.feather')
 
     def get_nombre_Gba(self, GbaCod: int) -> str:
         nombre = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
