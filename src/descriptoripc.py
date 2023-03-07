@@ -296,12 +296,12 @@ class Descriptor:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
                         en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
-                        respecto al año anterior ({indice_2:,.2f}%), y con respecto a la
+                        respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
                         variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
                         {diferencia_2:,.2f} puntos."""
         elif tipo == "acumulada":
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.2f}%. Y la de {fecha_2} se
+                        se ubicó en {indice_1:,.2f}%. La de {fecha_2} se
                         presento en {indice_3:,.2f}%."""
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
