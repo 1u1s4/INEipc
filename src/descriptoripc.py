@@ -300,15 +300,17 @@ class Descriptor:
                         variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
                         {diferencia_2:,.2f} puntos."""
         elif tipo == "acumulada":
+            fecha_2 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
+            indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.2f}%. La de {fecha_2} se
-                        presento en {indice_3:,.2f}%."""
+                        presentó en {indice_3:,.2f}%."""
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
                         en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
                         respecto al mes anterior ({indice_2:,.2f}%), y la de {fecha_2} se
-                        presento en {indice_3:,.2f}%."""
+                        presentó en {indice_3:,.2f}%."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos, fecha) -> str:
