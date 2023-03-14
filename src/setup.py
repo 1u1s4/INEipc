@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
-    name='automatizacion_capitulo_1_IPC_INE',
-    version='0.3',
+    name='automatizacion_IPC_INE',
+    version='1.0.3',
     author='Luis Alfredo Alvarado Rodríguez',
     description='Automatizacion de extraccion de datos para el capitulo 1 del IPC.',
     long_description='',
@@ -9,13 +9,15 @@ setup(
     keywords='development, setup, setuptools',
     python_requires='>=3.9',
     packages=find_packages(),
-    py_modules=['datosipc','descriptoripc','funcionesjo','sqline'],
+    py_modules=['datosipc', 'descriptoripc', 'funcionesjo', 'sqline'],
     install_requires=[
         'fredapi',
-        'xlrd=1.2.0',
+        'xlrd==1.2.0',
         'prettytable',
         'rpy2',
         'xlsxwriter',
-        'pyodbc'
+        'pyodbc',
+        'requests',
+        'bs4'
     ]
 )
