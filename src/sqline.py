@@ -231,7 +231,6 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             [abr_diviciones[nombre.strip().title()] for nombre in df_DivNom_dic['DivNom'].values()]
         ))
 
-    def hacer_db_backup(self):
         # Comprobamos si la carpeta db_b existe
         if not os.path.exists("db_b"):
             # Si no existe, la creamos
