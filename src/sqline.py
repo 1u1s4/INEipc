@@ -498,11 +498,8 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                     mes_abr = mes_by_ordinal(mes, False)
                     serie.append((anio, mes_abr, indice))
                 else:
-                    if mes == 1 or mes == 6:
-                        mes_abr = mes_by_ordinal(mes)
-                        fecha = f'{mes_abr}-{anio}'
-                    else:
-                        fecha = "\u200B" * J
+                    mes_abr = mes_by_ordinal(mes)
+                    fecha = f'{mes_abr}-{anio}'
                     serie.append((fecha, indice))
         for mes in range(1, self.mes + 1):
                 J += 1
@@ -511,11 +508,6 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                     mes_abr = mes_by_ordinal(mes, False)
                     serie.append((self.anio, mes_abr, indice))
                 else:
-                    if mes == 1 or mes == 6 or mes == self.mes:
-                        mes_abr = mes_by_ordinal(mes)
-                        fecha = f'{mes_abr}-{anio}'
-                    else:
-                        fecha = "\u200B" * J
                     mes_abr = mes_by_ordinal(mes)
                     fecha = f'{mes_abr}-{self.anio}'
                     serie.append((fecha, indice))
