@@ -224,7 +224,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def inflacion(self, datos, mes, anio) -> str:
-        inflacion_mes = [(i[1], i[0]) for i in datos[1::]]
+        inflacion_mes = [(i[2], i[0]) for i in datos[1::]]
         inflacion_mes.sort()
         INFLACION_MIN = inflacion_mes[0]
         INFLACION_MAX = inflacion_mes[-1]
