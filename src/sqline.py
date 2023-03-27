@@ -636,7 +636,15 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 serie.append((fecha, conteo.shape[0]))
         return serie
 
-    def desagregacion_fuentes(self):
+    def desagregacion_fuentes(self) -> List[Tuple[str, int]]:
+        """
+        Desagrega el número de fuentes por tipo de fuente.
+
+        Returns:
+        -----------
+        List[Tuple[str, int]]:
+            Una lista de tuplas que contienen el nombre del tipo de fuente y el número de fuentes para el mes y año actual.
+        """
         serie = []
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
