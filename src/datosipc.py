@@ -194,7 +194,7 @@ class datosIPC:
                 None
         return (Jo.invertir_orden(data_mean), self.Descriptor.cambio_del_quetzal(data_mean))
 
-    def tasa_interes(self, fecha_final: str, fecha_inicial: str) -> Tuple[List[Tuple[str, float]], Descriptor]:
+    def tasa_interes(self, fecha_final: str, fecha_inicial: str) -> Tuple[List[Tuple[str, float]], str]:
         """
         Calcula la tasa de interés entre dos fechas y devuelve una lista de tuplas con las tasas de interés y un descriptor.
         
@@ -277,7 +277,17 @@ class datosIPC:
                 pass
         return (Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_usa(datos_variacion_interanual))
 
-    def ipc_mex(self) -> tuple:
+    def ipc_mex(self) -> Tuple[List[Tuple[str, float]],str]:
+        """
+        Obtiene el índice de precios al consumidor (IPC) de México y calcula la tasa de variación interanual.
+
+        Returns
+        -------
+        tuple
+            Un tuple con dos elementos:
+            1. Una lista de tuplas que contiene la fecha (str) y la tasa de variación interanual (float) del IPC.
+            2. Un tuple que contiene la fecha (str) y el último valor del IPC (float).
+        """
         FECHA_FINAL = Jo.month_before(f"{self.anio}-{self.mes}-01")
         FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato="%Y-%m-%d")
         API_KEY = "515963d6-1153-e348-8394-a81acec0d6da"
