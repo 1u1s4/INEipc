@@ -13,7 +13,23 @@ import calendar
 from typing import List, Tuple
 
 class datosIPC:
-    def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
+class datosIPC:
+    def __init__(self, anio: int, mes: int, QdbAux: bool = False, dbBackup: bool = False) -> None:
+        """
+        Constructor de la clase datosIPC, que permite manejar los datos del IPC y descripciones.
+
+        Parameters
+        ----------
+        anio : int
+            Año en el que se desea obtener los datos del IPC.
+        mes : int
+            Mes en el que se desea obtener los datos del IPC.
+        QdbAux : bool, optional
+            Indica si se utiliza una base de datos auxiliar (por defecto, False).
+        dbBackup : bool, optional
+            Indica si se utiliza una copia de seguridad de la base de datos (por defecto, False).
+        """
+
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
