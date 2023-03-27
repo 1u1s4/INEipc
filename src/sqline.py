@@ -287,6 +287,23 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         return np.average(a=indices, weights=PONDERACIONES_REG)
 
     def inflacion_mensual(self, anio: int, mes: int, RegCod: int) -> float:
+        """
+        Calcula la inflación mensual para una región específica.
+        
+        Parameters
+        ----------
+        anio : int
+            El año para el cual se desea calcular la inflación.
+        mes : int
+            El mes para el cual se desea calcular la inflación, en formato numérico (1-12).
+        RegCod : int
+            El código de la región para la cual se desea calcular la inflación.
+        
+        Returns
+        -------
+        float
+            El valor de la inflación mensual para la región y el periodo especificados, expresado como un porcentaje.
+        """
         actual = self.calcular_IPC(anio, mes, RegCod)
         if mes == 1:
             anterior = self.calcular_IPC(anio - 1, 12, RegCod)
