@@ -667,7 +667,16 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 break
         return serie[0:i + 1]
     
-    def cobertura_fuentes_precios(self, Qfuentes: bool = True):
+    def cobertura_fuentes_precios(self, Qfuentes: bool = True) -> List[Tuple[int, int]]:
+        """Calcula la cobertura de fuentes de precios para cada región en un mes y año específico.
+
+        Args:
+            Qfuentes (bool, optional): Si se requiere el conteo de fuentes únicas. Defaults to True.
+
+        Returns:
+            List[Tuple[int, int]]: Una lista de tuplas que contiene el código de región y el número de fuentes 
+            de precios para la región especificada en el mes y año específico.
+        """
         cobertura = []
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
