@@ -244,7 +244,18 @@ class datosIPC:
                 data.append((marca_temp, 100*interes))
         return (Jo.invertir_orden(data), self.Descriptor.tasa_de_interes(data))
 
-    def ipc_usa(self) -> tuple:
+    def ipc_usa(self) -> Tuple[List[Tuple[str, float]], str]:
+        """
+        Calcula la variación interanual del IPC de Estados Unidos y retorna una lista de tuplas con la variación
+        por mes y una descripción.
+
+        Returns
+        -------
+        tuple:
+            - List[Tuple[str, float]]: Lista de tuplas que contiene la fecha (año-mes) y la variación interanual
+            del IPC de Estados Unidos en porcentaje.
+            - str: Descripción de la variación interanual del IPC de Estados Unidos.
+        """
         FECHA_FINAL = Jo.month_before(f"{self.anio}-{self.mes:0>2}-01")
         FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL)
         FECHA_INICIAL_INICIAL = Jo.year_ago(fecha=FECHA_INICIAL, inicio_de_anio=True)
