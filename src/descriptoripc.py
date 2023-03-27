@@ -25,7 +25,18 @@ class Descriptor:
         return plantilla
 
     def variacion(self, dato: float, dato_antes: float) -> float:
+        """
+        Calcula la variación porcentual entre dos valores numéricos.
+
+        Args:
+        dato (float): Valor actual.
+        dato_antes (float): Valor anterior.
+
+        Returns:
+        float: Variación porcentual entre los dos valores.
+        """
         return ((dato - dato_antes) / dato_antes) * 100
+
     # indice_precio_alimentos
     """
     ejemplo de datos
