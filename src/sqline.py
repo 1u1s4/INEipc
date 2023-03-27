@@ -585,7 +585,25 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                     serie.append((fecha, indice))
         return serie
 
-    def serie_fuentes_precios(self, Qfuentes: bool = True):
+    def serie_fuentes_precios(self, Qfuentes: bool = True) -> List[Tuple[str, int]]:
+        """
+        Devuelve una serie histórica con la cantidad de fuentes de precios disponibles
+        para cada mes y año.
+        
+        Parameters
+        ----------
+        Qfuentes : bool, optional
+            Si es True, se contabilizan solamente las fuentes de precios únicas (eliminando duplicados), 
+            de lo contrario, se cuentan todas las observaciones. Por defecto es True.
+            
+        Returns
+        -------
+        List[Tuple[str, int]]
+            Lista de tuplas con la información de la serie histórica. 
+            Cada tupla contiene dos elementos: 
+            - un string con la fecha en formato 'Abr-Año'
+            - un entero con la cantidad de fuentes de precios disponibles para esa fecha.
+        """
         serie = []
         if self.mes != 12:
             for i in range(self.mes, 13):
