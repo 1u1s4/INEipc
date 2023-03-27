@@ -688,30 +688,30 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             cobertura.append((i, conteo.shape[0]))
         return cobertura
 
-    def serie_historica(self, tipo: str, Qtabla: bool=False):
+    def serie_historica(self, tipo: str):
         serie = []
-        funcion = self.inflacion_mensual if tipo == 'intermensual' else self.inflacion_interanual
-        anio_inf = 2011 if tipo == 'intermensual' else 2012
+        if tipo == 'intermensual':
+            funcion = self.inflacion_mensual
+        elif tipo == 'interanual':
+            funcion = self.inflacion_interanual
+        elif tipo == 'IPC':
+            funcion = self.calcular_IPC
+        if tipo == 'intermensual':
+            anio_inf = 2011
+        else:
+            anio_inf = 2012
         J = 0 # para corregir las etiquetas
         for anio in range(anio_inf, self.anio):
             for mes in range(1, 13):
                 J += 1
                 indice = funcion(anio, mes, 0)
-                if Qtabla:
-                    mes_abr = mes_by_ordinal(mes, False)
-                    serie.append((anio, mes_abr, indice))
-                else:
-                    mes_abr = mes_by_ordinal(mes)
-                    fecha = f'{mes_abr}-{anio}'
-                    serie.append((fecha, indice))
+                mes_abr = mes_by_ordinal(mes)
+                fecha = f'{mes_abr}-{anio}'
+                serie.append((fecha, indice))
         for mes in range(1, self.mes + 1):
                 J += 1
                 indice = funcion(self.anio, mes, 0)
-                if Qtabla:
-                    mes_abr = mes_by_ordinal(mes, False)
-                    serie.append((self.anio, mes_abr, indice))
-                else:
-                    mes_abr = mes_by_ordinal(mes)
-                    fecha = f'{mes_abr}-{self.anio}'
-                    serie.append((fecha, indice))
+                mes_abr = mes_by_ordinal(mes)
+                fecha = f'{mes_abr}-{self.anio}'
+                serie.append((fecha, indice))
         return serie
