@@ -37,16 +37,16 @@ class Descriptor:
         """
         return ((dato - dato_antes) / dato_antes) * 100
 
-    # indice_precio_alimentos
-    """
-    ejemplo de datos
-    ('2014-Nov', 75.78947368421052)
-    ('2014-Dic', 59.29045454545455)
-    ...
-    ('2015-Sep', 45.479523809523805)
-    ('2015-Oct', 46.22363636363636)
-    """
     def indice_precio_alimentos(self, datos: list[tuple[str]]) -> str:
+        """
+        Genera un texto con la información del índice de precios de los alimentos.
+
+        Args:
+        datos (List[Tuple[str, float]]): Lista de tuplas que contiene información de fecha y precio.
+
+        Returns:
+        str: Texto con la información del índice de precios de los alimentos.
+        """
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         fecha_3 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
