@@ -64,8 +64,15 @@ class datosIPC:
         data = data.dropna()
         return data.mean()
 
-    def petroleo(self) -> tuple:
-        # extraccion de los datos en el rango de fechas
+    def petroleo(self) -> Tuple[List[Tuple[str, float]], str]:
+        """
+        Calcula la media de la serie de petróleo en un rango de fechas y devuelve
+        una tupla con los datos y el descriptor de petróleo.
+
+        Returns:
+            tuple: Una tupla que contiene una lista de tuplas (fecha, media) y
+                el descriptor de petróleo.
+        """
         data = []
         if self.mes == 12:
             for mes in range(1, 13):
