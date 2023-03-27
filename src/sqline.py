@@ -356,9 +356,38 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         return 100*(actual/anterior - 1)
     
     def poder_adquisitivo(self, anio: int, mes: int, RegCod: int) -> float:
+        """
+        Calcula el poder adquisitivo de la moneda para una región específica.
+        
+        Parameters
+        ----------
+        anio : int
+            El año para el cual se desea calcular el poder adquisitivo.
+        mes : int
+            El mes para el cual se desea calcular el poder adquisitivo, en formato numérico (1-12).
+        RegCod : int
+            El código de la región para la cual se desea calcular el poder adquisitivo.
+        
+        Returns
+        -------
+        float
+            El valor del poder adquisitivo de la moneda para la región y el periodo especificados, expresado como un porcentaje.
+        """
         return (1 / self.calcular_IPC(anio, mes, RegCod)) * 100
 
     def incidencia_divisiones(self, RegCod: int) -> List[float]:
+        """
+        Calcula la incidencia de cada división en el índice de precios al consumidor
+        en una determinada región y periodo.
+
+        Args:
+            RegCod (int): Código de la región.
+
+        Returns:
+            List[float]: Lista de tuplas que contiene la incidencia de cada división 
+            en el índice de precios al consumidor de la región, en orden descendente. 
+            Cada tupla contiene la variación ponderada de la división y su nombre.
+        """
         incidencias = []
         for DivCod in range(1, 13):
             ponderacion = self.df_DivPon[(self.df_DivPon['RegCod'] == RegCod) & (self.df_DivPon['DivCod'] == DivCod)]['DivPon'].iloc[0]
