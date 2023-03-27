@@ -20,7 +20,17 @@ class datosIPC:
         self.SQL = sqlINE(anio, mes, QdbAux, dbBackup)
         self.Descriptor = Descriptor(anio, mes) 
 
-    def indice_precio_alimentos(self) -> tuple:
+    def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
+        """
+        Obtiene el índice de precios de los alimentos de los últimos 13 meses desde la FAO y su descriptor.
+
+        Returns
+        -------
+        tuple
+            - Una lista de tuplas que contiene el índice de precios de los alimentos de los últimos 13 meses
+              en el formato (mes-año, índice).
+            - Descriptor del índice de precios de los alimentos basado en el último mes.
+        """
         # web scraping para encontrar el link actualizado
         URL = "https://www.fao.org/worldfoodsituation/foodpricesindex/en/"
         HEADERS = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
