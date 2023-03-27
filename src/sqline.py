@@ -244,6 +244,20 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         self.df_Fnt.to_feather('db_b/df_Fnt.feather')
 
     def get_nombre_Gba(self, GbaCod: int) -> str:
+        """
+        Obtiene el nombre del gasto básico correspondiente al código proporcionado.
+
+        Parameters
+        ----------
+        GbaCod : int
+            Código del gasto básico para el cual se desea obtener el nombre.
+
+        Returns
+        -------
+        str
+            Nombre del gasto básico correspondiente al código proporcionado,
+            con espacios iniciales y finales eliminados y en formato título.
+        """
         nombre = self.df_GbaInfo[self.df_GbaInfo['GbaCod'] == GbaCod]['GbaNom'].iloc[0]
         return nombre.strip().title()
 
