@@ -10,6 +10,7 @@ from sqline import sqlINE
 import pandas as pd
 import numpy as np
 import calendar
+from typing import List, Tuple
 
 class datosIPC:
     def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
@@ -83,7 +84,21 @@ class datosIPC:
             
         return (data, self.Descriptor.petroleo(data))
 
-    def cambio_quetzal(self) -> tuple:
+    def cambio_quetzal(self) -> Tuple[List[Tuple[str, float]], str]:
+        """
+        Retorna una tupla con una lista de tuplas y un string. La lista de tuplas
+        contiene información sobre el cambio del quetzal respecto al dólar de los
+        Estados Unidos de América. El string contiene información sobre la tasa
+        de interés activa en moneda nacional.
+
+        Returns
+        -------
+        tuple of list of tuple of str and float and str
+            Una tupla que contiene una lista de tuplas con información sobre el
+            cambio del quetzal respecto al dólar de los Estados Unidos de América
+            y un string con información sobre la tasa de interés activa en moneda
+            nacional.
+        """
         FORMATO = "%d/%m/%Y"
         FECHA_FINAL = f"28/{self.mes}/{self.anio}"
         FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO, inicio_de_mes=True)
