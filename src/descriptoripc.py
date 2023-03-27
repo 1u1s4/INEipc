@@ -1,4 +1,5 @@
 # from sqline import sqlINE
+from typing import List, Tuple
 from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 class Descriptor:
@@ -37,15 +38,17 @@ class Descriptor:
         """
         return ((dato - dato_antes) / dato_antes) * 100
 
-    def indice_precio_alimentos(self, datos: list[tuple[str]]) -> str:
+    def indice_precio_alimentos(self, datos: List[Tuple[str]]) -> str:
         """
         Genera un texto con la información del índice de precios de los alimentos.
 
-        Args:
-        datos (List[Tuple[str, float]]): Lista de tuplas que contiene información de fecha y precio.
+        Parameters
+        ----------
+            datos (List[Tuple[str, float]]): Lista de tuplas que contiene información de fecha y precio.
 
-        Returns:
-        str: Texto con la información del índice de precios de los alimentos.
+        Returns
+        ----------
+            str: Texto con la información del índice de precios de los alimentos.
         """
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
@@ -66,16 +69,23 @@ class Descriptor:
                     variación de {variacion_1:,.2f}% respecto a {fecha_2} y de
                     {variacion_2:,.2f}% respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
-    # petroleo
-    """
-    ejemplo de datos
-    ('2014-Nov', 75.78947368421052)
-    ('2014-Dic', 59.29045454545455)
-    ...
-    ('2015-Sep', 45.479523809523805)
-    ('2015-Oct', 46.22363636363636)
-    """
-    def petroleo(self, datos: list[tuple[str]]) -> str:
+
+    def petroleo(self, datos: List[Tuple[str, float]]) -> str:
+        """
+        Función que recibe una lista de tuplas con datos del precio del petróleo y
+        devuelve una cadena de texto formateada con la información correspondiente.
+
+        Parameters
+        ----------
+            datos: Lista de tuplas con los datos del precio del petróleo. Cada
+            tupla contiene una cadena con la abreviatura del mes y el año
+            correspondiente (por ejemplo, "Ene 2022") y un valor float con
+            el precio del petróleo en dólares por barril.
+        
+        Returns
+        ----------
+            Cadena de texto con la información del precio del petróleo formateada.
+        """
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
@@ -103,15 +113,23 @@ class Descriptor:
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    # cambio del quetzal
-    """
-    ejemplo de datos
-    ('2021-Ago', 7.738385161290321)
-    ...
-    ('2022-Jun', 7.735068333333335)
-    ('2022-Jul', 7.739475806451614)
-    """
-    def cambio_del_quetzal(self, datos: list[tuple[str]]) -> str:
+    def cambio_del_quetzal(self, datos: List[Tuple[str, float]]) -> str:
+        """
+        Retorna un string con información sobre el tipo de cambio del quetzal
+        guatemalteco respecto al dólar estadounidense.
+
+        Parameters
+        ----------
+        datos : list of tuple of str and float
+            Una lista de tuplas con información sobre el tipo de cambio. Cada tupla
+            contiene una cadena con la abreviación del mes y el año (por ejemplo, "Ene 2022")
+            y un valor float con el tipo de cambio en quetzales por dólar estadounidense.
+
+        Returns
+        -------
+        str
+            Un string con información sobre el tipo de cambio.
+        """
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
