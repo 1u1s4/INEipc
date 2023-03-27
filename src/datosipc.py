@@ -13,7 +13,6 @@ import calendar
 from typing import List, Tuple
 
 class datosIPC:
-class datosIPC:
     def __init__(self, anio: int, mes: int, QdbAux: bool = False, dbBackup: bool = False) -> None:
         """
         Constructor de la clase datosIPC, que permite manejar los datos del IPC y descripciones.
@@ -195,7 +194,22 @@ class datosIPC:
                 None
         return (Jo.invertir_orden(data_mean), self.Descriptor.cambio_del_quetzal(data_mean))
 
-    def tasa_interes(self, fecha_final="", fecha_inicial="") -> tuple:
+    def tasa_interes(self, fecha_final: str, fecha_inicial: str) -> Tuple[List[Tuple[str, float]], Descriptor]:
+        """
+        Calcula la tasa de interés entre dos fechas y devuelve una lista de tuplas con las tasas de interés y un descriptor.
+        
+        Parameters
+        ----------
+        fecha_final : str
+            Fecha final en formato 'YYYY-MM'. Si no se proporciona, se utiliza la fecha actual.
+        fecha_inicial : str
+            Fecha inicial en formato 'YYYY-MM'. Si no se proporciona, se utiliza un año antes de la fecha final.
+            
+        Returns
+        -------
+        tuple
+            Una tupla que contiene una lista de tuplas con las tasas de interés y un descriptor.
+        """
         FORMATO = "%Y-%m"
         if len(fecha_final) == 0:
             FECHA_FINAL = Jo.hoy(FORMATO)
