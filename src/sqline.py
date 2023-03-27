@@ -312,6 +312,23 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         return 100*(actual/anterior - 1)
 
     def inflacion_interanual(self, anio: int, mes: int, RegCod: int) -> float:
+        """
+        Calcula la inflación interanual para una región específica.
+        
+        Parameters
+        ----------
+        anio : int
+            El año para el cual se desea calcular la inflación.
+        mes : int
+            El mes para el cual se desea calcular la inflación, en formato numérico (1-12).
+        RegCod : int
+            El código de la región para la cual se desea calcular la inflación.
+        
+        Returns
+        -------
+        float
+            El valor de la inflación interanual para la región y el periodo especificados, expresado como un porcentaje.
+        """
         actual = self.calcular_IPC(anio, mes, RegCod)
         anterior = self.calcular_IPC(anio - 1, mes, RegCod)
         return 100*(actual/anterior - 1)
