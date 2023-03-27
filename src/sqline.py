@@ -262,6 +262,23 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         return nombre.strip().title()
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
+        """
+        Calcula el índice de precios al consumidor (IPC) para una región y período de tiempo dados.
+
+        Parameters
+        ----------
+        anio : int
+            Año para el cual se desea calcular el IPC.
+        mes : int
+            Mes (número entero entre 1 y 12) para el cual se desea calcular el IPC.
+        RegCod : int
+            Código de la región para la cual se desea calcular el IPC.
+
+        Returns
+        -------
+        float
+            IPC calculado para la región y período de tiempo dados.
+        """
         PONDERACIONES_REG = self.df_DivPon[self.df_DivPon['RegCod'] == RegCod]['DivPon']
         Qanio = self.df_DivInd['PerAno'] == anio
         Qmes = self.df_DivInd['PerMes'] == mes
