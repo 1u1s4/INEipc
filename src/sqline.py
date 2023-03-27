@@ -537,7 +537,21 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 serie.append((fecha, ipc))
         return serie
 
-    def serie_historica_inflacion(self, RegCod: int, tipo: str):
+    def serie_historica_inflacion(self, RegCod: int, tipo: str) -> List[Tuple[str, float]]:
+        """
+        Retorna una serie histórica de inflación para una región específica.
+
+        Args:
+            RegCod (int): Código de la región para la cual se quiere obtener la
+            serie histórica de inflación.
+            tipo (str): Tipo de inflación que se desea calcular. Puede ser
+            'intermensual', 'interanual' o 'acumulada'.
+
+        Returns:
+            List[Tuple[str, float]]: Lista de tuplas, donde cada tupla contiene
+            dos elementos: la fecha en formato "mes-año" y el valor del índice
+            de inflación correspondiente a esa fecha.
+        """
         serie = []
         if tipo == 'intermensual':
             funcion = self.inflacion_mensual
