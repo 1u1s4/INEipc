@@ -499,6 +499,20 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         return series
 
     def serie_historica_ipc_pdr_adq(self, RegCod: int, Qpdr_adq: bool=False):
+        """
+        Retorna una serie histórica del IPC para una región específica.
+
+        Args:
+            RegCod (int): Código de la región para la cual se quiere obtener la
+            serie histórica del IPC.
+            Qpdr_adq (bool, optional): Indica si se quiere calcular la serie
+            histórica en términos de poder adquisitivo o no. Por defecto es False.
+
+        Returns:
+            List[Tuple[str, float]]: Lista de tuplas, donde cada tupla contiene
+            dos elementos: la fecha en formato "mes-año" y el valor del IPC
+            correspondiente a esa fecha.
+        """
         serie = []
         if Qpdr_adq:
             funcion = self.poder_adquisitivo
