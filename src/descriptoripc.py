@@ -148,16 +148,24 @@ class Descriptor:
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    # tasa de interes
-    """
-    ('2021-Ago', 12.139999999999999)
-    ('2021-Sep', 12.16)
-    ...
-    ('2022-Abr', 11.93)
-    ('2022-May', 11.940000000000001)
-    ('2022-Jun', 11.98)
-    """
-    def tasa_de_interes(self, datos: list[tuple[str]]) -> str:
+    def tasa_de_interes(self, datos: List[Tuple[str, float]]) -> str:
+        """
+        Retorna un string con información sobre la tasa de interés activa en
+        moneda nacional.
+
+        Parameters
+        ----------
+        datos : list of tuple of str and float
+            Una lista de tuplas con información sobre la tasa de interés activa.
+            Cada tupla contiene una cadena con la abreviación del mes y el año
+            (por ejemplo, "Ene 2022") y un valor float con la tasa de interés
+            activa en porcentaje.
+
+        Returns
+        -------
+        str
+            Un string con información sobre la tasa de interés activa.
+        """
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         fecha_3 = mes_anio_by_abreviacion(datos[-2][0])
