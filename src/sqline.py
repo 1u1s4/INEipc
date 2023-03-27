@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import warnings
 warnings.filterwarnings("ignore")
 import pyodbc 
@@ -408,7 +408,19 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 
-    def incidencia_gasto_basico(self, RegCod: int):
+    def incidencia_gasto_basico(self, RegCod: int) -> List[Tuple[float, str]]:
+        """
+        Obtiene la incidencia de la variación de los gastos básicos para una región.
+
+        Parámetros:
+        -----------
+        - RegCod: int. Código de la región de interés.
+
+        Retorna:
+        --------
+        - List[Tuple[float, str]]: Lista de tuplas que contienen la incidencia de la variación de los gastos básicos
+        y su nombre correspondiente para la región de interés.
+        """
         incidencias = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
             ponderacion = self.df_GbaPon[(self.df_GbaPon['RegCod'] == RegCod) & (self.df_GbaPon['GbaCod'] == GbaCod)]['GbaPon'].iloc[0]
