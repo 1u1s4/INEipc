@@ -448,7 +448,24 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             incidencias.append((variacion, nombre_gba))
         return incidencias
 
-    def series_historicas_Gbas(self, RegCod: int):
+    def series_historicas_Gbas(self, RegCod: int) -> List[Tuple[str, List[Tuple[str, float]]]]:
+        """
+        Devuelve una lista de tuplas, cada una representando una serie histórica
+        de un gasto básico diferente. La tupla contiene el nombre del gasto básico
+        y una lista de tuplas que contienen la fecha en formato "mes-año" y el
+        índice correspondiente a ese mes y año.
+
+        Parámetros:
+        -----------
+        RegCod: int
+            Código de región.
+
+        Returns:
+        --------
+        series: List[Tuple[str, List[Tuple[str, float]]]]
+            Lista de tuplas que contienen el nombre del gasto básico y la lista de
+            tuplas de fecha-índice correspondientes a ese gasto básico.
+        """
         series = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
             if self.mes != 12:
