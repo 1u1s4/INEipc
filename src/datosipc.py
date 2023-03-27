@@ -48,7 +48,22 @@ class datosIPC:
             data.append((fecha, indice))
         return(data, self.Descriptor.indice_precio_alimentos(data))
 
-    def __petroleo_series_mean(self, anio, mes):
+    def __petroleo_series_mean(self, anio: int, mes: int) -> float:
+        """
+        Calcula el promedio del precio del petróleo en un mes específico de un año dado.
+
+        Parameters
+        ----------
+        anio : int
+            Año en el que se desea calcular el promedio del precio del petróleo.
+        mes : int
+            Mes en el que se desea calcular el promedio del precio del petróleo.
+
+        Returns
+        -------
+        float
+            Promedio del precio del petróleo en el mes especificado del año dado.
+        """
         API_KEY ='734b605521e7734edc09f38e977fe238'
         SERIES_ID = 'DCOILWTICO'
         fred = Fred(api_key=API_KEY)
