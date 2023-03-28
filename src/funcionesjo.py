@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def hoy(formato="%Y-%m-%d", inicio_de_mes=False) -> str:
+def hoy(formato="%Y-%m-%d", inicio_de_mes=False) -> str: # eliminar ?
     if inicio_de_mes and "%d" in formato:
         formato = formato.replace("%d", "01")
     return datetime.today().strftime(formato)
