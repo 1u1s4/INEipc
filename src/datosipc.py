@@ -439,7 +439,17 @@ class datosIPC:
             salidas.append((NomGba, datos_i, descripcion))
         return salidas
     
-    def serie_fuentes(self):
+    def serie_fuentes(self) -> Tuple[List, str]:
+        """
+        Obtiene la serie histórica de precios basada en diferentes fuentes.
+
+        Returns
+        -------
+        datos : pd.DataFrame
+            Dataframe que contiene la serie histórica de precios basada en diferentes fuentes.
+        descripcion : str
+            Descripción textual de la serie histórica de precios basada en las fuentes de datos obtenidas.
+        """
         datos = self.SQL.serie_fuentes_precios()
         descripcion = self.Descriptor.serie_fuentes(datos)
         return(datos, descripcion)
