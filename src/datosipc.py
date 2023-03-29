@@ -552,6 +552,16 @@ class datosIPC:
         return(datos, descripcion)
     
     def desagregacion_fuentes(self):
+        """
+        Obtiene la desagregación de fuentes de precios.
+
+        Returns
+        -------
+        datos : pd.DataFrame
+            Dataframe que contiene la desagregación de fuentes de precios.
+        descripcion : str
+            Descripción textual de la desagregación de fuentes de precios, basada en los datos obtenidos y el mes actual.
+        """
         datos = self.SQL.desagregacion_fuentes()
         descripcion = self.Descriptor.desagregacion_fuentes(datos, self.mes)
         return(datos, descripcion)
