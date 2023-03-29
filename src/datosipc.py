@@ -469,7 +469,17 @@ class datosIPC:
         descripcion = self.Descriptor.serie_precios(datos)
         return(datos, descripcion)
 
-    def serie_imputacion(self):
+    def serie_imputacion(self) -> Tuple[List[Tuple[str, float]], str]:
+        """
+        Obtiene la serie de imputación de precios basada en un archivo de Excel con datos de periodos de espera por década.
+
+        Returns
+        -------
+        serie : List[Tuple[str, float]]
+            Lista de tuplas que contienen la fecha (en formato 'mes-año') y el porcentaje de imputación de precios.
+        descripcion : str
+            Descripción textual de la serie de imputación de precios.
+        """
         serie = []
         df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
         df['Prec_PE'] = pd.to_numeric(df['Prec_PE'], errors='coerce')
