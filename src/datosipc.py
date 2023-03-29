@@ -637,6 +637,16 @@ class datosIPC:
         return(datos, descripcion)
 
     def cobertura_precios(self):
+        """
+        Obtiene la cobertura de precios sin considerar las diferentes fuentes.
+
+        Returns
+        -------
+        cobertura : List[Tuple[str, float]]
+            Dataframe que contiene la cobertura de precios sin considerar las diferentes fuentes.
+        descripcion : str
+            Descripción textual de la cobertura de precios sin considerar las fuentes de datos, basada en los datos obtenidos.
+        """
         cobertura = self.SQL.cobertura_fuentes_precios(False)
         descripcion = self.Descriptor.cobertura_precios(cobertura)
         return(cobertura, descripcion)
