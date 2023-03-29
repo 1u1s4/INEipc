@@ -669,7 +669,17 @@ class datosIPC:
         descripcion = self.Descriptor.ipc_regiones(datos)
         return(datos, descripcion)
 
-    def inflacion_interanual_regiones(self):
+    def inflacion_interanual_regiones(self) -> Tuple[List[Tuple[int, float]], str]:
+        """
+        Obtiene la inflación interanual para todas las regiones (del 1 al 8).
+
+        Returns
+        -------
+        datos : List[Tuple[int, float]]
+            Lista de tuplas que contienen el número de la región y su correspondiente inflación interanual.
+        descripcion : str
+            Descripción textual de la inflación interanual para cada una de las regiones, basada en los datos obtenidos.
+        """
         datos = []
         for reg in range(1, 9):
             indice = self.SQL.inflacion_interanual(self.anio, self.mes, reg)
@@ -677,7 +687,25 @@ class datosIPC:
         descripcion = self.Descriptor.inflacion_interanual_regiones(datos)
         return(datos, descripcion)
 
-    def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True):
+    def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True) -> Tuple[List[Tuple[float, str]], str]:
+        """
+        Obtiene las incidencias de gasto básico, mostrando el top 5 de incidencias positivas o negativas.
+
+        Parameters
+        ----------
+        RegCod : int, optional, default=0
+            Código de la región para la cual se desea obtener las incidencias. Por defecto, 0, que corresponde al nivel nacional.
+        Qpositiva : bool, optional, default=True
+            Indica si se deben obtener las incidencias positivas (True) o negativas (False).
+
+        Returns
+        -------
+        top5 : List[Tuple[float, str]]
+            Lista de tuplas con las 5 incidencias de gasto básico más importantes, donde cada tupla contiene
+            el valor de la incidencia y la descripción del gasto básico.
+        descripcion : str
+            Descripción textual de las 5 incidencias de gasto básico más importantes, basada en los datos obtenidos.
+        """
         incidencias = sorted(self.SQL.incidencia_gasto_basico(RegCod), reverse=Qpositiva)
         incidencias = [i[::-1] for i in incidencias]
         top5 = incidencias[0:5]
