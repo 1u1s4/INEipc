@@ -415,7 +415,21 @@ class datosIPC:
         descripcion = self.Descriptor.poder_adquisitivo(datos)
         return(datos, descripcion)
 
-    def series_Gba(self, RegCod: int):
+    def series_Gba(self, RegCod: int) -> List[Tuple[str, List, str]]:
+        """
+        Obtiene las series históricas de IPC (Índice de Precios al Consumidor) para diferentes subregiones de una región dada.
+
+        Parameters
+        ----------
+        RegCod : int
+            Código de la región para la cual se desea obtener las series históricas de IPC de sus subregiones.
+
+        Returns
+        -------
+        salidas : List[Tuple[str, pd.DataFrame, str]]
+            Lista de tuplas que contienen el nombre de la subregión (NomGba), el dataframe con la serie histórica de IPC (datos_i),
+            y una descripción textual de la serie histórica (descripcion).
+        """
         salidas = [] # (NomGba, datos, descripcion)
         datos = self.SQL.series_historicas_Gbas(RegCod)
         for dt in datos:
