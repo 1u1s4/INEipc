@@ -566,7 +566,16 @@ class datosIPC:
         descripcion = self.Descriptor.desagregacion_fuentes(datos, self.mes)
         return(datos, descripcion)
 
-    def introduccion(self):
+    def introduccion(self) -> str:
+        """
+        Genera la introducción de un informe mensual sobre el Índice de Precios al Consumidor (IPC).
+
+        Returns
+        -------
+        introduccion : str
+            Cadena de texto con la introducción del informe mensual del IPC, incluyendo información sobre inflación
+            mensual, ritmo inflacionario e inflación acumulada, además de una descripción general de los apartados del informe.
+        """
         inf_mensual = self.SQL.inflacion_mensual(self.anio, self.mes, 0)
         inf_interanual = self.SQL.inflacion_interanual(self.anio, self.mes, 0)
         inf_acumulada = self.SQL.inflacion_acumulada(self.anio, self.mes, 0)
