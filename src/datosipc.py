@@ -357,7 +357,20 @@ class datosIPC:
         return (data, self.Descriptor.inflacion(data, mes_actual.lower(), self.anio))
 
 # para el capitulo 3
-    def serie_IPC(self, RegCod: int, QGba: bool = False):
+    def serie_IPC(self, RegCod: int, QGba: bool = False) -> Tuple[List, str]:
+        """
+        Devuelve una serie histórica de los índices de precios al consumidor para una región específica.
+        
+        Parameters
+        ----------
+        - self: objeto que representa la clase actual.
+        - RegCod (int): código de la región para la que se desea obtener la serie histórica.
+        - QGba (bool): indica si se desea obtener la serie de datos ajustada por estacionalidad. Por defecto es False.
+        
+        Returns:
+        - datos: lista de datos que representan la serie histórica de los índices de precios al consumidor.
+        - descripcion: cadena que describe la serie histórica obtenida.
+        """
         datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod)
         descripcion = self.Descriptor.serie_historica_ipc(datos, QGba)
         return(datos, descripcion)
