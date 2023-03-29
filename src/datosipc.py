@@ -363,7 +363,6 @@ class datosIPC:
         
         Parameters
         ----------
-        - self: objeto que representa la clase actual.
         - RegCod (int): código de la región para la que se desea obtener la serie histórica.
         - QGba (bool): indica si se desea obtener la serie de datos ajustada por estacionalidad. Por defecto es False.
         
@@ -375,7 +374,21 @@ class datosIPC:
         descripcion = self.Descriptor.serie_historica_ipc(datos, QGba)
         return(datos, descripcion)
     
-    def serie_inflacion(self, RegCod: int, tipo: str, nivel: str='nacional'):
+    def serie_inflacion(self, RegCod: int, tipo: str, nivel: str='nacional') -> Tuple[List, str]:
+        """
+        Devuelve una serie histórica de la inflación para una región específica y tipo de índice.
+        
+        Parameters
+        ----------
+        - RegCod (int): código de la región para la que se desea obtener la serie histórica.
+        - tipo (str): tipo de índice para el que se desea obtener la serie histórica.
+        - nivel (str): nivel de desagregación para el que se desea obtener la serie histórica. Por defecto es 'nacional'.
+        
+        Returns:
+        ----------
+        - datos: lista de datos que representan la serie histórica de la inflación.
+        - descripcion: cadena que describe la serie histórica obtenida.
+        """
         datos = self.SQL.serie_historica_inflacion(RegCod, tipo)
         descripcion = self.Descriptor.serie_historica_inflacion(datos, tipo, nivel)
         return(datos, descripcion)
