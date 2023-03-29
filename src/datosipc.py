@@ -316,11 +316,25 @@ class datosIPC:
                 pass
         return(Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_mex(datos_variacion_interanual))
 
-    def inflacion_CA_RD_MEX(self):
-        paises = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
-        mes = Jo.mes_by_ordinal(self.mes)
-        data = [("Pais", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
-        mes_actual = Jo.mes_by_ordinal(self.mes, abreviado=False)
+    def inflacion_CA_RD_MEX(self) -> Tuple[List[Tuple[str, float, float]], str]:
+        """
+        Calcula la inflación interanual de varios países de Centroamérica, República Dominicana y México.
+        
+        Args:
+        - self: objeto que representa la clase actual.
+        
+        Returns:
+        - data: lista de tuplas con información de la inflación interanual de cada país. Cada tupla tiene la siguiente información:
+            - str: nombre del país.
+            - float: inflación interanual del año anterior.
+            - float: inflación interanual del año actual.
+        - Descriptor.inflacion(data, mes_actual.lower(), self.anio): llamada a un método de la clase Descriptor que devuelve una cadena
+        que describe la inflación en los países seleccionados para el mes y año proporcionados.
+        """
+        paises: Tuple[str, ...] = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
+        mes: str = Jo.mes_by_ordinal(self.mes)
+        data: List[Tuple[str, str, str]] = [("Pais", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
+        mes_actual: str = Jo.mes_by_ordinal(self.mes, abreviado=False)
         for pais in paises:
             df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
             # inflacion interanual del mes actual
