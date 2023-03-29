@@ -1,16 +1,19 @@
-import xml.etree.ElementTree as ET
-import requests
+import calendar
 import json
+import xml.etree.ElementTree as ET
+from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
+import requests
 import xlrd
+from bs4 import BeautifulSoup
 from fredapi import Fred
+
 import funcionesjo as Jo
 from descriptoripc import Descriptor
-from bs4 import BeautifulSoup
 from sqline import sqlINE
-import pandas as pd
-import numpy as np
-import calendar
-from typing import List, Tuple
+
 
 class datosIPC:
     def __init__(self, anio: int, mes: int, QdbAux: bool = False, dbBackup: bool = False) -> None:
