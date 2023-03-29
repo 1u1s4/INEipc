@@ -454,7 +454,17 @@ class datosIPC:
         descripcion = self.Descriptor.serie_fuentes(datos)
         return(datos, descripcion)
 
-    def serie_precios(self):
+    def serie_precios(self) -> Tuple[List, str]:
+        """
+        Obtiene la serie histórica de precios sin considerar las diferentes fuentes.
+
+        Returns
+        -------
+        datos : pd.DataFrame
+            Dataframe que contiene la serie histórica de precios sin considerar las diferentes fuentes.
+        descripcion : str
+            Descripción textual de la serie histórica de precios sin considerar las fuentes de datos.
+        """
         datos = self.SQL.serie_fuentes_precios(False)
         descripcion = self.Descriptor.serie_precios(datos)
         return(datos, descripcion)
