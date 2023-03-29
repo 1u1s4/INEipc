@@ -1,6 +1,8 @@
 # from sqline import sqlINE
 from typing import List, Tuple
+
 from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
+
 
 class Descriptor:
     def __init__(self, anio: int, mes: int) -> None:

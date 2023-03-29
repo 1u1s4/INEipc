@@ -1,11 +1,15 @@
-from typing import List, Tuple
 import warnings
+from typing import List, Tuple
+
 warnings.filterwarnings("ignore")
-import pyodbc 
-import pandas as pd
-import numpy as np
 import os
+
+import numpy as np
+import pandas as pd
+import pyodbc
+
 from funcionesjo import mes_by_ordinal
+
 
 class sqlINE:
     def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
