@@ -393,7 +393,24 @@ class datosIPC:
         descripcion = self.Descriptor.serie_historica_inflacion(datos, tipo, nivel)
         return(datos, descripcion)
 
-    def serie_poder_adquisitivo(self, RegCod: int):
+    def serie_poder_adquisitivo(self, RegCod: int) -> Tuple[List, str]:
+        """
+        Calcula la serie histórica del poder adquisitivo en base al IPC (Índice
+        de Precios al Consumidor) para una región dada.
+
+        Parameters
+        ----------
+        RegCod : int
+            Código de la región para la cual se desea calcular el poder adquisitivo.
+
+        Returns
+        -------
+        datos : pd.DataFrame
+            Dataframe que contiene la serie histórica del poder adquisitivo en
+            base al IPC para la región especificada.
+        descripcion : str
+            Descripción textual del poder adquisitivo en base a los datos obtenidos.
+        """
         datos = self.SQL.serie_historica_ipc_pdr_adq(RegCod, True)
         descripcion = self.Descriptor.poder_adquisitivo(datos)
         return(datos, descripcion)
