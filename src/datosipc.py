@@ -531,6 +531,21 @@ class datosIPC:
         return(serie, descripcion)
 
     def incidencias_divisiones(self, RegCod: int):
+        """
+        Obtiene las incidencias de divisiones para una región dada.
+
+        Parameters
+        ----------
+        RegCod : int
+            Código de la región para la cual se desea obtener las incidencias de divisiones.
+
+        Returns
+        -------
+        datos : List[Tuple[str, float]]
+            Lista de tuplas que contienen el nombre de la división y su incidencia en la región especificada.
+        descripcion : str
+            Descripción textual de las incidencias de divisiones para la región especificada.
+        """
         datos = self.SQL.incidencia_divisiones(RegCod)
         descripcion = self.Descriptor.incidencia_divisiones(datos)
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
