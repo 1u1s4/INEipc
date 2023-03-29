@@ -651,7 +651,17 @@ class datosIPC:
         descripcion = self.Descriptor.cobertura_precios(cobertura)
         return(cobertura, descripcion)
 
-    def ipc_regiones(self):
+    def ipc_regiones(self) -> Tuple[List[Tuple[int, float]], str]:
+        """
+        Obtiene el Índice de Precios al Consumidor (IPC) para todas las regiones (del 1 al 8).
+
+        Returns
+        -------
+        datos : List[Tuple[int, float]]
+            Lista de tuplas que contienen el número de la región y su correspondiente IPC.
+        descripcion : str
+            Descripción textual del IPC para cada una de las regiones, basada en los datos obtenidos.
+        """
         datos = []
         for reg in range(1, 9):
             indice = self.SQL.calcular_IPC(self.anio, self.mes, reg)
