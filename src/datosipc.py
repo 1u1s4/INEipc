@@ -405,7 +405,7 @@ class datosIPC:
 
         Returns
         -------
-        datos : pd.DataFrame
+        datos : List[Tuple[str, float]]
             Dataframe que contiene la serie histórica del poder adquisitivo en
             base al IPC para la región especificada.
         descripcion : str
@@ -426,7 +426,7 @@ class datosIPC:
 
         Returns
         -------
-        salidas : List[Tuple[str, pd.DataFrame, str]]
+        salidas : List[Tuple[str, List[Tuple[str, float]], str]]
             Lista de tuplas que contienen el nombre de la subregión (NomGba), el dataframe con la serie histórica de IPC (datos_i),
             y una descripción textual de la serie histórica (descripcion).
         """
@@ -445,7 +445,7 @@ class datosIPC:
 
         Returns
         -------
-        datos : pd.DataFrame
+        datos : List[Tuple[str, float]]
             Dataframe que contiene la serie histórica de precios basada en diferentes fuentes.
         descripcion : str
             Descripción textual de la serie histórica de precios basada en las fuentes de datos obtenidas.
@@ -460,7 +460,7 @@ class datosIPC:
 
         Returns
         -------
-        datos : pd.DataFrame
+        datos : List[Tuple[str, float]]
             Dataframe que contiene la serie histórica de precios sin considerar las diferentes fuentes.
         descripcion : str
             Descripción textual de la serie histórica de precios sin considerar las fuentes de datos.
@@ -557,7 +557,7 @@ class datosIPC:
 
         Returns
         -------
-        datos : pd.DataFrame
+        datos : List[Tuple[str, float]]
             Dataframe que contiene la desagregación de fuentes de precios.
         descripcion : str
             Descripción textual de la desagregación de fuentes de precios, basada en los datos obtenidos y el mes actual.
@@ -622,6 +622,16 @@ class datosIPC:
         return self.Descriptor.retocar_plantilla(introduccion)
 
     def cobertura_fuentes(self):
+        """
+        Obtiene la cobertura de fuentes de precios.
+
+        Returns
+        -------
+        datos : List[Tuple[str, float]]
+            Dataframe que contiene la cobertura de fuentes de precios.
+        descripcion : str
+            Descripción textual de la cobertura de fuentes de precios, basada en los datos obtenidos.
+        """
         datos = self.SQL.cobertura_fuentes_precios()
         descripcion = self.Descriptor.cobertura_fuentes(datos)
         return(datos, descripcion)
