@@ -197,31 +197,18 @@ class datosIPC:
                 None
         return (Jo.invertir_orden(data_mean), self.Descriptor.cambio_del_quetzal(data_mean))
 
-    def tasa_interes(self, fecha_final: str, fecha_inicial: str) -> Tuple[List[Tuple[str, float]], str]:
+    def tasa_interes(self) -> Tuple[List[Tuple[str, float]], str]:
         """
         Calcula la tasa de interés entre dos fechas y devuelve una lista de tuplas con las tasas de interés y un descriptor.
-        
-        Parameters
-        ----------
-        fecha_final : str
-            Fecha final en formato 'YYYY-MM'. Si no se proporciona, se utiliza la fecha actual.
-        fecha_inicial : str
-            Fecha inicial en formato 'YYYY-MM'. Si no se proporciona, se utiliza un año antes de la fecha final.
-            
+
         Returns
         -------
         tuple
             Una tupla que contiene una lista de tuplas con las tasas de interés y un descriptor.
         """
         FORMATO = "%Y-%m"
-        if len(fecha_final) == 0:
-            FECHA_FINAL = Jo.hoy(FORMATO)
-        else:
-            FECHA_FINAL = fecha_final
-        if len(fecha_inicial) == 0:
-            FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
-        else:
-            FECHA_INICIAL = fecha_inicial
+        FECHA_FINAL = Jo.hoy(FORMATO)
+        FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
         # descarga de datos
         DATA_URL = "https://banguat.gob.gt/sites/default/files/banguat/imm/imm04.xls"
         with open('tasa_interes.xls', 'wb') as f:

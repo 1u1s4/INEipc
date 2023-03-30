@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='automatizacion_IPC_INE',
-    version='1.0.8',
+    version='1.0.9',
     author='Luis Alfredo Alvarado Rodríguez',
     description='Automatizacion de extraccion de datos para el capitulo 1 del IPC.',
     long_description='',
