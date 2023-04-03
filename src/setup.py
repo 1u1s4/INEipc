@@ -3,7 +3,7 @@ setup(
     name='automatizacion_IPC_INE',
     version='1.0.23',
     author='Luis Alfredo Alvarado Rodríguez',
-    description='Automatizacion de extraccion de datos para el capitulo 1 del IPC.',
+    description='ETL para el informe mensual de IPC.',
     long_description='',
     url='https://github.com/1u1s4/INE_IPC',
     keywords='development, setup, setuptools',
