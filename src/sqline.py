@@ -7,8 +7,9 @@ import os
 import numpy as np
 import pandas as pd
 import pyodbc
+import datetime
 
-from funcionesjo import mes_by_ordinal
+from funcionesjo import mes_by_ordinal, r0und
 
 
 class sqlINE:
@@ -213,6 +214,23 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
             columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
             self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
+            # Comprobamos si la carpeta db_b existe
+            if not os.path.exists("db_b"):
+                # Si no existe, la creamos
+                os.makedirs("db_b")
+            self.df_DivInd.to_feather('db_b/df_DivInd.feather')
+            self.df_DivPon.to_feather('db_b/df_DivPon.feather')
+            self.df_GbaInd.to_feather('db_b/df_GbaInd.feather')
+            self.df_GbaPon.to_feather('db_b/df_GbaPon.feather')
+            self.df_GbaInfo.to_feather('db_b/df_GbaInfo.feather')
+            self.df_DivNom.to_feather('db_b/df_DivNom.feather')
+            self.df_Fnt.to_feather('db_b/df_Fnt.feather')
+            # Obtener la marca temporal actual
+            now = datetime.datetime.now()
+            # Crear el nombre del archivo con la marca temporal
+            # Crear el archivo en la carpeta "db_b" con la marca temporal como nombre
+            with open('db_b/marca_temporal.txt', 'w') as file:
+                file.write('Backup creado el ' + now.strftime("%d-%m-%Y %H:%M"))
         # fin de carga de datos 
         # nombre de divisiones
         abr_diviciones = {
@@ -234,18 +252,6 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             [int(i) for i in df_DivNom_dic['DivCod'].values()],
             [abr_diviciones[nombre.strip().title()] for nombre in df_DivNom_dic['DivNom'].values()]
         ))
-
-        # Comprobamos si la carpeta db_b existe
-        if not os.path.exists("db_b"):
-            # Si no existe, la creamos
-            os.makedirs("db_b")
-        self.df_DivInd.to_feather('db_b/df_DivInd.feather')
-        self.df_DivPon.to_feather('db_b/df_DivPon.feather')
-        self.df_GbaInd.to_feather('db_b/df_GbaInd.feather')
-        self.df_GbaPon.to_feather('db_b/df_GbaPon.feather')
-        self.df_GbaInfo.to_feather('db_b/df_GbaInfo.feather')
-        self.df_DivNom.to_feather('db_b/df_DivNom.feather')
-        self.df_Fnt.to_feather('db_b/df_Fnt.feather')
 
     def get_nombre_Gba(self, GbaCod: int) -> str:
         """
@@ -409,6 +415,7 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
+            variacion = r0und(variacion, 2)
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 
