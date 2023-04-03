@@ -699,15 +699,15 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             cobertura.append((i, conteo.shape[0]))
         return cobertura
 
-    def serie_historica(self, tipo: str):
+    def serie_historica(self, tipo: str) -> List[Tuple[str, float]]:
         serie = []
-        if tipo == 'intermensual':
+        if tipo == 'mensual':
             funcion = self.inflacion_mensual
-        elif tipo == 'interanual':
+        elif tipo == 'anual':
             funcion = self.inflacion_interanual
         elif tipo == 'IPC':
             funcion = self.calcular_IPC
-        if tipo == 'intermensual':
+        if tipo == 'mensual':
             anio_inf = 2011
         else:
             anio_inf = 2012
