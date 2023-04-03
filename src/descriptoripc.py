@@ -558,11 +558,25 @@ class Descriptor:
         if tipo == 'ipc':
             titulo = 'del Índice de precios al consumidor'
         elif tipo == 'anual':
-            titulo = 'Inflación interanual'
+            titulo = 'ritmo inflacionario'
         elif tipo == 'mensual':
             titulo = 'de la variación mensual'
         else:
             raise ValueError('Tipo de serie no reconocido')
         plantilla = """En la siguiente gráfica se presenta la serie histórica
                     {} desde el inicio de la base (diciembre de 2010).""".format(titulo)
+        return self.retocar_plantilla(plantilla)
+    
+    def tabla_serie_historica(self) -> str:
+        """
+        Genera el texto de la tabla de la serie histórica de IPC, inflación
+        interanual o variación mensual.
+        Retorna
+        -------
+        str
+            Texto de la tabla de la serie histórica.
+        """
+        plantilla = """En la siguiente tabla se presenta la serie histórica
+                    del ritmo inflacionario, variación mensual e Índice de precios
+                    al consumidor desde el inicio de la base (diciembre de 2010)."""
         return self.retocar_plantilla(plantilla)

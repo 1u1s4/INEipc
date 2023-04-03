@@ -706,3 +706,13 @@ class datosIPC:
         serie = self.SQL.serie_historica(tipo)
         descripcion = self.Descriptor.serie_historica(tipo)
         return(serie, descripcion)
+
+    def tabla_series_historicas(self) -> Tuple[pd.DataFrame, str]:
+        anual = pd.DataFrame(self.SQL.serie_historica('anual'), columns=['Fecha', 'Ritmo inflacionario'])
+        mensual = pd.DataFrame(self.SQL.serie_historica('mensual'), columns=['Fecha', 'Variación mensual'])
+        ipc = pd.DataFrame(self.SQL.serie_historica('IPC'), columns=['Fecha', 'IPC'])
+        df = mensual.merge(anual, on='Fecha', how='outer').merge(ipc, on='Fecha', how='outer')
+        df.fillna('-', inplace=True)
+        descripcion = self.Descriptor.tabla_serie_historica()
+        return (df, descripcion)
+        
