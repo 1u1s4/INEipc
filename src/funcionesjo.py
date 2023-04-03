@@ -179,3 +179,11 @@ def invertir_orden(data, Qfecha: bool = True):
         for dato in data:
             data_salida.append(dato[::-1])
     return tuple(data_salida)
+
+def r0und(numero: float, precicion: int=2) -> float:
+    numero = round(numero, precicion)
+    if numero == -0.0:
+        numero = 0.0
+    else:
+        numero = numero
+    return numero
