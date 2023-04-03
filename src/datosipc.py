@@ -556,7 +556,7 @@ class datosIPC:
         descripcion = self.Descriptor.desagregacion_fuentes(datos, self.mes)
         return(datos, descripcion)
 
-    def introduccion(self) -> str:
+    def introduccion(self, precision: int=1) -> str:
         """
         Genera la introducción de un informe mensual sobre el Índice de Precios al Consumidor (IPC).
 
@@ -585,8 +585,8 @@ class datosIPC:
 
                         Los niveles de inflación más importantes de {fecha}
                         son los siguientes: se registró una inflación mensual de
-                        {inf_mensual:.2f}\%, ritmo inflacionario de {inf_interanual:.2f}\%
-                        y una inflación acumulada de {inf_acumulada:.2f}\%.\\\\\\\\
+                        {inf_mensual:.{precision}f}\%, ritmo inflacionario de {inf_interanual:.{precision}f}\%
+                        y una inflación acumulada de {inf_acumulada:.{precision}f}\%.\\\\\\\\
 
                         Este informe del IPC está compuesto de 11 apartados y 3 anexos.
                         En el primer apartado se incluyen los detalles del operativo de
@@ -701,3 +701,8 @@ class datosIPC:
         top5 = incidencias[0:5]
         descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
         return(top5, descripcion)
+
+    def serie_historica(self, tipo: str) -> Tuple[List[Tuple[int, float]], str]:
+        serie = self.SQL.serie_historica(tipo)
+        descripcion = self.Descriptor.serie_historica(tipo)
+        return(serie, descripcion)
