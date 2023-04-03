@@ -1,15 +1,29 @@
-*.xml
+# Archivos temporales y configuración del sistema
+.DS_Store
+
+# Archivos de Microsoft Office
 *.xls
+*.xml
+
+# Archivos y carpetas de Python
 __pycache__
-app_name.egg-info
+*.egg-info
 build
 dist
+
+# Carpetas de entorno virtual
 .venv
-automatizacion_capitulo_1_IPC_INE.egg-info
+
+# Archivos y carpetas de Visual Studio Code
+.vscode
+
+# Archivos específicos del proyecto
 main.py
 Temp
-.vscode
-.DS_Store
+automatizacion_capitulo_1_IPC_INE.egg-info
+app_name.egg-info
+
+# Carpetas específicas del proyecto
 src/curso
 src/automatizacion_IPC_INE.egg-info
 src/db_b
