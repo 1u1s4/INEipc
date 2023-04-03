@@ -535,3 +535,34 @@ class Descriptor:
                     registran la mayor incidencia {} mensual
                     se encuentran: {}, {}, {}, {} y {}.""".format(signo, *textos)
         return self.retocar_plantilla(plantilla)
+
+    def serie_historica(self, tipo: str) -> str:
+        """
+        Genera el texto de la serie histórica de IPC, inflación interanual o
+        variación mensual.
+        Parámetros
+        ----------
+        tipo: str
+            Tipo de serie. Puede ser 'ipc', 'anual' o 'mensual'.
+            
+        Retorna
+        -------
+        str
+            Texto de la serie histórica.
+            
+        Excepciones
+        -----------
+        ValueError
+            Si el tipo de serie no es reconocido.  
+        """
+        if tipo == 'ipc':
+            titulo = 'del Índice de precios al consumidor'
+        elif tipo == 'anual':
+            titulo = 'Inflación interanual'
+        elif tipo == 'mensual':
+            titulo = 'de la variación mensual'
+        else:
+            raise ValueError('Tipo de serie no reconocido')
+        plantilla = """En la siguiente gráfica se presenta la serie histórica
+                    {} desde el inicio de la base (diciembre de 2010).""".format(titulo)
+        return self.retocar_plantilla(plantilla)
