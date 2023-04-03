@@ -40,7 +40,7 @@ class Descriptor:
         """
         return ((dato - dato_antes) / dato_antes) * 100
 
-    def indice_precio_alimentos(self, datos: List[Tuple[str]]) -> str:
+    def indice_precio_alimentos(self, datos: List[Tuple[str]], precision: int=1) -> str:
         """
         Genera un texto con la información del índice de precios de los alimentos.
 
@@ -67,12 +67,12 @@ class Descriptor:
         nota_2 = '''\\footnote{Organización de las Naciones Unidas para la
                     Alimentación y la Agricultura.}'''
         plantilla = f"""El índice de precios de los alimentos{nota_1} de la FAO{nota_2} registró en
-                    {fecha_1} un índice de {indice:,.2f}, lo que representa una
-                    variación de {variacion_1:,.2f}% respecto a {fecha_2} y de
+                    {fecha_1} un índice de {indice:,.{precision}f}, lo que representa una
+                    variación de {variacion_1:,.{precision}f}% respecto a {fecha_2} y de
                     {variacion_2:,.2f}% respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def petroleo(self, datos: List[Tuple[str, float]]) -> str:
+    def petroleo(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
         """
         Función que recibe una lista de tuplas con datos del precio del petróleo y
         devuelve una cadena de texto formateada con la información correspondiente.
@@ -109,13 +109,13 @@ class Descriptor:
         nota = """\\footnote{Se refiere al crudo West Texas Intermediate (WTI)
                     producido en Texas y el sur de Oklahoma}"""
         plantilla = f"""El precio internacional del petróleo{nota} registró en {fecha_1}
-                    un precio medio de US${PRECIO:,.2f} por barril, lo que representa
-                    una variación de {variacion_1:,.2f}% ({signo_1}US${diferencia_1:,.2f})
-                    respecto a {fecha_2} y de {variacion_2:,.2f}% ({signo_2}US${diferencia_2:,.2f})
+                    un precio medio de US${PRECIO:,.{precision}f} por barril, lo que representa
+                    una variación de {variacion_1:,.{precision}f}% ({signo_1}US${diferencia_1:,.{precision}f})
+                    respecto a {fecha_2} y de {variacion_2:,.{precision}f}% ({signo_2}US${diferencia_2:,.{precision}f})
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def cambio_del_quetzal(self, datos: List[Tuple[str, float]]) -> str:
+    def cambio_del_quetzal(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
         """
         Retorna un string con información sobre el tipo de cambio del quetzal
         guatemalteco respecto al dólar estadounidense.
@@ -145,12 +145,12 @@ class Descriptor:
                     vendidas y sus respectivas equivalencias en moneda nacional.}"""
         plantilla = f"""El tipo de cambio de referencia{nota} del quetzal respecto al dólar
                     de los Estados Unidos de América, registró en {fecha_1} un tipo de cambio
-                    promedio de Q{PRECIO:,.2f} por US$1.00, lo que representa una variación
-                    de {variacion_1:,.2f}% respecto a {fecha_2} y de {variacion_2:,.2f}%
+                    promedio de Q{PRECIO:,.{precision}f} por US$1.00, lo que representa una variación
+                    de {variacion_1:,.{precision}f}% respecto a {fecha_2} y de {variacion_2:,.{precision}f}%
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def tasa_de_interes(self, datos: List[Tuple[str, float]]) -> str:
+    def tasa_de_interes(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
         """
         Retorna un string con información sobre la tasa de interés activa en
         moneda nacional.
@@ -193,9 +193,9 @@ class Descriptor:
                     del banco central, cobran por los diferentes tipos de servicios
                     de crédito a los usuarios de los mismos.}"""
         plantilla = f"""El promedio ponderado preliminar de la tasa de interés activa{nota}
-                    en moneda nacional se ubicó en {fecha_1} en {tasa:,.2f}%,
-                    representa {cambio_1} de {diferencia_1:,.2f} puntos porcentuales
-                    respecto a {fecha_2} y {cambio_2} de {diferencia_2:,.2f} puntos
+                    en moneda nacional se ubicó en {fecha_1} en {tasa:,.{precision}f}%,
+                    representa {cambio_1} de {diferencia_1:,.{precision}f} puntos porcentuales
+                    respecto a {fecha_2} y {cambio_2} de {diferencia_2:,.{precision}f} puntos
                     porcentuales respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
@@ -208,7 +208,7 @@ class Descriptor:
     ('2022-May', 8.516412942713858)
     ('2022-Jun', 8.995220608588127)
     """
-    def ipc_usa(self, datos: list[tuple[str]]) -> str:
+    def ipc_usa(self, datos: list[tuple[str]], precision: int=1) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         indice_1 = datos[-1][1]
@@ -226,8 +226,8 @@ class Descriptor:
                     \\url{http://www.bls.gov/cpi}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en los Estados Unidos de
                     América{nota} registró una variación interanual al mes de {fecha_1} de
-                    {indice_1:,.2f}%. En {fecha_2} la variación interanual se ubicó en
-                    {indice_2:,.2f}%, por lo que este indicador {cambio} {diferencia:,.2f}
+                    {indice_1:,.{precision}f}%. En {fecha_2} la variación interanual se ubicó en
+                    {indice_2:,.{precision}f}%, por lo que este indicador {cambio} {diferencia:,.{precision}f}
                     puntos porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
 
@@ -240,7 +240,7 @@ class Descriptor:
     ('2022-May', 8.516412942713858)
     ('2022-Jun', 8.995220608588127)
     """
-    def ipc_mex(self, datos: list[tuple[str]]) -> str:
+    def ipc_mex(self, datos: list[tuple[str]], precision: int=1) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         indice_1 = datos[-1][1]
@@ -256,25 +256,25 @@ class Descriptor:
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en México{nota} se registró una
-                    variación interanual al mes de {fecha_1} de {indice_1:,.2f}%. En
-                    {fecha_2} la variación interanual se ubicó en {indice_2:,.2f}%,
-                    por lo que este indicador {cambio} {diferencia:,.2f} puntos
+                    variación interanual al mes de {fecha_1} de {indice_1:,.{precision}f}%. En
+                    {fecha_2} la variación interanual se ubicó en {indice_2:,.{precision}f}%,
+                    por lo que este indicador {cambio} {diferencia:,.{precision}f} puntos
                     porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
 
-    def inflacion(self, datos, mes, anio) -> str:
+    def inflacion(self, datos, mes, anio, precision: int=1) -> str:
         inflacion_mes = [(i[2], i[0]) for i in datos[1::]]
         inflacion_mes.sort()
         INFLACION_MIN = inflacion_mes[0]
         INFLACION_MAX = inflacion_mes[-1]
         plantilla = f"""Para el mes de {mes} {anio}, en Centro América, República
                     Dominicana y México, {INFLACION_MAX[1]} presentó
-                    la mayor tasa de inflación interanual de {INFLACION_MAX[0]:,.2f}%,
+                    la mayor tasa de inflación interanual de {INFLACION_MAX[0]:,.{precision}f}%,
                     mientras que {INFLACION_MIN[1]} registró la tasa más
-                    baja con un nivel de {INFLACION_MIN[0]:,.2f}%."""
+                    baja con un nivel de {INFLACION_MIN[0]:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
-    def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False) -> str:
+    def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=1) -> str:
         if QGba:
             gba = f'índice del gasto basico {datos[0].lower()}'
             datos = datos[1]
@@ -304,12 +304,12 @@ class Descriptor:
         else:
             cambio = "igual"
         plantilla = f"""El {gba} a {fecha_1} se ubicó en
-                    {indice_1:,.2f}, {cambio} a lo observado en {plantilla_aux}
-                    ({indice_2:,.2f})."""
+                    {indice_1:,.{precision}f}, {cambio} a lo observado en {plantilla_aux}
+                    ({indice_2:,.{precision}f})."""
         return self.retocar_plantilla(plantilla)
 
     # tipo = intermensual, interanual, acumulada
-    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True) -> str:
+    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True, precision: int=1) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         indice_1 = datos[-1][1] # mes actual
@@ -333,23 +333,23 @@ class Descriptor:
             cambio_2 = "un cambio"
         if tipo == "interanual":
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
-                        en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
-                        respecto al mes anterior ({indice_2:,.2f}%), y con respecto a la
-                        variación alcanzada en {fecha_2} ({indice_3:,.2f}%) {cambio_2} de
-                        {diferencia_2:,.2f} puntos."""
+                        se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
+                        en el nivel de precios de {diferencia_1:,.{precision}f} puntos porcentuales
+                        respecto al mes anterior ({indice_2:,.{precision}f}%), y con respecto a la
+                        variación alcanzada en {fecha_2} ({indice_3:,.{precision}f}%) {cambio_2} de
+                        {diferencia_2:,.{precision}f} puntos."""
         elif tipo == "acumulada":
             fecha_2 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
             indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.2f}%. La de {fecha_2} se
-                        presentó en {indice_3:,.2f}%."""
+                        se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
+                        presentó en {indice_3:,.{precision}f}%."""
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.2f}%. Esta variación representa {cambio_1}
-                        en el nivel de precios de {diferencia_1:,.2f} puntos porcentuales
-                        respecto al mes anterior ({indice_2:,.2f}%), y la de {fecha_2} se
-                        presentó en {indice_3:,.2f}%."""
+                        se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
+                        en el nivel de precios de {diferencia_1:,.{precision}f} puntos porcentuales
+                        respecto al mes anterior ({indice_2:,.{precision}f}%), y la de {fecha_2} se
+                        presentó en {indice_3:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos, fecha) -> str:
@@ -433,7 +433,7 @@ class Descriptor:
                     de {fecha_3} con una cantidad de {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
 
-    def imputacion_precios(self, datos) -> str:
+    def imputacion_precios(self, datos, precision: int=1) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
@@ -443,10 +443,10 @@ class Descriptor:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""El porcentaje de precios imputados en {fecha_1} es de {indice_1:.2f}%.
+        plantilla = f"""El porcentaje de precios imputados en {fecha_1} es de {indice_1:.{precision}f}%.
                     El mayor porcentaje de imputaciones fue en el mes de {fecha_2}
-                    con una cantidad de {indice_2:.2f}% y el menor se encuentra en el mes
-                    de {fecha_3} con una cantidad de {indice_3:.2f}%."""
+                    con una cantidad de {indice_2:.{precision}f}% y el menor se encuentra en el mes
+                    de {fecha_3} con una cantidad de {indice_3:.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos) -> str:
@@ -473,15 +473,15 @@ class Descriptor:
                     fueron consultadas con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
 
-    def desagregacion_fuentes(self, datos, mes_ordinal) -> str:
+    def desagregacion_fuentes(self, datos, mes_ordinal, precision: int=1) -> str:
         mes = mes_by_ordinal(mes_ordinal, abreviado=False).lower()
         maximo = datos[0][1]
         fuente_max = datos[0][0].lower()
         minimo = datos[1][1]
         fuente_min = datos[1][0].lower()
         plantilla = f"""En el mes de {mes} el tipo de fuente más consultado fue
-                    {fuente_max} ({maximo:,.2f}%), y el segundo más consultado fue
-                    {fuente_min} ({minimo:,.2f}%)."""
+                    {fuente_max} ({maximo:,.{precision}f}%), y el segundo más consultado fue
+                    {fuente_min} ({minimo:,.{precision}f}%)."""
         return self.retocar_plantilla(plantilla)
 
     def cobertura_precios(self, datos):
@@ -495,7 +495,7 @@ class Descriptor:
                     fueron diligenciados con un total de {minimo[1]}."""
         return self.retocar_plantilla(plantilla)
     
-    def ipc_regiones(self, datos):
+    def ipc_regiones(self, datos, precision: int=1):
         datos = sorted(datos, key=lambda x: x[1], reverse=True)
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
@@ -503,11 +503,11 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg} {self.region[maximo[0]]}
                     presentó el mayor índice de precios al consumidor, el cual fue
-                    de {maximo[1]:,.2f}, mientras que la región {self.region[minimo[0]]}
-                    presentó el índice más bajo, de {minimo[1]:,.2f}"""
+                    de {maximo[1]:,.{precision}f}, mientras que la región {self.region[minimo[0]]}
+                    presentó el índice más bajo, de {minimo[1]:,.{precision}f}"""
         return self.retocar_plantilla(plantilla)
 
-    def inflacion_interanual_regiones(self, datos):
+    def inflacion_interanual_regiones(self, datos, precision: int=1):
         datos = sorted(datos, key=lambda x: x[1], reverse=True)
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
@@ -515,9 +515,9 @@ class Descriptor:
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
                     {self.region[maximo[0]]} presentó la mayor inflación interanual,
-                    la cual fue de {maximo[1]:,.2f}, mientras que la región
+                    la cual fue de {maximo[1]:,.{precision}f}, mientras que la región
                     {self.region[minimo[0]]} presentó la menor inflación interanual,
-                    de {minimo[1]:,.2f}"""
+                    de {minimo[1]:,.{precision}f}"""
         return self.retocar_plantilla(plantilla)
     
     def incidencias_gba(self, datos, Qpositiva: bool = True):
