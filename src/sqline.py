@@ -6,7 +6,6 @@ import os
 
 import numpy as np
 import pandas as pd
-import pyodbc
 import datetime
 
 from funcionesjo import mes_by_ordinal, r0und
@@ -50,6 +49,7 @@ class sqlINE:
             self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
             self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
         else:
+            import pyodbc
             # datos servidor
             DATABASE = 'IPC2010_RN'
             SERVER = '10.0.0.3'
