@@ -423,7 +423,7 @@ class datosIPC:
         salidas = [] # (NomGba, datos, descripcion)
         datos = self.SQL.series_historicas_Gbas(RegCod)
         for dt in datos:
-            NomGba = dt[0] 
+            NomGba = dt[0]
             datos_i = dt[1]
             descripcion = self.Descriptor.serie_historica_ipc(dt, True)
             salidas.append((NomGba, datos_i, descripcion))
