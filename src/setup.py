@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='automatizacion_IPC_INE',
-    version='1.0.24',
+    version='1.0.28',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
