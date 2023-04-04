@@ -40,7 +40,7 @@ class Descriptor:
         """
         return ((dato - dato_antes) / dato_antes) * 100
 
-    def indice_precio_alimentos(self, datos: List[Tuple[str]], precision: int=1) -> str:
+    def indice_precio_alimentos(self, datos: List[Tuple[str]], precision: int=2) -> str:
         """
         Genera un texto con la información del índice de precios de los alimentos.
 
@@ -72,7 +72,7 @@ class Descriptor:
                     {variacion_2:,.2f}% respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def petroleo(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
+    def petroleo(self, datos: List[Tuple[str, float]], precision: int=2) -> str:
         """
         Función que recibe una lista de tuplas con datos del precio del petróleo y
         devuelve una cadena de texto formateada con la información correspondiente.
@@ -115,7 +115,7 @@ class Descriptor:
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def cambio_del_quetzal(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
+    def cambio_del_quetzal(self, datos: List[Tuple[str, float]], precision: int=2) -> str:
         """
         Retorna un string con información sobre el tipo de cambio del quetzal
         guatemalteco respecto al dólar estadounidense.
@@ -150,7 +150,7 @@ class Descriptor:
                     respecto a {fecha_3}."""
         return self.retocar_plantilla(plantilla)
 
-    def tasa_de_interes(self, datos: List[Tuple[str, float]], precision: int=1) -> str:
+    def tasa_de_interes(self, datos: List[Tuple[str, float]], precision: int=2) -> str:
         """
         Retorna un string con información sobre la tasa de interés activa en
         moneda nacional.
@@ -208,7 +208,7 @@ class Descriptor:
     ('2022-May', 8.516412942713858)
     ('2022-Jun', 8.995220608588127)
     """
-    def ipc_usa(self, datos: list[tuple[str]], precision: int=1) -> str:
+    def ipc_usa(self, datos: list[tuple[str]], precision: int=2) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         indice_1 = datos[-1][1]
@@ -240,7 +240,7 @@ class Descriptor:
     ('2022-May', 8.516412942713858)
     ('2022-Jun', 8.995220608588127)
     """
-    def ipc_mex(self, datos: list[tuple[str]], precision: int=1) -> str:
+    def ipc_mex(self, datos: list[tuple[str]], precision: int=2) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0])
         fecha_2 = mes_anio_by_abreviacion(datos[0][0])
         indice_1 = datos[-1][1]
@@ -262,7 +262,7 @@ class Descriptor:
                     porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
 
-    def inflacion(self, datos, mes, anio, precision: int=1) -> str:
+    def inflacion(self, datos, mes, anio, precision: int=2) -> str:
         inflacion_mes = [(i[2], i[0]) for i in datos[1::]]
         inflacion_mes.sort()
         INFLACION_MIN = inflacion_mes[0]
@@ -309,7 +309,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     # tipo = intermensual, interanual, acumulada
-    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True, precision: int=1) -> str:
+    def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True, precision: int=2) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
         indice_1 = datos[-1][1] # mes actual
@@ -491,8 +491,8 @@ class Descriptor:
         minimo = datos[-1]
         plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {self.region[maximo[0]]}
                     fue donde más precios fueron diligenciados con un total de
-                    {maximo[1]} y la región {self.region[minimo[0]]} fue donde menos precios
-                    fueron diligenciados con un total de {minimo[1]}."""
+                    {maximo[1]:,} y la región {self.region[minimo[0]]} fue donde menos precios
+                    fueron diligenciados con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
     
     def ipc_regiones(self, datos, precision: int=1):
@@ -507,7 +507,7 @@ class Descriptor:
                     presentó el índice más bajo, de {minimo[1]:,.{precision}f}"""
         return self.retocar_plantilla(plantilla)
 
-    def inflacion_interanual_regiones(self, datos, precision: int=1):
+    def inflacion_interanual_regiones(self, datos, precision: int=2):
         datos = sorted(datos, key=lambda x: x[1], reverse=True)
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
