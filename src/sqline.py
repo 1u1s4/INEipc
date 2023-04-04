@@ -499,6 +499,7 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
+            indices = indices.sort_values(by=['PerAno', 'PerMes'])
             if len(indices) != 0:
                 for i in range(len(indices)):
                     mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
