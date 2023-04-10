@@ -556,7 +556,7 @@ class datosIPC:
         descripcion = self.Descriptor.desagregacion_fuentes(datos, self.mes)
         return(datos, descripcion)
 
-    def introduccion(self, precision: int=1) -> str:
+    def introduccion(self, precision: int=2) -> str:
         """
         Genera la introducción de un informe mensual sobre el Índice de Precios al Consumidor (IPC).
 
@@ -713,6 +713,7 @@ class datosIPC:
         ipc = pd.DataFrame(self.SQL.serie_historica('IPC'), columns=['Fecha', 'IPC'])
         df = mensual.merge(anual, on='Fecha', how='outer').merge(ipc, on='Fecha', how='outer')
         df.fillna('-', inplace=True)
+        df = df.reindex(columns=['Fecha', 'IPC', 'Variación mensual', 'Ritmo inflacionario'])
         descripcion = self.Descriptor.tabla_serie_historica()
         return (df, descripcion)
         
