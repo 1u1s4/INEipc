@@ -708,20 +708,17 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             funcion = self.inflacion_interanual
         elif tipo == 'IPC':
             funcion = self.calcular_IPC
-        if tipo == 'mensual':
+        if tipo != 'anual':
             anio_inf = 2011
         else:
             anio_inf = 2012
-        J = 0 # para corregir las etiquetas
         for anio in range(anio_inf, self.anio):
-            for mes in range(1, 13):
-                J += 1
+            for mes in range(4, 13):
                 indice = funcion(anio, mes, 0)
                 mes_abr = mes_by_ordinal(mes)
                 fecha = f'{mes_abr}-{anio}'
                 serie.append((fecha, indice))
         for mes in range(1, self.mes + 1):
-                J += 1
                 indice = funcion(self.anio, mes, 0)
                 mes_abr = mes_by_ordinal(mes)
                 fecha = f'{mes_abr}-{self.anio}'
