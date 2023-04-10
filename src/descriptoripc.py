@@ -274,7 +274,7 @@ class Descriptor:
                     baja con un nivel de {INFLACION_MIN[0]:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
-    def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=1) -> str:
+    def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=2) -> str:
         if QGba:
             gba = f'índice del gasto basico {datos[0].lower()}'
             datos = datos[1]
@@ -433,7 +433,7 @@ class Descriptor:
                     de {fecha_3} con una cantidad de {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
 
-    def imputacion_precios(self, datos, precision: int=1) -> str:
+    def imputacion_precios(self, datos, precision: int=2) -> str:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
@@ -473,7 +473,7 @@ class Descriptor:
                     fueron consultadas con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
 
-    def desagregacion_fuentes(self, datos, mes_ordinal, precision: int=1) -> str:
+    def desagregacion_fuentes(self, datos, mes_ordinal, precision: int=2) -> str:
         mes = mes_by_ordinal(mes_ordinal, abreviado=False).lower()
         maximo = datos[0][1]
         fuente_max = datos[0][0].lower()
@@ -495,7 +495,7 @@ class Descriptor:
                     fueron diligenciados con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
     
-    def ipc_regiones(self, datos, precision: int=1):
+    def ipc_regiones(self, datos, precision: int=2):
         datos = sorted(datos, key=lambda x: x[1], reverse=True)
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         maximo = datos[0]
