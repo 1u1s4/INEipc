@@ -318,16 +318,16 @@ class Descriptor:
         diferencia_1 = indice_1 - indice_2
         diferencia_2 = indice_1 - indice_3
         if diferencia_1 > 0:
-            cambio_1 = "un aumento"
+            cambio_1 = "una aceleración"
         elif diferencia_1 < 0:
-            cambio_1 = "una disminución"
+            cambio_1 = "una desaceleración"
             diferencia_1 *= -1
         else:
             cambio_1 = "un cambio"
         if diferencia_2 > 0:
-            cambio_2 = "un aumento"
+            cambio_2 = "una aceleración"
         elif diferencia_2 < 0:
-            cambio_2 = "una disminución"
+            cambio_2 = "una desaceleración"
             diferencia_2 *= -1
         else:
             cambio_2 = "un cambio"
