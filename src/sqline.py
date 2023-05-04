@@ -97,14 +97,6 @@ class sqlINE:
             columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
             for columna in columnas:
                 self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
-            # fuentes
-            if self.__QdbAux:
-                conexion_auxiliar = pyodbc.connect(
-                    'DRIVER={ODBC Driver 17 for SQL Server}'
-                    + f';SERVER=INEVSQL01\A;DATABASE=master;UID=lmdelgado;PWD=Del/*2022'
-                )
-            else:
-                conexion_auxiliar = self.__conexion
             query = f"""
 SELECT * FROM (SELECT CASE 
         WHEN (H.ArtCod = 011110101 OR H.ArtCod = 011110102 OR H.ArtCod = 011110103) THEN 'ARROZ'
@@ -146,8 +138,8 @@ SELECT * FROM (SELECT CASE
         WHEN (H.ArtCod = 072210201) THEN 'GASOLINA REGULAR'
         WHEN (H.ArtCod = 072210301) THEN 'DIESEL'
         ELSE 'No CBA'
-    END AS 'Canasta Básica', H.PerAno, H.PerMes, H.PerSem, H.ArtCod, H.BolNum, H.ArtPac, H.ArtPhi, H.UreCan, H.UraChi, H.UmeCan, H.ArtCR, H.ArtSI, H.RegCod, H.ArtNOm, H.ArtPrc, H.TfnCod, H.TfnNom, H.FntCod, H.FntNom, H.DepCod, H.MunCod FROM 
-(SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+    END AS 'Canasta Básica', H.PerAno, H.PerMes, H.PerSem, H.ArtCod, H.BolNum, H.ArtPac, H.ArtPhi, H.UreCan, H.UraChi, H.UmeCan, H.ArtCR, H.ArtSI, H.RegCod, H.ArtNOm, H.ArtPrc, H.TfnCod, H.TfnNom, H.FntCod, H.FntNom, H.FntDir, H.DepCod, H.MunCod FROM 
+(SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_01_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_01_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_01_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -155,7 +147,7 @@ INNER JOIN IPC2010_01_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_01_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_02_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_02_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_02_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -163,7 +155,7 @@ INNER JOIN IPC2010_02_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_02_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_03_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_03_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_03_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -171,7 +163,7 @@ INNER JOIN IPC2010_03_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_03_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_04_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_04_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_04_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -179,7 +171,7 @@ INNER JOIN IPC2010_04_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_04_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_05_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_05_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_05_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -187,7 +179,7 @@ INNER JOIN IPC2010_05_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_05_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_06_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_06_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_06_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -195,7 +187,7 @@ INNER JOIN IPC2010_06_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_06_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_07_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_07_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_07_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -203,7 +195,7 @@ INNER JOIN IPC2010_07_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_07_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)
 UNION ALL 
-SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, b.DepCod, b.MunCod
+SELECT a.PerAno, a.PerMes, a.PerSem, a.ArtCod, b.BolNum, a.ArtPac, a.ArtPhi, a.UreCan, a.UraChi, d.UmeCan, a.ArtCR, a.ArtSI, b.RegCod, d.ArtNOm, d.ArtPrc, e.TfnCod, e.TfnNom, c.FntCod, c.FntNom, c.FntDir, b.DepCod, b.MunCod
 FROM IPC2010_08_RN.dbo.IPC104 a 
 INNER JOIN IPC2010_08_RN.dbo.IPC103 b ON (a.BolNum = b.BolNum AND a.PerAno = b.PerAno AND a.PerMes = b.PerMes AND a.PerSem = b.PerSem  AND a.RegCod = b.RegCod)
 INNER JOIN IPC2010_08_RN.dbo.IPC010 c ON (c.FntCod = b.FntCod AND c.DepCod = b.DepCod AND c.MunCod =b.MunCod)
@@ -211,7 +203,7 @@ INNER JOIN IPC2010_08_RN.dbo.IPC007 d ON a.ArtCod = d.ArtCod
 INNER JOIN IPC2010_08_RN.dbo.IPC008 e ON c.TfnCod = e.TfnCod
 WHERE a.ArtCod IN (SELECT DISTINCT ArtCod FROM IPC2010_01_RN.dbo.IPCPH6 WHERE PerAno = 2010 AND PerMes = 12 AND ArtCod != 091110301)) H
 WHERE H.PerAno >= {self.anio - 1}) J"""
-            self.df_Fnt = pd.read_sql(query, conexion_auxiliar)
+            self.df_Fnt = pd.read_sql(query, self.__conexion)
             columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
             self.df_Fnt = self.df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
             # Comprobamos si la carpeta db_b existe
@@ -713,7 +705,8 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
         else:
             anio_inf = 2012
         for anio in range(anio_inf, self.anio):
-            for mes in range(4, 13):
+            mes_inf = 4 if anio == anio_inf else 1
+            for mes in range(mes_inf, 13):
                 indice = funcion(anio, mes, 0)
                 mes_abr = mes_by_ordinal(mes)
                 fecha = f'{mes_abr}-{anio}'
