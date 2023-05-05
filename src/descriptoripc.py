@@ -334,7 +334,7 @@ class Descriptor:
         if tipo == "interanual":
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
-                        en el nivel de precios de {diferencia_1:,.{precision}f} puntos porcentuales
+                        en el nivel de aumento de los precios de {diferencia_1:,.{precision}f} puntos porcentuales
                         respecto al mes anterior ({indice_2:,.{precision}f}%), y con respecto a la
                         variación alcanzada en {fecha_2} ({indice_3:,.{precision}f}%) {cambio_2} de
                         {diferencia_2:,.{precision}f} puntos."""
@@ -347,7 +347,7 @@ class Descriptor:
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
-                        en el nivel de precios de {diferencia_1:,.{precision}f} puntos porcentuales
+                        en el ritmo de crecimiento de los precios de {diferencia_1:,.{precision}f} puntos porcentuales
                         respecto al mes anterior ({indice_2:,.{precision}f}%), y la de {fecha_2} se
                         presentó en {indice_3:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
