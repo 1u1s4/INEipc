@@ -494,7 +494,7 @@ class Descriptor:
                     {maximo[1]:,} y la región {self.region[minimo[0]]} fue donde menos precios
                     fueron diligenciados con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
-    
+
     def ipc_regiones(self, datos, precision: int=2):
         datos = sorted(datos, key=lambda x: x[1], reverse=True)
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
@@ -514,12 +514,12 @@ class Descriptor:
         minimo = datos[-1]
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
-                    {self.region[maximo[0]]} presentó la mayor inflación interanual,
+                    {self.region[maximo[0]]} presentó la mayor variación interanual,
                     la cual fue de {maximo[1]:,.{precision}f}, mientras que la región
-                    {self.region[minimo[0]]} presentó la menor inflación interanual,
+                    {self.region[minimo[0]]} presentó la menor variación interanual,
                     de {minimo[1]:,.{precision}f}"""
         return self.retocar_plantilla(plantilla)
-    
+
     def incidencias_gba(self, datos, Qpositiva: bool = True):
         if Qpositiva:
             signo = 'positiva'
@@ -566,7 +566,7 @@ class Descriptor:
         plantilla = """En la siguiente gráfica se presenta la serie histórica
                     {} desde el inicio de la base (diciembre de 2010).""".format(titulo)
         return self.retocar_plantilla(plantilla)
-    
+
     def tabla_serie_historica(self) -> str:
         """
         Genera el texto de la tabla de la serie histórica de IPC, inflación
