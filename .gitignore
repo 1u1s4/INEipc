@@ -3,7 +3,6 @@
 __pycache__
 app_name.egg-info
 build
-dist
 .venv
 automatizacion_capitulo_1_IPC_INE.egg-info
 main.py
