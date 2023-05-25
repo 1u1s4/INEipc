@@ -12,8 +12,7 @@ from funcionesjo import mes_by_ordinal, r0und
 
 
 class sqlINE:
-    def __init__(self, anio: int, mes: int, QdbAux: bool=False, dbBackup: bool=False) -> None:
-        self.__QdbAux = QdbAux
+    def __init__(self, anio: int, mes: int, dbBackup: bool=False) -> None:
         self.anio = anio
         self.mes = mes
        # diccionario tipo de fuentes
@@ -55,10 +54,7 @@ class sqlINE:
             SERVER = '10.0.0.3'
             USERNAME = 'lmdelgado'
             PASSWORD = 'Del/*2022'
-            self.__conexion = pyodbc.connect(
-                'DRIVER={ODBC Driver 17 for SQL Server}'
-                + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
-            )
+            self.__conexion = create_engine(f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server')
             self.df_DivNom = pd.read_sql(
                 'SELECT DivCod, DivNom FROM IPCM01',
                 self.__conexion
@@ -717,3 +713,6 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 fecha = f'{mes_abr}-{self.anio}'
                 serie.append((fecha, indice))
         return serie
+
+
+p = sqlINE(2023, 4)

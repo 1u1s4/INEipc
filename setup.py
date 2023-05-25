@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='ineipc',
-    version='0.1',
+    version='0.1.1',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
@@ -19,6 +19,7 @@ setup(
         'requests',
         'bs4',
         'numpy',
-        'pandas'
+        'pandas',
+        'pyarrow'
     ]
 )
