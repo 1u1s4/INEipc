@@ -713,6 +713,3 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 fecha = f'{mes_abr}-{self.anio}'
                 serie.append((fecha, indice))
         return serie
-
-
-p = sqlINE(2023, 4)

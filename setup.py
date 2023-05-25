@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='ineipc',
-    version='0.1.1',
+    version='1.0.2',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
@@ -13,13 +13,14 @@ setup(
     install_requires=[
         'fredapi',
         'xlrd==2.0.1',
-        'prettytable',
         'xlsxwriter',
         'pyodbc',
+        'sqlalchemy',
         'requests',
         'bs4',
         'numpy',
         'pandas',
-        'pyarrow'
+        'pyarrow',
+        'funcionesjo'
     ]
 )
