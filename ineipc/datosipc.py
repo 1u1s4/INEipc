@@ -11,8 +11,8 @@ from bs4 import BeautifulSoup
 from fredapi import Fred
 
 import funcionesjo as Jo
-from descriptoripc import Descriptor
-from sqline import sqlINE
+from .descriptoripc import Descriptor
+from .sqline import sqlINE
 
 
 class datosIPC:
