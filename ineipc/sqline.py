@@ -48,13 +48,16 @@ class sqlINE:
             self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
             self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
         else:
-            from sqlalchemy import create_engine
+            import pyodbc
             # datos servidor
             DATABASE = 'IPC2010_RN'
             SERVER = '10.0.0.3'
             USERNAME = 'lmdelgado'
             PASSWORD = 'Del/*2022'
-            self.__conexion = create_engine(f'mssql+pyodbc://{USERNAME}:{PASSWORD}@{SERVER}/{DATABASE}?driver=ODBC+Driver+17+for+SQL+Server')
+            self.__conexion = pyodbc.connect(
+                'DRIVER={ODBC Driver 17 for SQL Server}'
+                + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+            )
             self.df_DivNom = pd.read_sql(
                 'SELECT DivCod, DivNom FROM IPCM01',
                 self.__conexion
