@@ -52,9 +52,9 @@ class Descriptor:
         ----------
             str: Texto con la información del índice de precios de los alimentos.
         """
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
-        fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
-        fecha_3 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
+        fecha_2 = mes_anio_by_abreviacion(datos[0][0], mmaa=True)
+        fecha_3 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
         indice = datos[-1][1]
         variacion_1 = self.variacion(datos[-1][1], datos[0][1])
         variacion_2 = self.variacion(datos[-1][1], datos[-2][1])
@@ -282,8 +282,8 @@ class Descriptor:
             gba = 'número índice'
         else:
             gba = 'Índice de Precios al Consumidor'
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
-        fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
+        fecha_2 = mes_anio_by_abreviacion(datos[0][0], mmaa=True)
         if datos[-1][0].split('-')[0] == datos[0][0].split('-')[0]:
             Qmismo_anio = False
         else:
@@ -310,8 +310,8 @@ class Descriptor:
 
     # tipo = intermensual, interanual, acumulada
     def serie_historica_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', Qmensual: bool=True, precision: int=2) -> str:
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
-        fecha_2 = mes_anio_by_abreviacion(datos[0][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
+        fecha_2 = mes_anio_by_abreviacion(datos[0][0], mmaa=True)
         indice_1 = datos[-1][1] # mes actual
         indice_2 = datos[-2][1] # mes anterior
         indice_3 = datos[0][1]
@@ -339,7 +339,7 @@ class Descriptor:
                         variación alcanzada en {fecha_2} ({indice_3:,.{precision}f}%) {cambio_2} de
                         {diferencia_2:,.{precision}f} puntos."""
         elif tipo == "acumulada":
-            fecha_2 = mes_anio_by_abreviacion(datos[-2][0], MMAA=True)
+            fecha_2 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
             indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
@@ -353,7 +353,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def incidencia_divisiones(self, datos, fecha) -> str:
-        fecha = mes_anio_by_abreviacion(fecha, MMAA=True)
+        fecha = mes_anio_by_abreviacion(fecha, mmaa=True)
         datos = sorted(datos, reverse=True)
         mayor_1 = datos[0]
         mayor_2 = datos[1]
@@ -393,7 +393,7 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def poder_adquisitivo(self, datos) -> str:
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
         indice_1 = datos[-1][1]
         perdida = 1 - indice_1
         plantilla = f"""El quetzal ha perdido {perdida:,.2f} centavos en poder adquisitivo
@@ -402,13 +402,13 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def serie_fuentes(self, datos) -> str:
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
         maximo = datos_temp[-1]
         minimo = datos_temp[0]
-        fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
-        fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+        fecha_2 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_3 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
         plantilla = f"""La cantidad de fuentes consultadas en {fecha_1} es de {indice_1:,}.
@@ -418,13 +418,13 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def serie_precios(self, datos) -> str:
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
         maximo = datos_temp[-1]
         minimo = datos_temp[0]
-        fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
-        fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+        fecha_2 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_3 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
         plantilla = f"""La cantidad de precios diligenciados en {fecha_1} es de {indice_1:,}.
@@ -434,13 +434,13 @@ class Descriptor:
         return self.retocar_plantilla(plantilla)
 
     def imputacion_precios(self, datos, precision: int=2) -> str:
-        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], MMAA=True)
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
         indice_1 = datos[-1][1]
         datos_temp = sorted([d[::-1] for d in datos])
         maximo = datos_temp[-1]
         minimo = datos_temp[0]
-        fecha_2 = mes_anio_by_abreviacion(maximo[1], MMAA=True)
-        fecha_3 = mes_anio_by_abreviacion(minimo[1], MMAA=True)
+        fecha_2 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_3 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
         plantilla = f"""El porcentaje de precios imputados en {fecha_1} es de {indice_1:.{precision}f}%.
