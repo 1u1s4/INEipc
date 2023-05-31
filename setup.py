@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 setup(
     name='ineipc',
-    version='1.0.7',
+    version='1.0.8',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
     url='https://github.com/1u1s4/INE_IPC',
     keywords='development, setup, setuptools',
-    python_requires='>=3.9',
+    python_requires='>=3',
     packages=find_packages(),
     py_modules=['datosipc', 'descriptoripc', 'sqline'],
     install_requires=[
