@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='ineipc',
-    version='1.0.8',
+    version='1.0.9',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
@@ -23,7 +23,7 @@ setup(
         'funcionesjo'
     ],
     package_data={
-        'ineipc': ['IPC CA RD Y MEX.xlsx'],
+        'ineipc': ['IPC CA RD Y MEX.xlsx', 'imputacion.feather', 'PRECIOS_EN_PERIODO_DE_ESPERA.xlsx'],
     },
     include_package_data=True,
 )
