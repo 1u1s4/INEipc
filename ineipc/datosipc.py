@@ -675,7 +675,7 @@ class datosIPC:
         descripcion = self.Descriptor.inflacion_interanual_regiones(datos)
         return(datos, descripcion)
 
-    def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True) -> Tuple[List[Tuple[float, str]], str]:
+    def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True, top_n: int = 5) -> Tuple[List[Tuple[float, str]], str]:
         """
         Obtiene las incidencias de gasto básico, mostrando el top 5 de incidencias positivas o negativas.
 
@@ -696,9 +696,9 @@ class datosIPC:
         """
         incidencias = sorted(self.SQL.incidencia_gasto_basico(RegCod), reverse=Qpositiva)
         incidencias = [i[::-1] for i in incidencias]
-        top5 = incidencias[0:5]
-        descripcion = self.Descriptor.incidencias_gba(top5, Qpositiva)
-        return(top5, descripcion)
+        top = incidencias[0:top_n]
+        descripcion = self.Descriptor.incidencias_gba(top, Qpositiva)
+        return(top, descripcion)
 
     def serie_historica(self, tipo: str) -> Tuple[List[Tuple[int, float]], str]:
         serie = self.SQL.serie_historica(tipo)
