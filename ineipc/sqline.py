@@ -670,6 +670,37 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 break
         return serie[0:i + 1]
     
+    def desagregacion_fuentes_cantidad(self) -> List[Tuple[str, int]]:
+        """
+        Desagrega el número de fuentes por tipo de fuente.
+
+        Returns:
+        -----------
+        List[Tuple[str, int]]:
+            Una lista de tuplas que contienen el nombre del tipo de fuente y el número de fuentes para el mes y año actual.
+        """
+        serie = []
+        mes_ = self.df_Fnt['PerMes'] == self.mes
+        anio_ = self.df_Fnt['PerAno'] == self.anio
+        S = 1
+        for i in range(24):
+            if i in (17,18,19): # no existen estos tipos de fuentes
+                continue
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
+            conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
+            S += conteo
+            nmbr_Fnt = self.nombre_fuentes.get(i)
+            serie.append((nmbr_Fnt, conteo))
+        invertir = [(i[1] , i[0]) for i in serie]
+        serie = [i[::-1] for i in sorted(invertir, reverse=True)]
+        # hacer pareto
+        acumulado = 0
+        for i, fuente in enumerate(serie):
+            acumulado += fuente[1]
+            if acumulado >= 80:
+                break
+        return serie
+
     def cobertura_fuentes_precios(self, Qfuentes: bool = True) -> List[Tuple[int, int]]:
         """Calcula la cobertura de fuentes de precios para cada región en un mes y año específico.
 
