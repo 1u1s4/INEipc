@@ -656,7 +656,7 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             if i in (17,18,19): # no existen estos tipos de fuentes
                 continue
             tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
-            conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].shape[0]
+            conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"]).shape[0]
             S += conteo
             nmbr_Fnt = self.nombre_fuentes.get(i)
             serie.append((nmbr_Fnt, conteo))
