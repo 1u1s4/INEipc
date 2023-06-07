@@ -747,3 +747,33 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 fecha = f'{mes_abr}-{self.anio}'
                 serie.append((fecha, indice))
         return serie
+
+    def serie_historica_mensual_inflacion(self, RegCod: int, tipo: str) -> List[Tuple[str, float]]:
+        """
+        Retorna una serie histórica de inflación para una región específica.
+
+        Args:
+            RegCod (int): Código de la región para la cual se quiere obtener la
+            serie histórica de inflación.
+            tipo (str): Tipo de inflación que se desea calcular. Puede ser
+            'intermensual', 'interanual' o 'acumulada'.
+
+        Returns:
+            List[Tuple[str, float]]: Lista de tuplas, donde cada tupla contiene
+            dos elementos: la fecha en formato "mes-año" y el valor del índice
+            de inflación correspondiente a esa fecha.
+        """
+        serie = []
+        if tipo == 'intermensual':
+            funcion = self.inflacion_mensual
+        elif tipo == 'interanual':
+            funcion = self.inflacion_interanual
+        elif tipo == 'acumulada':
+            funcion = self.inflacion_acumulada
+
+        for anio in range(2012, self.anio + 1):
+            mes_abr = mes_by_ordinal(self.mes)
+            fecha = f'{mes_abr}-{anio}'
+            indice = funcion(anio, self.mes, RegCod)
+            serie.append((fecha, indice))
+        return serie
