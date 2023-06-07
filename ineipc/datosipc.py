@@ -34,7 +34,9 @@ class datosIPC:
         self.mes = mes
         self.anio = anio
         self.SQL = sqlINE(anio, mes, dbBackup)
-        self.Descriptor = Descriptor(anio, mes) 
+        # variacion mensual
+        var_mensual = self.SQL.inflacion_mensual(anio, mes, 0)
+        self.Descriptor = Descriptor(anio, mes, var_mensual)
 
     def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
         """
@@ -714,4 +716,9 @@ class datosIPC:
         df = df.reindex(columns=['Fecha', 'IPC', 'Variación mensual', 'Ritmo inflacionario'])
         descripcion = self.Descriptor.tabla_serie_historica()
         return (df, descripcion)
-        
+    
+
+    def serie_historica_mensual_inflacion(self, RegCod: int, tipo: str) -> Tuple[List[Tuple[int, float]], str]:
+        serie = self.SQL.serie_historica_mensual_inflacion(RegCod, tipo)
+        descripcion = self.Descriptor.serie_historica_mensual_inflacion(serie, tipo)
+        return(serie, descripcion)
