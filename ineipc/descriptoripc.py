@@ -5,7 +5,7 @@ from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 
 class Descriptor:
-    def __init__(self, anio: int, mes: int) -> None:
+    def __init__(self, anio: int, mes: int, var_mensual: int) -> None:
         self.mes = mes
         self.anio = anio
         self.region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
@@ -20,6 +20,8 @@ class Descriptor:
                             Retalhuleu, San Marcos, Suchitepéquez, Sololá y Totonicapán,
                             la región VII o Noroccidental por Huehuetenango y
                             Quiché y la región VIII por Petén.}'''
+        # signo de la variación mensual
+        self.signo_var_mensual = True if var_mensual >= 0 else False
 
     def retocar_plantilla(self, plantilla: str) -> str:
         plantilla = plantilla.replace("\n", " ")
@@ -352,31 +354,6 @@ class Descriptor:
                         presentó en {indice_3:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
-    def incidencia_divisiones(self, datos, fecha) -> str:
-        fecha = mes_anio_by_abreviacion(fecha, mmaa=True)
-        datos = sorted(datos, reverse=True)
-        mayor_1 = datos[0]
-        mayor_2 = datos[1]
-        menor = datos[-1]
-        div_1 = mayor_1[1].lower()
-        div_2 = mayor_2[1].lower()
-        div_3 = menor[1].lower()
-        indice_menor = menor[0]
-        if indice_menor < 0.01 and indice_menor > 0:
-            indice_menor = f'{indice_menor:,.3f}'
-        elif indice_menor < 0.001 and indice_menor > 0:
-            indice_menor = f'{indice_menor:,.4f}'
-        elif indice_menor < 0.0001 and indice_menor > 0:
-            indice_menor = f'{indice_menor:,.5f}'
-        else:
-            indice_menor = f'{indice_menor:,.2f}'
-        plantilla = f"""De las doce divisiones de gasto que integran el IPC, la de
-                    {div_1} ({mayor_1[0]:,.2f}%) y {div_2} ({mayor_2[0]:,.2f}%),
-                    registraron la mayor variación mensual en {fecha}. Por su parte,
-                    {div_3} es la división de gasto con menor variación mensual
-                    ({indice_menor}%)."""
-        return self.retocar_plantilla(plantilla)
-
     def incidencias(self, datos, fecha: str, Qpositivas: bool=True) -> str:
         datos = sorted(datos, reverse=Qpositivas)[0:5]
         if Qpositivas:
@@ -454,11 +431,19 @@ class Descriptor:
         maximo1 = datos[0]
         maximo2 = datos[1]
         minimo = datos[-1]
-        plantilla = f"""De las doce divisiones de gasto que integran
-                    el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
-                    {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
-                    incidencia mensual. Por su parte, {minimo[1].lower()} es la división
-                    de gasto con menor incidencia mensual ({round(minimo[0], 2):,.2f}%)."""
+        if self.signo_var_mensual:
+            plantilla = f"""De las doce divisiones de gasto que integran
+                        el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
+                        {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
+                        incidencia mensual positiva. Por su parte, {minimo[1].lower()} es la división
+                        de gasto con menor incidencia mensual negativa ({round(minimo[0], 2):,.2f}%)."""
+        else:
+            plantilla = f"""De las doce divisiones de gasto que integran
+                        el IPC, la de {minimo[1].lower()} es la división
+                        de gasto con menor incidencia mensual negativa ({round(minimo[0], 2):,.2f}%). 
+                        Por su parte, {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
+                        {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
+                        incidencia mensual positiva."""
         return self.retocar_plantilla(plantilla)
 
     def cobertura_fuentes(self, datos) -> str:
@@ -579,4 +564,16 @@ class Descriptor:
         plantilla = """En la siguiente tabla se presenta la serie histórica
                     del ritmo inflacionario, variación mensual e Índice de precios
                     al consumidor desde el inicio de la base (diciembre de 2010)."""
+        return self.retocar_plantilla(plantilla)
+    
+    def serie_historica_mensual_inflacion(self, datos, tipo: str, nivel: str='a nivel nacional', precision: int=2) -> str:
+        fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
+        fecha_2 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
+        indice_1 = datos[-1][1] # mes actual
+        indice_2 = datos[-2][1] # mes anterior
+        
+        plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+                    se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
+                    presentó en {indice_2:,.{precision}f}%."""
+
         return self.retocar_plantilla(plantilla)
