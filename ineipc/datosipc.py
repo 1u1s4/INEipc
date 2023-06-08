@@ -36,7 +36,7 @@ class datosIPC:
         self.SQL = sqlINE(anio, mes, dbBackup)
         # variacion mensual
         var_mensual = self.SQL.inflacion_mensual(anio, mes, 0)
-        self.Descriptor = Descriptor(anio, mes, var_mensual)
+        self.Descriptor = Descriptor(anio, mes)
 
     def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
         """
@@ -537,7 +537,7 @@ class datosIPC:
             Descripción textual de las incidencias de divisiones para la región especificada.
         """
         datos = self.SQL.incidencia_divisiones(RegCod)
-        descripcion = self.Descriptor.incidencia_divisiones(datos)
+        descripcion = self.Descriptor.incidencia_divisiones(datos, self.SQL.inflacion_mensual(self.anio, self.mes, RegCod))
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
     

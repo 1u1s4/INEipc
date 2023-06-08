@@ -5,7 +5,7 @@ from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 
 class Descriptor:
-    def __init__(self, anio: int, mes: int, var_mensual: int) -> None:
+    def __init__(self, anio: int, mes: int) -> None:
         self.mes = mes
         self.anio = anio
         self.region = dict(zip(range(1,9), ('I','II','III','VI','V','VI','VII','VIII')))
@@ -20,8 +20,6 @@ class Descriptor:
                             Retalhuleu, San Marcos, Suchitepéquez, Sololá y Totonicapán,
                             la región VII o Noroccidental por Huehuetenango y
                             Quiché y la región VIII por Petén.}'''
-        # signo de la variación mensual
-        self.signo_var_mensual = True if var_mensual >= 0 else False
 
     def retocar_plantilla(self, plantilla: str) -> str:
         plantilla = plantilla.replace("\n", " ")
@@ -426,12 +424,12 @@ class Descriptor:
                     de {fecha_3} con una cantidad de {indice_3:.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
-    def incidencia_divisiones(self, datos) -> str:
+    def incidencia_divisiones(self, datos, variacion_mensual: float) -> str:
         datos = sorted(datos, reverse=True)
         maximo1 = datos[0]
         maximo2 = datos[1]
         minimo = datos[-1]
-        if self.signo_var_mensual:
+        if variacion_mensual > 0:
             plantilla = f"""De las doce divisiones de gasto que integran
                         el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
                         {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
