@@ -777,3 +777,15 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             indice = funcion(anio, self.mes, RegCod)
             serie.append((fecha, indice))
         return serie
+    
+    def deteccion_Fnt_sin_tipo(self):
+        mes_ = self.df_Fnt['PerMes'] == self.mes
+        anio_ = self.df_Fnt['PerAno'] == self.anio
+        tipo_fuente = 0
+
+        tipo_fuente_ = self.df_Fnt['TfnCod'] == str(tipo_fuente).zfill(2)
+        sin_fuente = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+
+        nmbr_Fnt = self.nombre_fuentes.get(tipo_fuente)
+
+        return (sin_fuente, nmbr_Fnt)
