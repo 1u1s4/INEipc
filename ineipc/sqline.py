@@ -51,9 +51,9 @@ class sqlINE:
             import pyodbc
             # datos servidor
             DATABASE = 'IPC2010_RN'
-            SERVER = '10.0.0.3'
-            USERNAME = 'lmdelgado'
-            PASSWORD = 'Del/*2022'
+            SERVER = '10.0.0.153'
+            USERNAME = 'laalvarado'
+            PASSWORD = 'Abc$/2022'
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
