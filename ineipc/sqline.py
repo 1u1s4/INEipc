@@ -588,7 +588,7 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                     serie.append((fecha, indice))
         return serie
 
-    def serie_fuentes_precios(self, Qfuentes: bool = True) -> List[Tuple[str, int]]:
+    def serie_fuentes_precios(self, Qfuentes: bool = True, RegCod: int = 0) -> List[Tuple[str, int]]:
         """
         Devuelve una serie histórica con la cantidad de fuentes de precios disponibles
         para cada mes y año.
@@ -615,6 +615,8 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio - 1
                 conteo = self.df_Fnt[anio_ & mes_]
+                if RegCod != 0:
+                    conteo = conteo[conteo['RegCod'] == RegCod]
                 if Qfuentes:
                     conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
                 serie.append((fecha, conteo.shape[0]))
@@ -624,6 +626,8 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio
                 conteo = self.df_Fnt[anio_ & mes_]
+                if RegCod != 0:
+                    conteo = conteo[conteo['RegCod'] == RegCod]
                 if Qfuentes:
                     conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
                 serie.append((fecha, conteo.shape[0]))
@@ -634,6 +638,8 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
                 mes_ = self.df_Fnt['PerMes'] == i
                 anio_ = self.df_Fnt['PerAno'] == self.anio
                 conteo = self.df_Fnt[anio_ & mes_]
+                if RegCod != 0:
+                    conteo = conteo[conteo['RegCod'] == RegCod]
                 if Qfuentes:
                     conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
                 serie.append((fecha, conteo.shape[0]))
