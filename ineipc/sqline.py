@@ -40,13 +40,18 @@ class sqlINE:
             23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
         }
         if dbBackup:
-            self.df_DivInd = pd.read_feather('db_b/df_DivInd.feather')
-            self.df_DivPon = pd.read_feather('db_b/df_DivPon.feather')
-            self.df_GbaInd = pd.read_feather('db_b/df_GbaInd.feather')
-            self.df_GbaPon = pd.read_feather('db_b/df_GbaPon.feather')
-            self.df_GbaInfo = pd.read_feather('db_b/df_GbaInfo.feather')
-            self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
-            self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
+            try:
+                self.df_DivInd = pd.read_feather('db_b/df_DivInd.feather')
+                self.df_DivPon = pd.read_feather('db_b/df_DivPon.feather')
+                self.df_GbaInd = pd.read_feather('db_b/df_GbaInd.feather')
+                self.df_GbaPon = pd.read_feather('db_b/df_GbaPon.feather')
+                self.df_GbaInfo = pd.read_feather('db_b/df_GbaInfo.feather')
+                self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
+                self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
+            except Exception as e:
+                import pkg_resources
+                print("Se cargaran los datos desde un backup del paquete.")
+                ruta = pkg_resources.resource_filename(__name__, 'regiones/regiones.shp')
         else:
             import pyodbc
             # datos servidor
