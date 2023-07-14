@@ -41,13 +41,13 @@ class sqlINE:
         }
         if dbBackup:
             try:
-                self.df_DivInd = pd.read_feather('db_b/df_DivInd.feather')
-                self.df_DivPon = pd.read_feather('db_b/df_DivPon.feather')
-                self.df_GbaInd = pd.read_feather('db_b/df_GbaInd.feather')
-                self.df_GbaPon = pd.read_feather('db_b/df_GbaPon.feather')
-                self.df_GbaInfo = pd.read_feather('db_b/df_GbaInfo.feather')
-                self.df_DivNom = pd.read_feather('db_b/df_DivNom.feather')
-                self.df_Fnt = pd.read_feather('db_b/df_Fnt.feather')
+                self.df_DivInd = pd.read_parquet('db_b/df_DivInd.parquet')
+                self.df_DivPon = pd.read_parquet('db_b/df_DivPon.parquet')
+                self.df_GbaInd = pd.read_parquet('db_b/df_GbaInd.parquet')
+                self.df_GbaPon = pd.read_parquet('db_b/df_GbaPon.parquet')
+                self.df_GbaInfo = pd.read_parquet('db_b/df_GbaInfo.parquet')
+                self.df_DivNom = pd.read_parquet('db_b/df_DivNom.parquet')
+                self.df_Fnt = pd.read_parquet('db_b/df_Fnt.parquet')
             except Exception as e:
                 import pkg_resources
                 print("Se cargaran los datos desde un backup del paquete.")
@@ -56,9 +56,9 @@ class sqlINE:
             import pyodbc
             # datos servidor
             DATABASE = 'IPC2010_RN'
-            SERVER = '10.0.15.35'
-            USERNAME = 'esliep'
-            PASSWORD = 'Abc$2020'
+            SERVER = '10.0.0.153'
+            USERNAME = 'laalvarado'
+            PASSWORD = 'Abc$/2022'
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
@@ -214,13 +214,13 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             if not os.path.exists("db_b"):
                 # Si no existe, la creamos
                 os.makedirs("db_b")
-            self.df_DivInd.to_feather('db_b/df_DivInd.feather')
-            self.df_DivPon.to_feather('db_b/df_DivPon.feather')
-            self.df_GbaInd.to_feather('db_b/df_GbaInd.feather')
-            self.df_GbaPon.to_feather('db_b/df_GbaPon.feather')
-            self.df_GbaInfo.to_feather('db_b/df_GbaInfo.feather')
-            self.df_DivNom.to_feather('db_b/df_DivNom.feather')
-            self.df_Fnt.to_feather('db_b/df_Fnt.feather')
+            self.df_DivInd.to_parquet('db_b/df_DivInd.parquet', compression='Brotli')
+            self.df_DivPon.to_parquet('db_b/df_DivPon.parquet', compression='Brotli')
+            self.df_GbaInd.to_parquet('db_b/df_GbaInd.parquet', compression='Brotli')
+            self.df_GbaPon.to_parquet('db_b/df_GbaPon.parquet', compression='Brotli')
+            self.df_GbaInfo.to_parquet('db_b/df_GbaInfo.parquet', compression='Brotli')
+            self.df_DivNom.to_parquet('db_b/df_DivNom.parquet', compression='Brotli')
+            self.df_Fnt.to_parquet('db_b/df_Fnt.parquet', compression='Brotli')
             # Obtener la marca temporal actual
             now = datetime.datetime.now()
             # Crear el nombre del archivo con la marca temporal
