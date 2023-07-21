@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(
-    name='ineipc',
+    name='INEipc',
     version='1.3.0',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
@@ -23,7 +23,7 @@ setup(
         'funcionesjo'
     ],
     package_data={
-        'ineipc': ['db_pack/*', 'datos/*'],
+        'INEipc': ['db_pack/*', 'datos/*'],
     },
     include_package_data=True,
 )
