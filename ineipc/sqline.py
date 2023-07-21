@@ -1,3 +1,4 @@
+import pkg_resources
 import warnings
 from typing import List, Tuple
 
@@ -10,9 +11,8 @@ import datetime
 
 from funcionesjo import mes_by_ordinal, r0und
 
-
-class sqlINE:
-    def __init__(self, anio: int, mes: int, dbBackup: bool=False) -> None:
+class SqlIPC:
+    def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
         self.anio = anio
         self.mes = mes
        # diccionario tipo de fuentes
@@ -40,18 +40,21 @@ class sqlINE:
             23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
         }
         if dbBackup:
-            try:
-                self.df_DivInd = pd.read_parquet('db_b/df_DivInd.parquet')
-                self.df_DivPon = pd.read_parquet('db_b/df_DivPon.parquet')
-                self.df_GbaInd = pd.read_parquet('db_b/df_GbaInd.parquet')
-                self.df_GbaPon = pd.read_parquet('db_b/df_GbaPon.parquet')
-                self.df_GbaInfo = pd.read_parquet('db_b/df_GbaInfo.parquet')
-                self.df_DivNom = pd.read_parquet('db_b/df_DivNom.parquet')
-                self.df_Fnt = pd.read_parquet('db_b/df_Fnt.parquet')
-            except Exception as e:
-                import pkg_resources
-                print("Se cargaran los datos desde un backup del paquete.")
-                ruta = pkg_resources.resource_filename(__name__, 'regiones/regiones.shp')
+            self.df_DivInd = pd.read_parquet('db_b/df_DivInd.parquet')
+            self.df_DivPon = pd.read_parquet('db_b/df_DivPon.parquet')
+            self.df_GbaInd = pd.read_parquet('db_b/df_GbaInd.parquet')
+            self.df_GbaPon = pd.read_parquet('db_b/df_GbaPon.parquet')
+            self.df_GbaInfo = pd.read_parquet('db_b/df_GbaInfo.parquet')
+            self.df_DivNom = pd.read_parquet('db_b/df_DivNom.parquet')
+            self.df_Fnt = pd.read_parquet('db_b/df_Fnt.parquet')
+        elif dbPack:
+            self.df_DivInd = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivInd.parquet'))
+            self.df_DivPon = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivPon.parquet'))
+            self.df_GbaInd = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInd.parquet'))
+            self.df_GbaPon = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaPon.parquet'))
+            self.df_GbaInfo = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInfo.parquet'))
+            self.df_DivNom = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivNom.parquet'))
+            self.df_Fnt = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
         else:
             import pyodbc
             # datos servidor

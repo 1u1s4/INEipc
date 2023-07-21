@@ -11,11 +11,11 @@ from bs4 import BeautifulSoup
 from fredapi import Fred
 
 import funcionesjo as Jo
-from .descriptoripc import Descriptor
-from .sqline import sqlINE
+from .descriptoripc import DescriptorIPC
+from .sqline import SqlIPC
 
 
-class datosIPC:
+class DatosIPC:
     def __init__(self, anio: int, mes: int, dbBackup: bool = False) -> None:
         """
         Constructor de la clase datosIPC, que permite manejar los datos del IPC y descripciones.
@@ -33,10 +33,10 @@ class datosIPC:
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
-        self.SQL = sqlINE(anio, mes, dbBackup)
+        self.SQL = SqlIPC(anio, mes, dbBackup)
         # variacion mensual
         var_mensual = self.SQL.inflacion_mensual(anio, mes, 0)
-        self.Descriptor = Descriptor(anio, mes)
+        self.Descriptor = DescriptorIPC(anio, mes)
 
     def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
         """
