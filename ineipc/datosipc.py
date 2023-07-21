@@ -12,7 +12,7 @@ from fredapi import Fred
 
 import funcionesjo as Jo
 from .descriptoripc import DescriptorIPC
-from .sqline import SqlIPC
+from .sqlipc import SqlIPC
 
 
 class DatosIPC:
@@ -34,8 +34,6 @@ class DatosIPC:
         self.mes = mes
         self.anio = anio
         self.SQL = SqlIPC(anio, mes, dbBackup)
-        # variacion mensual
-        var_mensual = self.SQL.inflacion_mensual(anio, mes, 0)
         self.Descriptor = DescriptorIPC(anio, mes)
 
     def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
