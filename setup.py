@@ -20,7 +20,7 @@ setup(
         'numpy',
         'pandas',
         'pyarrow',
-        'funcionesjo'
+        'funcionesjo @ git+https://github.com/1u1s4/funcionesjo.git'
     ],
     package_data={
         'INEipc': ['db_pack/*', 'datos/*'],
