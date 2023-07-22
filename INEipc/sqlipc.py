@@ -10,9 +10,13 @@ import pandas as pd
 import datetime
 
 from funcionesjo import mes_by_ordinal, r0und
+from INEcodex import Codex
 
 class SqlIPC:
     def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
+        # cargar Codex
+        self.__codex = Codex()
+        self.__codex.cargar_clave()
         self.anio = anio
         self.mes = mes
        # diccionario tipo de fuentes
@@ -40,21 +44,21 @@ class SqlIPC:
             23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
         }
         if dbBackup:
-            self.df_DivInd = pd.read_parquet('db_b/df_DivInd.parquet')
-            self.df_DivPon = pd.read_parquet('db_b/df_DivPon.parquet')
-            self.df_GbaInd = pd.read_parquet('db_b/df_GbaInd.parquet')
-            self.df_GbaPon = pd.read_parquet('db_b/df_GbaPon.parquet')
-            self.df_GbaInfo = pd.read_parquet('db_b/df_GbaInfo.parquet')
-            self.df_DivNom = pd.read_parquet('db_b/df_DivNom.parquet')
-            self.df_Fnt = pd.read_parquet('db_b/df_Fnt.parquet')
+            self.df_DivInd = self.__codex.cargar_df('db_b/df_DivInd.parquet')
+            self.df_DivPon = self.__codex.cargar_df('db_b/df_DivPon.parquet')
+            self.df_GbaInd = self.__codex.cargar_df('db_b/df_GbaInd.parquet')
+            self.df_GbaPon = self.__codex.cargar_df('db_b/df_GbaPon.parquet')
+            self.df_GbaInfo = self.__codex.cargar_df('db_b/df_GbaInfo.parquet')
+            self.df_DivNom = self.__codex.cargar_df('db_b/df_DivNom.parquet')
+            self.df_Fnt = self.__codex.cargar_df('db_b/df_Fnt.parquet')
         elif dbPack:
-            self.df_DivInd = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivInd.parquet'))
-            self.df_DivPon = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivPon.parquet'))
-            self.df_GbaInd = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInd.parquet'))
-            self.df_GbaPon = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaPon.parquet'))
-            self.df_GbaInfo = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInfo.parquet'))
-            self.df_DivNom = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_DivNom.parquet'))
-            self.df_Fnt = pd.read_parquet(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
+            self.df_DivInd = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivInd.parquet'))
+            self.df_DivPon = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivPon.parquet'))
+            self.df_GbaInd = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInd.parquet'))
+            self.df_GbaPon = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaPon.parquet'))
+            self.df_GbaInfo = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInfo.parquet'))
+            self.df_DivNom = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivNom.parquet'))
+            self.df_Fnt = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
         else:
             import pyodbc
             # datos servidor
@@ -217,13 +221,14 @@ WHERE H.PerAno >= {self.anio - 1}) J"""
             if not os.path.exists("db_b"):
                 # Si no existe, la creamos
                 os.makedirs("db_b")
-            self.df_DivInd.to_parquet('db_b/df_DivInd.parquet', compression='Brotli')
-            self.df_DivPon.to_parquet('db_b/df_DivPon.parquet', compression='Brotli')
-            self.df_GbaInd.to_parquet('db_b/df_GbaInd.parquet', compression='Brotli')
-            self.df_GbaPon.to_parquet('db_b/df_GbaPon.parquet', compression='Brotli')
-            self.df_GbaInfo.to_parquet('db_b/df_GbaInfo.parquet', compression='Brotli')
-            self.df_DivNom.to_parquet('db_b/df_DivNom.parquet', compression='Brotli')
-            self.df_Fnt.to_parquet('db_b/df_Fnt.parquet', compression='Brotli')
+            # Guardar los dataframes en la carpeta "db_b"
+            self.__codex.guardar_df(self.df_DivInd, 'db_b/df_DivInd.parquet')
+            self.__codex.guardar_df(self.df_DivPon, 'db_b/df_DivPon.parquet')
+            self.__codex.guardar_df(self.df_GbaInd, 'db_b/df_GbaInd.parquet')
+            self.__codex.guardar_df(self.df_GbaPon, 'db_b/df_GbaPon.parquet')
+            self.__codex.guardar_df(self.df_GbaInfo, 'db_b/df_GbaInfo.parquet')
+            self.__codex.guardar_df(self.df_DivNom, 'db_b/df_DivNom.parquet')
+            self.__codex.guardar_df(self.df_Fnt, 'db_b/df_Fnt.parquet')
             # Obtener la marca temporal actual
             now = datetime.datetime.now()
             # Crear el nombre del archivo con la marca temporal
