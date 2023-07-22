@@ -1,6 +1,32 @@
 import pandas as pd
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from dateutil.relativedelta import relativedelta
 import datetime
+
+def get_boletas(anio: int, mes: int, conexion) -> pd.DataFrame:
+    dfs = []
+
+    # Genera una lista de los últimos 12 meses
+    start_date = datetime.date(anio, mes, 1)
+    dates = [start_date - relativedelta(months=i) for i in range(12)]
+    
+    # Utiliza un ProcessPoolExecutor para paralelizar las llamadas a la función boletas
+    with ProcessPoolExecutor() as executor:
+        futures = {executor.submit(boletas, date.year, date.month, conexion): date for date in dates}
+        
+        # A medida que las llamadas a boletas se completan, guarda los resultados en dfs
+        for future in as_completed(futures):
+            date = futures[future]
+            try:
+                df = future.result()
+                dfs.append(df)
+            except Exception as exc:
+                print(f'{date} generated an exception: {exc}')
+                
+    # Concatena todos los dataframes
+    df_final = pd.concat(dfs, ignore_index=True)
+    
+    return df_final
 
 def boletas_ultimos_12_meses(anio: int, mes: int, conexion) -> pd.DataFrame:
     dfs = []
