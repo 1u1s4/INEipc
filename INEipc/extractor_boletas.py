@@ -110,3 +110,7 @@ WHERE H.PerAno = {anio} AND H.PerMes = {mes}) J"""
         df_Fnt = pd.read_sql(query, conexion)
         columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
         df_Fnt = df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
+        return df_Fnt
+
+def boletas_ultimos_12_meses(anio: int, conexion) -> pd.DataFrame:
+        
