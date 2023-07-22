@@ -1,4 +1,26 @@
 import pandas as pd
+from dateutil.relativedelta import relativedelta
+import datetime
+
+def boletas_ultimos_12_meses(anio: int, mes: int, conexion) -> pd.DataFrame:
+    dfs = []
+
+    # Genera una lista de los últimos 12 meses
+    start_date = datetime.date(anio, mes, 1)
+    dates = [start_date - relativedelta(months=i) for i in range(12)]
+    
+    # Llama a la función boletas para cada mes y guarda los resultados en dfs
+    for date in dates:
+        try:
+            df = boletas(date.year, date.month, conexion)
+            dfs.append(df)
+        except Exception as exc:
+            print(f'{date} generated an exception: {exc}')
+                
+    # Concatena todos los dataframes
+    df_final = pd.concat(dfs, ignore_index=True)
+    
+    return df_final
 
 def boletas(anio: int, mes: int, conexion) -> pd.DataFrame:
         query = f"""
@@ -111,6 +133,3 @@ WHERE H.PerAno = {anio} AND H.PerMes = {mes}) J"""
         columnas = ('RegCod', 'MunCod', 'DepCod', 'PerAno', 'PerMes')
         df_Fnt = df_Fnt.astype(dict.fromkeys(columnas, "int64"), errors='ignore')
         return df_Fnt
-
-def boletas_ultimos_12_meses(anio: int, conexion) -> pd.DataFrame:
-        
