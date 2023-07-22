@@ -58,10 +58,10 @@ class SqlIPC:
         else:
             import pyodbc
             # datos servidor
-            DATABASE = 'IPC2010_RN'
-            SERVER = '10.0.0.153'
-            USERNAME = 'laalvarado'
-            PASSWORD = 'Abc$/2022'
+            DATABASE = os.getenv('DATABASE')
+            SERVER = os.getenv('SERVER')
+            USERNAME = os.getenv('USERNAME')
+            PASSWORD = os.getenv('PASSWORD')
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
