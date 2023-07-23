@@ -67,6 +67,7 @@ class SqlIPC:
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
             )
+            # extractor de boletas
             fuentes = Fuentes(self.__conexion)
             self.df_DivNom = pd.read_sql(
                 'SELECT DivCod, DivNom FROM IPCM01',
@@ -107,7 +108,7 @@ class SqlIPC:
             for columna in columnas:
                 self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
 
-            self.df_Fnt = fuentes.boletas_ultimos_12_meses(self.anio, self.mes, self.__conexion)
+            self.df_Fnt = fuentes.boletas_ultimos_12_meses(self.anio, self.mes)
             # Comprobamos si la carpeta db_b existe
             if not os.path.exists("db_b"):
                 # Si no existe, la creamos
