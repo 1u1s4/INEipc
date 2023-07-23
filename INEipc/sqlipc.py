@@ -63,10 +63,15 @@ class SqlIPC:
         else:
             import pyodbc
             # datos servidor
-            DATABASE = os.getenv('DATABASE')
-            SERVER = os.getenv('SERVER')
-            USERNAME = os.getenv('USERNAME')
-            PASSWORD = os.getenv('PASSWORD')
+            import configparser
+            config = configparser.ConfigParser()
+            config.read('config.ini')
+            db_config = config['database']
+            DATABASE = db_config['DATABASE']
+            SERVER = db_config['SERVER']
+            USERNAME = db_config['USERNAME']
+            PASSWORD = db_config['PASSWORD']
+            # conexion
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
