@@ -1,7 +1,7 @@
 # from sqline import sqlINE
 from typing import List, Tuple
 
-from funcionesjo import mes_anio_by_abreviacion, mes_by_ordinal
+from utilsjo import mes_anio_by_abreviacion, mes_by_ordinal
 
 
 class DescriptorIPC:

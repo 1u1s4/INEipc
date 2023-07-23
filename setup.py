@@ -20,7 +20,7 @@ setup(
         'numpy',
         'pandas',
         'pyarrow',
-        'funcionesjo @ git+https://github.com/1u1s4/funcionesjo.git',
+        'utilsjo @ git+https://github.com/1u1s4/utilsjo.git',
         'INEcodex @ git+https://github.com/1u1s4/INEcodex.git',
         'INEfnts @ git+https://github.com/1u1s4/INEfnts.git',
     ],

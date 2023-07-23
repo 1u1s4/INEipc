@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import datetime
 
-from funcionesjo import mes_by_ordinal, r0und
+from utilsjo import mes_by_ordinal, r0und
 from INEcodex import Codex
 from INEfnts import Fuentes
 

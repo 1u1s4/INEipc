@@ -10,7 +10,7 @@ import xlrd
 from bs4 import BeautifulSoup
 from fredapi import Fred
 
-import funcionesjo as Jo
+import utilsjo as Jo
 from .descriptoripc import DescriptorIPC
 from .sqlipc import SqlIPC
 
