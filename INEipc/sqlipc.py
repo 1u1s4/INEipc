@@ -10,7 +10,7 @@ import pandas as pd
 import datetime
 
 from funcionesjo import mes_by_ordinal, r0und
-from extractor_boletas import boletas_ultimos_12_meses
+from INEfnts import Fuentes
 
 class SqlIPC:
     def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
@@ -67,6 +67,7 @@ class SqlIPC:
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
             )
+            fuentes = Fuentes(self.__conexion)
             self.df_DivNom = pd.read_sql(
                 'SELECT DivCod, DivNom FROM IPCM01',
                 self.__conexion
@@ -106,7 +107,7 @@ class SqlIPC:
             for columna in columnas:
                 self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
 
-            self.df_Fnt = boletas_ultimos_12_meses(self.anio, self.mes, self.__conexion)
+            self.df_Fnt = fuentes.boletas_ultimos_12_meses(self.anio, self.mes, self.__conexion)
             # Comprobamos si la carpeta db_b existe
             if not os.path.exists("db_b"):
                 # Si no existe, la creamos
