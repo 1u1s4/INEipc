@@ -1,4 +1,6 @@
 import pkg_resources
+import configparser
+from getpass import getpass
 import warnings
 from typing import List, Tuple
 
@@ -61,17 +63,22 @@ class SqlIPC:
             self.df_DivNom = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivNom.parquet'))
             self.df_Fnt = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
         else:
-            import pyodbc
             # datos servidor
-            import configparser
-            config = configparser.ConfigParser()
-            config.read('config.ini')
-            db_config = config['database']
-            DATABASE = db_config['DATABASE']
-            SERVER = db_config['SERVER']
-            USERNAME = db_config['USERNAME']
-            PASSWORD = db_config['PASSWORD']
+            DATABASE = "IPC2010_RN"
+            if os.path.exists('config.ini'):
+                config = configparser.ConfigParser()
+                config.read('config.ini')
+                db_config = config['database']
+                SERVER, USERNAME, PASSWORD = db_config['SERVER'], db_config['USERNAME'], db_config['PASSWORD']
+            elif all(os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')):
+                SERVER, USERNAME, PASSWORD = os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')
+            else:
+                print('Datos de conexión no encontrados. Ingrese los datos de conexión a la base de datos:')
+                os.environ['SERVER'] = getpass()
+                os.environ['USERNAME'] = getpass()
+                os.environ['PASSWORD'] = getpass()
             # conexion
+            import pyodbc
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
