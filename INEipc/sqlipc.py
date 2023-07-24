@@ -70,13 +70,14 @@ class SqlIPC:
                 config.read('config.ini')
                 db_config = config['database']
                 SERVER, USERNAME, PASSWORD = db_config['SERVER'], db_config['USERNAME'], db_config['PASSWORD']
-            elif all(os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')):
+            elif all([os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')]):
                 SERVER, USERNAME, PASSWORD = os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')
             else:
                 print('Datos de conexión no encontrados. Ingrese los datos de conexión a la base de datos:')
-                os.environ['SERVER'] = getpass()
-                os.environ['USERNAME'] = getpass()
-                os.environ['PASSWORD'] = getpass()
+                os.environ['SERVER'] = input('Servidor: ')
+                os.environ['USERNAME'] = input('Usuario: ')
+                os.environ['PASSWORD'] = input('Contraseña: ')
+                SERVER, USERNAME, PASSWORD = os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')
             # conexion
             import pyodbc
             self.__conexion = pyodbc.connect(
@@ -716,3 +717,5 @@ class SqlIPC:
         nmbr_Fnt = self.nombre_fuentes.get(tipo_fuente)
 
         return (sin_fuente, nmbr_Fnt)
+
+SqlIPC(2023, 6)
