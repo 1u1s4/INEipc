@@ -717,5 +717,3 @@ class SqlIPC:
         nmbr_Fnt = self.nombre_fuentes.get(tipo_fuente)
 
         return (sin_fuente, nmbr_Fnt)
-
-SqlIPC(2023, 6)
