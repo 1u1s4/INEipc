@@ -16,7 +16,7 @@ from .sqlipc import SqlIPC
 
 
 class DatosIPC:
-    def __init__(self, anio: int, mes: int, dbBackup: bool = False) -> None:
+    def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
         """
         Constructor de la clase datosIPC, que permite manejar los datos del IPC y descripciones.
 
@@ -33,7 +33,7 @@ class DatosIPC:
         self._FORMATO = "%Y-%m-%d"
         self.mes = mes
         self.anio = anio
-        self.SQL = SqlIPC(anio, mes, dbBackup)
+        self.SQL = SqlIPC(anio, mes, dbBackup, dbPack)
         self.Descriptor = DescriptorIPC(anio, mes)
 
     def indice_precio_alimentos(self) -> Tuple[List[Tuple[str, float]], str]:
