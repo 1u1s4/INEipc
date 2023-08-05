@@ -402,8 +402,8 @@ class DescriptorIPC:
         fecha_3 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_2 = maximo[0]
         indice_3 = minimo[0]
-        plantilla = f"""La cantidad de precios diligenciados en {fecha_1} es de {indice_1:,}.
-                    La mayor cantidad de precios diligenciados fue en el mes de {fecha_2}
+        plantilla = f"""La cantidad de precios recolectados en {fecha_1} es de {indice_1:,}.
+                    La mayor cantidad de precios recolectados fue en el mes de {fecha_2}
                     con una cantidad de {indice_2:,} y la menor se encuentra en el mes
                     de {fecha_3} con una cantidad de {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
@@ -473,9 +473,9 @@ class DescriptorIPC:
         maximo = datos[0]
         minimo = datos[-1]
         plantilla = f"""En el mes de {mes} {self.anio} la región{self.__notaReg} {self.region[maximo[0]]}
-                    fue donde más precios fueron diligenciados con un total de
+                    fue donde más precios fueron recolectados con un total de
                     {maximo[1]:,} y la región {self.region[minimo[0]]} fue donde menos precios
-                    fueron diligenciados con un total de {minimo[1]:,}."""
+                    fueron recolectados con un total de {minimo[1]:,}."""
         return self.retocar_plantilla(plantilla)
 
     def ipc_regiones(self, datos, precision: int=2):
