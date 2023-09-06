@@ -225,8 +225,8 @@ class DescriptorIPC:
                     al consumidor de los Estados Unidos, visite
                     \\url{http://www.bls.gov/cpi}.}"""
         plantilla = f"""El Índice de Precios al Consumidor en los Estados Unidos de
-                    América{nota} registró una variación interanual al mes de {fecha_1} de
-                    {indice_1:,.{precision}f}%. En {fecha_2} la variación interanual se ubicó en
+                    América{nota} registró un ritmo inflacionario al mes de {fecha_1} de
+                    {indice_1:,.{precision}f}%. En {fecha_2} el ritmo inflacionario se ubicó en
                     {indice_2:,.{precision}f}%, por lo que este indicador {cambio} {diferencia:,.{precision}f}
                     puntos porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
@@ -255,9 +255,9 @@ class DescriptorIPC:
             cambio = "cambio"
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
-        plantilla = f"""El Índice de Precios al Consumidor en México{nota} se registró una
-                    variación interanual al mes de {fecha_1} de {indice_1:,.{precision}f}%. En
-                    {fecha_2} la variación interanual se ubicó en {indice_2:,.{precision}f}%,
+        plantilla = f"""El Índice de Precios al Consumidor en México{nota} se registró un
+                    ritmo inflacionario al mes de {fecha_1} de {indice_1:,.{precision}f}%. En
+                    {fecha_2} el ritmo inflacionario se ubicó en {indice_2:,.{precision}f}%,
                     por lo que este indicador {cambio} {diferencia:,.{precision}f} puntos
                     porcentuales en el último año."""
         return self.retocar_plantilla(plantilla)
@@ -269,9 +269,9 @@ class DescriptorIPC:
         INFLACION_MAX = inflacion_mes[-1]
         plantilla = f"""Para el mes de {mes} {anio}, en Centro América, República
                     Dominicana y México, {INFLACION_MAX[1]} presentó
-                    la mayor tasa de inflación interanual de {INFLACION_MAX[0]:,.{precision}f}%,
-                    mientras que {INFLACION_MIN[1]} registró la tasa más
-                    baja con un nivel de {INFLACION_MIN[0]:,.{precision}f}%."""
+                    el mayor ritmo inflacionario de {INFLACION_MAX[0]:,.{precision}f}%,
+                    mientras que {INFLACION_MIN[1]} registró el ritmo inflacionario más
+                    bajo con un nivel de {INFLACION_MIN[0]:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
     def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=2) -> str:
@@ -332,7 +332,7 @@ class DescriptorIPC:
         else:
             cambio_2 = "un cambio"
         if tipo == "interanual":
-            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+            plantilla = f"""El ritmo inflacionario del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
                         en el incremento general de precios de {diferencia_1:,.{precision}f} puntos porcentuales
                         respecto al mes anterior ({indice_2:,.{precision}f}%), y con respecto a la
@@ -497,9 +497,9 @@ class DescriptorIPC:
         minimo = datos[-1]
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
         plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
-                    {self.region[maximo[0]]} presentó la mayor variación interanual,
+                    {self.region[maximo[0]]} presentó el mayor ritmo inflacionario,
                     la cual fue de {maximo[1]:,.{precision}f}, mientras que la región
-                    {self.region[minimo[0]]} presentó la menor variación interanual,
+                    {self.region[minimo[0]]} presentó el menor ritmo inflacionario,
                     de {minimo[1]:,.{precision}f}"""
         return self.retocar_plantilla(plantilla)
 
