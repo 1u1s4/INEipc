@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name='INEipc',
-    version='1.3.7',
+    version='1.4',
     author='Luis Alfredo Alvarado Rodríguez',
     description='ETL para el informe mensual de IPC.',
     long_description='',
