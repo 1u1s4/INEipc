@@ -321,7 +321,7 @@ class DatosIPC:
         """
         paises: Tuple[str, ...] = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
         mes: str = Jo.mes_by_ordinal(self.mes)
-        data: List[Tuple[str, str, str]] = [("Pais", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
+        data: List[Tuple[str, str, str]] = [("País", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
         mes_actual: str = Jo.mes_by_ordinal(self.mes, abreviado=False)
         for pais in paises:
             df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
