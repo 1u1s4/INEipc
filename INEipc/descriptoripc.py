@@ -511,6 +511,7 @@ class DescriptorIPC:
         textos = []
         for d in datos:
             gba = d[0]
+            gba = gba.capitalize()
             indice = d[1]
             tx = f"{gba} ({indice:,.2f}%)"
             textos.append(tx)
