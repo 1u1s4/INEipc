@@ -571,8 +571,13 @@ class DescriptorIPC:
         indice_1 = datos[-1][1] # mes actual
         indice_2 = datos[-2][1] # mes anterior
         
-        plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                    se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
-                    presentó en {indice_2:,.{precision}f}%."""
+        if tipo == "interanual":
+            plantilla = f"""El ritmo inflacionario {nivel} en {fecha_1},
+                        se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
+                        presentó en {indice_2:,.{precision}f}%."""
+        else:
+            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
+                        se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
+                        presentó en {indice_2:,.{precision}f}%."""
 
         return self.retocar_plantilla(plantilla)
