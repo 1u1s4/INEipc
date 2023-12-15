@@ -63,7 +63,7 @@ class DatosIPC:
             r = requests.get(DATA_URL, allow_redirects=True)
             f.write(r.content)
             f.close()
-        df = pd.read_excel('FFPI.csv', header=2, usecols=[0, 1])
+        df = pd.read_excel('FFPI.xls', header=2, usecols=[0, 1])
         df['Date'] = df['Date'].astype('str')
         data = []
         for i in range(13):
