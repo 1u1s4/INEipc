@@ -54,16 +54,16 @@ class DatosIPC:
         soup = BeautifulSoup(r.content, 'html.parser')
         for link in soup.find_all('a', href=True):
             url = link['href']
-            if "Food_price_indices_data_" in url and "xls" in url: 
+            if "Food_price_indices_data_" in url and "csv" in url: 
                 url = f"https://www.fao.org{url}"
                 break
         # descargar datos
         DATA_URL = url
-        with open('FFPI.xls', 'wb') as f:
+        with open('FFPI.csv', 'wb') as f:
             r = requests.get(DATA_URL, allow_redirects=True)
             f.write(r.content)
             f.close()
-        df1 = pd.read_excel('FFPI.xls', header=2, usecols='A:B')
+        df1 = pd.read_csv('FFPI.csv', header=2, usecols=[0, 1])
         df['Date'] = df['Date'].astype('str')
         data = []
         for i in range(13):
