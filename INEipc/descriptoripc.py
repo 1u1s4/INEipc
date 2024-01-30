@@ -358,9 +358,8 @@ class DescriptorIPC:
         fecha_1 = mes_anio_by_abreviacion(datos[-1][0], mmaa=True)
         indice_1 = datos[-1][1]
         perdida = 1 - indice_1
-        plantilla = f"""El quetzal ha perdido {perdida:,.2f} centavos en poder adquisitivo
-                    respecto a diciembre de 2010, esto es, un quetzal de diciembre 2010 es
-                    equivalente a {indice_1:,.2f} centavos de {fecha_1}."""
+        plantilla = f"""El quetzal experimentó una pérdida de {perdida:,.2f} centavos en su poder adquisitivo en comparación con 
+                    diciembre de 2010, lo que significa que un quetzal de diciembre de 2010 equivale a {indice_1:,.2f} centavos en {fecha_1}."""
         return self.retocar_plantilla(plantilla)
 
     def serie_fuentes(self, datos) -> str:
@@ -416,13 +415,13 @@ class DescriptorIPC:
         maximo2 = datos[1]
         minimo = datos[-1]
         if variacion_mensual > 0:
-            plantilla = f"""De las doce divisiones de gasto que integran
+            plantilla = f"""De las trece divisiones de gasto que integran
                         el IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
                         {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron la mayor
                         incidencia mensual positiva. Por su parte, {minimo[1].lower()} es la división
                         de gasto con menor incidencia mensual negativa ({round(minimo[0], 2):,.2f}%)."""
         else:
-            plantilla = f"""De las doce divisiones de gasto que integran
+            plantilla = f"""De las trece divisiones de gasto que integran
                         el IPC, la de {minimo[1].lower()} es la división
                         de gasto con menor incidencia mensual negativa ({round(minimo[0], 2):,.2f}%). 
                         Por su parte, {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
@@ -499,9 +498,7 @@ class DescriptorIPC:
             indice = d[1]
             tx = f"{gba} ({indice:,.2f}%)"
             textos.append(tx)
-        plantilla = """Los cinco principales gastos básicos que
-                    registran la mayor incidencia {} mensual
-                    se encuentran: {}, {}, {}, {} y {}.""".format(signo, *textos)
+        plantilla = """Los cinco productos que presentan la mayor incidencia {} mensual son los siguientes: {}, {}, {}, {} y {}.""".format(signo, *textos)
         return self.retocar_plantilla(plantilla)
 
     def serie_historica(self, tipo: str) -> str:
