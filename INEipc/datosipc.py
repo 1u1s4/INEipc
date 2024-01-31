@@ -207,6 +207,7 @@ class DatosIPC:
         FORMATO = "%Y-%m"
         FECHA_FINAL = Jo.hoy(FORMATO)
         FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO)
+        FECHA_MES_0 = Jo.month_before(fecha=FECHA_INICIAL, formato=FORMATO)
         # descarga de datos
         DATA_URL = "https://banguat.gob.gt/sites/default/files/banguat/imm/imm04.xls"
         with open('tasa_interes.xls', 'wb') as f:
@@ -218,18 +219,27 @@ class DatosIPC:
         book = xlrd.open_workbook("tasa_interes.xls")
         sh = book.sheet_by_index(0)
         data = []
+
+        # El mes más antiguo se trabaja por separado para evitar el error de solicitar "mes 00" en Enero
+        COL = int(FECHA_MES_0.split("-")[0]) - 1994
+        i = int(FECHA_MES_0.split("-")[1]) + 1
+        marca_temp = FECHA_MES_0.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 1).rjust(2, "0"))
+        interes = sh.cell_value(rowx=i, colx=COL)
+        data.append((marca_temp, 100*interes))
+
         COL = int(FECHA_INICIAL.split("-")[0]) - 1994
-        for i in range(int(FECHA_INICIAL.split("-")[1]) + 3, 12 + 5):
+        for i in range(int(FECHA_INICIAL.split("-")[1]) + 4, 12 + 5):
             marca_temp = FECHA_INICIAL.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
                 data.append((marca_temp, 100*interes))
         COL = int(FECHA_FINAL.split("-")[0]) - 1994
-        for i in range(5, int(FECHA_FINAL.split("-")[1]) + 4 + 1):
-            marca_temp = FECHA_FINAL.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
-            interes = sh.cell_value(rowx=i, colx=COL)
-            if interes != "":
-                data.append((marca_temp, 100*interes))
+        if COL < sh.ncols:
+            for i in range(5, int(FECHA_FINAL.split("-")[1]) + 4 + 1):
+                marca_temp = FECHA_FINAL.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
+                interes = sh.cell_value(rowx=i, colx=COL)
+                if interes != "":
+                    data.append((marca_temp, 100*interes))
         return (Jo.invertir_orden(data), self.Descriptor.tasa_de_interes(data))
 
     def ipc_usa(self) -> Tuple[List[Tuple[str, float]], str]:
