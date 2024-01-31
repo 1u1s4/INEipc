@@ -373,7 +373,7 @@ class DescriptorIPC:
         indice_2 = maximo[0]
         indice_3 = minimo[0]
         plantilla = f"""En el período actual, se consultaron un total de {indice_1:,} fuentes.
-                    Al revisar los registros históricos, se identificó un máximo en el mes {fecha_2},
+                    Al revisar los registros históricos, se identificó un máximo en el mes de {fecha_2},
                     con {indice_2:,} y un mínimo en el mes
                     de {fecha_3}, con {indice_3:,}."""
         return self.retocar_plantilla(plantilla)
