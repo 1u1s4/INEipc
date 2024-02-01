@@ -222,13 +222,13 @@ class DatosIPC:
 
         # El mes más antiguo se trabaja por separado para evitar el error de solicitar "mes 00" en Enero
         COL = int(FECHA_MES_0.split("-")[0]) - 1994
-        i = int(FECHA_MES_0.split("-")[1]) + 1
-        marca_temp = FECHA_MES_0.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 1).rjust(2, "0"))
+        i = int(FECHA_MES_0.split("-")[1]) + 4
+        marca_temp = FECHA_MES_0.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
         interes = sh.cell_value(rowx=i, colx=COL)
         data.append((marca_temp, 100*interes))
 
         COL = int(FECHA_INICIAL.split("-")[0]) - 1994
-        for i in range(int(FECHA_INICIAL.split("-")[1]) + 4, 12 + 5):
+        for i in range(int(FECHA_INICIAL.split("-")[1]) + 4, 12 + 4 + 1):
             marca_temp = FECHA_INICIAL.split("-")[0] + "-" + Jo.mes_by_ordinal(str(i - 4).rjust(2, "0"))
             interes = sh.cell_value(rowx=i, colx=COL)
             if interes != "":
