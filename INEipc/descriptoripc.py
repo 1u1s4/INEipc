@@ -485,10 +485,10 @@ class DescriptorIPC:
         maximo = datos[0]
         minimo = datos[-1]
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
-        plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg} {self.region[maximo[0]]}
-                    presentó el mayor índice de precios al consumidor, el cual fue
-                    de {maximo[1]:,.{precision}f}, mientras que la región {self.region[minimo[0]]}
-                    presentó el índice más bajo, de {minimo[1]:,.{precision}f}"""
+        plantilla = f"""En {mes} de {self.anio}, la Región{self.__notaReg} {self.region[maximo[0]]} presenta el punto más alto con 
+                    un valor de {maximo[1]:,.{precision}f}, indicando una mayor presión inflacionaria en comparación con otras regiones.
+                    En contraste, la Región {self.region[minimo[0]]} reistra el punto más bajo con un valor de {minimo[1]:,.{precision}f},
+                    señalando una menor influencia de factores inflacionarios en esta área."""
         return self.retocar_plantilla(plantilla)
 
     def inflacion_interanual_regiones(self, datos, precision: int=2):
@@ -497,11 +497,10 @@ class DescriptorIPC:
         maximo = datos[0]
         minimo = datos[-1]
         mes = mes_by_ordinal(self.mes, abreviado=False).lower()
-        plantilla = f"""En el mes de {mes} del año {self.anio}, la región{self.__notaReg}
-                    {self.region[maximo[0]]} presentó el mayor ritmo inflacionario,
-                    la cual fue de {maximo[1]:,.{precision}f}, mientras que la región
-                    {self.region[minimo[0]]} presentó el menor ritmo inflacionario,
-                    de {minimo[1]:,.{precision}f}"""
+        plantilla = f"""En {mes} de {self.anio}, la Región {self.__notaReg} {self.region[maximo[0]]} destaca con el ritmo inflacionario
+                    más alto, alcanzando un valor de {maximo[1]:,.{precision}f}. Por otro lado, la Región {self.region[minimo[0]]} presenta
+                    el ritmo inflacionario más bajo, de {minimo[1]:,.{precision}f}, señalando que la menor influencia de factores inflacionarios
+                    en comparación con otras regiones."""
         return self.retocar_plantilla(plantilla)
 
     def incidencias_gba(self, datos, Qpositiva: bool = True):
