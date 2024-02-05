@@ -291,8 +291,16 @@ class DescriptorIPC:
             cambio = "disminución"
         else:
             cambio = "igual"
+
+        datos_temp = sorted([d[::-1] for d in datos])
+        maximo = datos_temp[-1]
+        minimo = datos_temp[0]
+        fecha_3 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_4 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
+        indice_3 = maximo[0]
+        indice_4 = minimo[0]
         plantilla = f"""En los períodos de {fecha_1} y {fecha_2} se observó un {cambio} en el {gba}, de {indice_1:,.{precision}f} a 
-                    {indice_2:,.{precision}f}, alcanzando el punto más alto en xxxxx con xxxx y el más bajo en xxxxx con xxxx,
+                    {indice_2:,.{precision}f}, alcanzando el punto más alto en {fecha_3} con {indice_3:,} y el más bajo en {fecha_4} con {indice_4:,},
                     esto sugiere que a lo largo del período analizado se presentarion fluctuaciones en los niveles de precios
                     por diversos factores económicos y estacionales que influyen en la dinámica de los precios."""
         return self.retocar_plantilla(plantilla)
@@ -306,6 +314,15 @@ class DescriptorIPC:
         indice_3 = datos[0][1]
         diferencia_1 = indice_1 - indice_2
         diferencia_2 = indice_1 - indice_3
+        
+        datos_temp = sorted([d[::-1] for d in datos])
+        maximo = datos_temp[-1]
+        minimo = datos_temp[0]
+        fecha_4 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_5 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
+        indice_4 = maximo[0]
+        indice_5 = minimo[0]
+        
         if diferencia_1 > 0:
             cambio_1 = "una aceleración"
         elif diferencia_1 < 0:
@@ -321,7 +338,7 @@ class DescriptorIPC:
         else:
             cambio_2 = "un cambio"
         if tipo == "interanual":
-            plantilla = f"""En {fecha_1}, el ritomo inflacionario del índice {nivel} se situó en {indice_1:,.{precision}f}%. Esta 
+            plantilla = f"""En {fecha_1}, el ritmo inflacionario del índice {nivel} se situó en {indice_1:,.{precision}f}%. Esta 
                         cifra indica {cambio_1} en el aumento general de precios, en {diferencia_1:,.{precision}f} puntos porcentuales 
                         en comparación con el mes anterior ({indice_2:,.{precision}f}%). Además, respecto a la variación observada en 
                         {fecha_2} ({indice_3:,.{precision}f}%), se registró {cambio_2} de {diferencia_2:,.{precision}f} puntos."""
@@ -330,7 +347,8 @@ class DescriptorIPC:
             indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} en {fecha_1} fue de {indice_1:,.{precision}f}%, marcando una disminución respecto al 
                         valor alcanzado en {fecha_2}, que fue del {indice_3:,.{precision}f}%. Dentro del período de {fecha_1} a {fecha_2} 
-                        se observaron fluctuaciones, con el punto más bajo en xxxx (xxxx%) y el más alto en xxxx (xxxx%)."""
+                        se observaron fluctuaciones, con el punto más bajo en {fecha_4} ({indice_4:,.{precision}f}%) y el más alto en
+                        {fecha_5} ({indice_5:,.{precision}f}%)."""
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
@@ -446,7 +464,7 @@ class DescriptorIPC:
         fuente_max = datos[0][0].lower()
         minimo = datos[1][1]
         fuente_min = datos[1][0].lower()
-        plantilla = f"""En el mes de {mes} las dos fuentes más consultadas fueron {fuente_max} con un {maximo:,.{precision}f}%, 
+        plantilla = f"""En el mes de {mes} {self.anio} las dos fuentes más consultadas fueron {fuente_max} con un {maximo:,.{precision}f}%, 
         y {fuente_min} con un {minimo:,.{precision}f}%."""
         return self.retocar_plantilla(plantilla)
 
@@ -551,14 +569,22 @@ class DescriptorIPC:
         fecha_2 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
         indice_1 = datos[-1][1] # mes actual
         indice_2 = datos[-2][1] # mes anterior
+
+        datos_temp = sorted([d[::-1] for d in datos])
+        maximo = datos_temp[-1]
+        minimo = datos_temp[0]
+        fecha_3 = mes_anio_by_abreviacion(maximo[1], mmaa=True)
+        fecha_4 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
+        indice_3 = maximo[0]
+        indice_4 = minimo[0]
         
         if tipo == "interanual":
-            plantilla = f"""El ritmo inflacionario {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
-                        presentó en {indice_2:,.{precision}f}%."""
+            plantilla = f"""En {fecha_1}, se observa un ritmo inflacionario del {indice_1:,.{precision}f}%. El punto más alto se registró
+                        en {fecha_3}, alcanzando un valor de {indice_3:,.{precision}f}%. En contraste, el punto más bajo se evidenció en
+                        {fecha_4}, con {indice_4:,.{precision}f}%."""
         else:
-            plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
-                        se ubicó en {indice_1:,.{precision}f}%. La de {fecha_2} se
-                        presentó en {indice_2:,.{precision}f}%."""
+            plantilla = f"""La variación {tipo} del índice {nivel} muestra que el punto máximo se alcanzó en {fecha_3}, con un {indice_3:,.{precision}f}%,
+                        mientras que el mínimo se registró en {fecha_4}, con {indice_4:,.{precision}f}%. En el actual, {fecha_1}, la variación fue de {indice_1:,.{precision}f}%.
+                        Estos resultados resaltan la variabilidad en la dinámica mensual de los precios a lo largo de los años."""
 
         return self.retocar_plantilla(plantilla)
