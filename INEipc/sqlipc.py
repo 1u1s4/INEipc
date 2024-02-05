@@ -112,12 +112,7 @@ class SqlIPC:
                 temp_df['PerAno'] = anio
                 temp_df['PerMes'] = i
                 self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            #Añado un 2022 falso
-            temp_df['PerAno'] = 2022
-            for i in range(1,13):
-                temp_df['PerMes'] = i
-                self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            # nombres de las divisiones
+            # Nombres de las divisiones
             self.df_DivNom = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
                 columns={
                     'grupo_codigo': 'DivCod',
@@ -210,6 +205,9 @@ class SqlIPC:
             # Crear el archivo en la carpeta "db_b" con la marca temporal como nombre
             with open('db_b/marca_temporal.txt', 'w') as file:
                 file.write('Backup creado el ' + now.strftime("%d-%m-%Y %H:%M"))
+        
+        # Empalmes
+        self.empalmes = pd.read_excel('Empalme IPC 23 01 2023.xlsx', sheet_name='Regiones')
             
         # fin de carga de datos 
         # nombre de divisiones
@@ -253,6 +251,12 @@ class SqlIPC:
         return nombre.strip().title()
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
+
+        if anio <= 2023:
+            row = 12 * (anio - 2011) + mes - 4
+            col = 6 * RegCod  + 5
+            return self.empalmes.iloc[row, col]
+
         """
         Calcula el índice de precios al consumidor (IPC) para una región y período de tiempo dados.
 
@@ -481,6 +485,9 @@ class SqlIPC:
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             indices = indices.sort_values(by=['PerAno', 'PerMes'])
+            # La evolución del índice de productos debe comenzar en diciembre 2023
+            if self.anio == 2023:
+                indices = indices.tail(self.mes + 1)
             if len(indices) != 0:
                 for i in range(len(indices)):
                     mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
@@ -553,7 +560,7 @@ class SqlIPC:
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
         if tipo == 'acumulada':
-            for anio in range(2023, self.anio + 1):
+            for anio in range(2012, self.anio + 1):
                 mes_abr = mes_by_ordinal(self.mes)
                 fecha = f'{mes_abr}-{anio}'
                 indice = funcion(anio, self.mes, RegCod)
@@ -685,10 +692,16 @@ class SqlIPC:
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 1
-        for i in range(24):
-            if i in (17,18,19): # no existen estos tipos de fuentes
-                continue
-            tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
+        TfnCods = {
+            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
+            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
+            351857, 351858, 351859, 351860, 351861,
+
+            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
+            351948, 351949
+        }
+        for i in TfnCods:
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
             conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"]).shape[0]
             S += conteo
             nmbr_Fnt = self.nombre_fuentes.get(i)
@@ -773,7 +786,7 @@ class SqlIPC:
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
 
-        for anio in range(2023, self.anio + 1):
+        for anio in range(2012, self.anio + 1):
             mes_abr = mes_by_ordinal(self.mes)
             fecha = f'{mes_abr}-{anio}'
             indice = funcion(anio, self.mes, RegCod)
