@@ -54,7 +54,7 @@ class DatosIPC:
         soup = BeautifulSoup(r.content, 'html.parser')
         for link in soup.find_all('a', href=True):
             url = link['href']
-            if "food_price_indices_data6" in url and "xls" in url: 
+            if "food_price_indices_data_" in url and "xls" in url: 
                 url = f"https://www.fao.org{url}"
                 break
         # descargar datos
