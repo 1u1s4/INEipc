@@ -217,7 +217,7 @@ class DescriptorIPC:
                     al consumidor de los Estados Unidos, visite
                     \\url{http://www.bls.gov/cpi}.}"""
         plantilla = f"""Durante el período comprenddo entre {fecha_2} y {fecha_1}, Estados Unidos de América{nota} experimentó un 
-                    cambio en su ritmo inflcionario, de un {indice_1:,.{precision}f}% a {indice_2:,.{precision}f}%, 
+                    cambio en su ritmo inflcionario, de un {indice_2:,.{precision}f}% a {indice_1:,.{precision}f}%, 
                     lo que representa una {cambio} en {diferencia:,.{precision}f} puntos porcentuales."""
         return self.retocar_plantilla(plantilla)
 
@@ -245,8 +245,8 @@ class DescriptorIPC:
             cambio = "cambio"
         nota = """\\footnote{Para mayor información sobre el índice de precios
                     al consumidor en México, visite \\url{http://www.inegi.org.mx}.}"""
-        plantilla = f"""Durante el período comprendido entre {fecha_1} y {fecha_2}, México{nota} experimentó un ccambio en su ritmo inflacionario, 
-                    de un {indice_1:,.{precision}f}% a un {indice_2:,.{precision}f}%, lo que representa una {cambio} en {diferencia:,.{precision}f} 
+        plantilla = f"""Durante el período comprendido entre {fecha_2} y {fecha_1}, México{nota} experimentó un ccambio en su ritmo inflacionario, 
+                    de un {indice_2:,.{precision}f}% a un {indice_1:,.{precision}f}%, lo que representa una {cambio} en {diferencia:,.{precision}f} 
                     puntos porcentuales."""
         return self.retocar_plantilla(plantilla)
 
@@ -299,8 +299,8 @@ class DescriptorIPC:
         fecha_4 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_3 = maximo[0]
         indice_4 = minimo[0]
-        plantilla = f"""En los períodos de {fecha_1} y {fecha_2} se observó un {cambio} en el {gba}, de {indice_1:,.{precision}f} a 
-                    {indice_2:,.{precision}f}, alcanzando el punto más alto en {fecha_3} con {indice_3:,} y el más bajo en {fecha_4} con {indice_4:,},
+        plantilla = f"""En los períodos de {fecha_2} y {fecha_1} se observó un {cambio} en el {gba}, de {indice_2:,.{precision}f} a 
+                    {indice_1:,.{precision}f}, alcanzando el punto más alto en {fecha_3} con {indice_3:,} y el más bajo en {fecha_4} con {indice_4:,},
                     esto sugiere que a lo largo del período analizado se presentarion fluctuaciones en los niveles de precios
                     por diversos factores económicos y estacionales que influyen en la dinámica de los precios."""
         return self.retocar_plantilla(plantilla)
@@ -346,7 +346,7 @@ class DescriptorIPC:
             fecha_2 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
             indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} en {fecha_1} fue de {indice_1:,.{precision}f}%, marcando una disminución respecto al 
-                        valor alcanzado en {fecha_2}, que fue del {indice_3:,.{precision}f}%. Dentro del período de {fecha_1} a {fecha_2} 
+                        valor alcanzado en {fecha_2}, que fue del {indice_3:,.{precision}f}%. Dentro del período de {fecha_2} a {fecha_1} 
                         se observaron fluctuaciones, con el punto más bajo en {fecha_4} ({indice_4:,.{precision}f}%) y el más alto en
                         {fecha_5} ({indice_5:,.{precision}f}%)."""
         else:
