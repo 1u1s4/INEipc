@@ -216,7 +216,7 @@ class DescriptorIPC:
         nota = """\\footnote{Para mayor información sobre el indice de precios
                     al consumidor de los Estados Unidos, visite
                     \\url{http://www.bls.gov/cpi}.}"""
-        plantilla = f"""Durante el período comprenddo entre {fecha_1} y {fecha_2}, Estados Unidos de América{nota} experimentó un 
+        plantilla = f"""Durante el período comprenddo entre {fecha_2} y {fecha_1}, Estados Unidos de América{nota} experimentó un 
                     cambio en su ritmo inflcionario, de un {indice_1:,.{precision}f}% a {indice_2:,.{precision}f}%, 
                     lo que representa una {cambio} en {diferencia:,.{precision}f} puntos porcentuales."""
         return self.retocar_plantilla(plantilla)
