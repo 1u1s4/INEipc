@@ -347,8 +347,8 @@ class DescriptorIPC:
             indice_3 = datos[-2][1]
             plantilla = f"""La variación {tipo} en {fecha_1} fue de {indice_1:,.{precision}f}%, marcando una disminución respecto al 
                         valor alcanzado en {fecha_2}, que fue del {indice_3:,.{precision}f}%. Dentro del período de {fecha_2} a {fecha_1} 
-                        se observaron fluctuaciones, con el punto más bajo en {fecha_4} ({indice_4:,.{precision}f}%) y el más alto en
-                        {fecha_5} ({indice_5:,.{precision}f}%)."""
+                        se observaron fluctuaciones, con el punto más bajo en {fecha_5} ({indice_5:,.{precision}f}%) y el más alto en
+                        {fecha_4} ({indice_4:,.{precision}f}%)."""
         else:
             plantilla = f"""La variación {tipo} del índice {nivel} en {fecha_1},
                         se ubicó en {indice_1:,.{precision}f}%. Esta variación representa {cambio_1}
