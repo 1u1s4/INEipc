@@ -300,7 +300,7 @@ class DescriptorIPC:
         indice_3 = maximo[0]
         indice_4 = minimo[0]
         plantilla = f"""En los períodos de {fecha_2} y {fecha_1} se observó un {cambio} en el {gba}, de {indice_2:,.{precision}f} a 
-                    {indice_1:,.{precision}f}, alcanzando el punto más alto en {fecha_3} con {indice_3:,} y el más bajo en {fecha_4} con {indice_4:,},
+                    {indice_1:,.{precision}f}, alcanzando el punto más alto en {fecha_3} con {indice_3:,.{precision}f} y el más bajo en {fecha_4} con {indice_4:,.{precision}f},
                     esto sugiere que a lo largo del período analizado se presentarion fluctuaciones en los niveles de precios
                     por diversos factores económicos y estacionales que influyen en la dinámica de los precios."""
         return self.retocar_plantilla(plantilla)
