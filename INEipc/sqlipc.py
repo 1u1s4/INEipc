@@ -22,29 +22,39 @@ class SqlIPC:
         self.__codex.cargar_clave()
         self.anio = anio
         self.mes = mes
-       # diccionario tipo de fuentes
+        # diccionario tipo de fuentes
         self.nombre_fuentes = {
-            0: 'Sin tipo',#SIN TIPO DE FUENTE ASIGNADO
-            1: 'Carnicerias',#CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
-            2: 'Supermercados',#SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
-            3: 'Hipermercados',#HIPERMERCADOS
-            4: 'Depositos',#DEPOSITOS Y ABARROTERIAS
-            5: 'Tiendas no Especializadas',#TIENDAS NO ESPECIALIZADAS (INCLUYE MISCELANEAS Y TIENDAS DE
-            6: 'Almacenes',#ALMACENES O TIENDAS ESPECIALIZADAS
-            7: 'Restaurantes',#RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
-            8: 'Empresas',#EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
-            9: 'Expendios de Gas',#EXPENDIOS DE GAS PROPANO
-            10: 'Farmacias',#FARMACIAS, DROGUERIAS Y PERFUMERIAS
-            11: 'Centros de Salud',#HOSPITALES, CLINICAS, CENTROS Y PUESTOS DE SALUD, LABORATORI
-            12: 'Hoteles',#HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
-            13: 'Centros Educativos',#COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
-            14: 'Otros Establecimientos Especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PREPARACION DE SERV
-            15: 'Servicio Domestico',#SERVICIO DOMESTICO
-            16: 'Otros Establecimientos No Especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
-            20: 'Cuarto de Alquiler',#VIVIENDA TIPO CUARTO DE ALQUILER
-            21: 'Apartamento de Alquiler',#VIVIENDA TIPO APARTAMENTO DE ALQUILER
-            22: 'Casa de Alquiler',#VIVIENDA TIPO CASA DE ALQUILER
-            23: 'Mercados',#MERCADOS CANTONALES Y MUNICIPALES ( COMPRA DE ALIMENTOS )
+            351841: 'Sin tipo',                 #SIN TIPO DE FUENTE ASIGNADO
+            351842: 'Carnicerias',              #CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
+            351843: 'Supermercados',            #SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
+            351844: 'Hipermercados',            #HIPERMERCADOS
+            351845: 'Depositos',                #DEPOSITOS Y ABARROTERIAS
+            351846: 'Tiendas no especializadas',#TIENDAS NO ESPECIALIZADAS
+            351847: 'Almacenes',                #ALMACENES O TIENDAS ESPECIALIZADAS
+            351848: 'Restaurantes',             #RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
+            351849: 'Empresas',                 #EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
+            351850: 'Expendios de Gas',         #EXPENDIOS DE GAS PROPANO
+            351851: 'Farmacias',                #FARMACIAS, DROGUERIAS Y PERFUMERIAS
+            351852: 'Centros de Salud',         #HOSPITALES, CLINICAS, LABORATORIOS, CENTROS Y PUESTOS DE SALUD
+            351853: 'Hoteles',                  #HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
+            351854: 'Centros Educativos',       #COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
+            351855: 'Otros establecimientos especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PRESTACION DE SERVICIOS
+            351856: 'Servicio domestico',       #SERVICIO DOMESTICO
+            351857: 'Otros establecimientos no especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
+            351858: 'Cuarto de alquiler',       #VIVIENDA TIPO CUARTO DE ALQUILER
+            351859: 'Apartamento de alquiler',  #VIVIENDA TIPO APARTAMENTO DE ALQUILER
+            351860: 'Casa de alquiler',         #VIVIENDA TIPO CASA DE ALQUILER
+            351861: 'Mercados',                 #MERCADOS CANTONALES Y MUNICIPALES
+            351940: 'Salones de belleza',       #SALONES DE BELLEZA
+            351941: 'Ventas informales',        #VENTAS INFORMALES
+            351942: 'Comedores',                #COMEDORES
+            351943: 'Heladerías',               #HELADERÍAS, PARTELERÍAS, REPOSTERÍAS
+            351944: 'Entradas',                 #CINE, TEATRO, ENTRADAS AL ESTADIO
+            351945: 'Transporte',               #SERVICIO DE TRANSPORTE
+            351946: 'Médico especialista',      #SERVICIO MÉDICO ESPECIALISTA
+            351947: 'Servicios aéreos',         #SERVICIOS AÉREOS
+            351948: 'Veterinaria',              #SERVICIOS DE VETERINARIA
+            351949: 'Extracción de basura',     #SERVICIO DE RETIRO O EXTRACCIÓN DE BASURA
         }
         if dbBackup:
             self.df_DivInd = self.__codex.cargar_df('db_b/df_DivInd.parquet')
@@ -64,7 +74,7 @@ class SqlIPC:
             self.df_Fnt = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
         else:
             # datos servidor
-            DATABASE = "IPC2010_RN"
+            DATABASE = "db-indices"
             if os.path.exists('config.ini'):
                 config = configparser.ConfigParser()
                 config.read('config.ini')
@@ -84,44 +94,96 @@ class SqlIPC:
                 'DRIVER={ODBC Driver 17 for SQL Server}'
                 + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
             )
-            self.df_DivNom = pd.read_sql(
-                'SELECT DivCod, DivNom FROM IPCM01',
-                self.__conexion
-            )
+            self.Grupos = pd.DataFrame() 
+            for j in range(2023,anio):
+                for i in range(1,13):
+                    temp_df = pd.read_sql(
+                        f'EXEC sp_get_indice_grupo {anio}, {i}',
+                        self.__conexion
+                    )
+                    temp_df['PerAno'] = j
+                    temp_df['PerMes'] = i
+                    self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            for i in range(1, mes+1):
+                temp_df = pd.read_sql(
+                    f'EXEC sp_get_indice_grupo {anio}, {i}',
+                    self.__conexion
+                )
+                temp_df['PerAno'] = anio
+                temp_df['PerMes'] = i
+                self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            # Nombres de las divisiones
+            self.df_DivNom = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
+                columns={
+                    'grupo_codigo': 'DivCod',
+                    'grupo_nombre': 'DivNom'
+                }
+            )[['DivCod', 'DivNom']].head(13)
             # ponderaciones de las divisiones
-            self.df_DivPon = pd.read_sql(
-                f'SELECT RegCod, DivCod, DivPon FROM IPCP01',
-                self.__conexion
-            )
+            self.df_DivPon = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
+                columns={
+                    'region_id':            'RegCod',
+                    'grupo_codigo':         'DivCod',
+                    'ponderacion_region':   'DivPon',
+                }
+            )[['RegCod', 'DivCod', 'DivPon']].head(13 * 9)
             self.df_DivPon = self.df_DivPon.astype({'RegCod': 'int64', 'DivCod': 'int64'})
-            # ponderaciones de los gastos basicos
-            self.df_GbaPon = pd.read_sql(
-                f'SELECT RegCod, DivCod, GbaCod, GbaPon FROM IPCP05',
-                self.__conexion
-            )
+            # ponderaciones de los productos
+            self.df_GbaPon = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto']
+            self.df_GbaPon = self.df_GbaPon[self.df_GbaPon['PerAno'] == self.anio]
+            self.df_GbaPon = self.df_GbaPon[self.df_GbaPon['PerMes'] == self.mes]
+            self.df_GbaPon = self.df_GbaPon.rename(
+                columns={
+                    'region_id':            'RegCod',
+                    'grupo_codigo':         'GbaCod',
+                    'ponderacion_region':   'GbaPon',
+                }
+            )[['RegCod', 'GbaCod', 'GbaPon']]
+            self.df_GbaPon.insert(1, 'DivCod', self.df_GbaPon['GbaCod'] // 100000)
             columnas = ("RegCod", "DivCod", "GbaCod")
             self.df_GbaPon = self.df_GbaPon.astype(dict.fromkeys(columnas, "int64"))
-            # informacion gastos basicos
-            self.df_GbaInfo = pd.read_sql(
-                'SELECT DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaNom FROM IPCM05',
-                self.__conexion
+            # informacion productos
+            self.df_GbaInfo = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto']
+            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['PerAno'] == self.anio]
+            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['PerMes'] == self.mes]
+            self.df_GbaInfo = self.df_GbaInfo.rename(
+                columns={
+                    'grupo_codigo': 'GbaCod',
+                    'grupo_nombre': 'GbaNom'
+                }
             )
+            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['region_id'] == 0][['GbaCod', 'GbaNom']]
+            self.df_GbaInfo.insert(0, 'SubCod', self.df_GbaInfo['GbaCod'] // 100)
+            self.df_GbaInfo.insert(0, 'GruCod', self.df_GbaInfo['SubCod'] // 10)
+            self.df_GbaInfo.insert(0, 'AgrCod', self.df_GbaInfo['GruCod'] // 10)
+            self.df_GbaInfo.insert(0, 'DivCod', self.df_GbaInfo['AgrCod'] // 10)
             columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
             self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
-            # indices por divicion
-            self.df_DivInd = pd.read_sql(
-                f'SELECT RegCod, PerAno, PerMes, DivCod, DivInd FROM IPCPH1 WHERE PerSem=3',
-                self.__conexion
-            )
+            # indices por division
+            self.df_DivInd = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
+                columns={
+                    'region_id':    'RegCod',
+                    'grupo_codigo': 'DivCod',
+                    'indice_grupo': 'DivInd'
+                }
+            )[['RegCod', 'PerAno', 'PerMes', 'DivCod', 'DivInd']]
             self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
             # indices por gasto basico
-            self.df_GbaInd = pd.read_sql(
-                f'SELECT RegCod, PerAno, PerMes, DivCod, AgrCod, GruCod, SubCod, GbaCod, GbaInd FROM IPCPH5 WHERE PerAno>={self.anio - 2} AND PerSem=3',
-                self.__conexion
-            )
+            self.df_GbaInd = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto'].rename(
+                columns={
+                    'region_id':    'RegCod',
+                    'grupo_codigo': 'GbaCod',
+                    'indice_grupo': 'GbaInd'
+                }
+            )[['RegCod', 'PerAno', 'PerMes', 'GbaCod', 'GbaInd']]
+            self.df_GbaInd.insert(3, 'SubCod', self.df_GbaInd['GbaCod'] // 100)
+            self.df_GbaInd.insert(3, 'GruCod', self.df_GbaInd['SubCod'] // 10)
+            self.df_GbaInd.insert(3, 'AgrCod', self.df_GbaInd['GruCod'] // 10)
+            self.df_GbaInd.insert(3, 'DivCod', self.df_GbaInd['AgrCod'] // 10)
             columnas = ('RegCod', 'PerAno', 'PerMes', 'DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
             for columna in columnas:
                 self.df_GbaInd[columna] = self.df_GbaInd[columna].astype('int64')
+            self.df_GbaInd = self.df_GbaInd[self.df_GbaInd['PerAno'] >= self.anio - 2]
             # extractor de boletas
             fuentes = Fuentes(self.__conexion)
             self.df_Fnt = fuentes.boletas_ultimos_12_meses(self.anio, self.mes)
@@ -143,21 +205,26 @@ class SqlIPC:
             # Crear el archivo en la carpeta "db_b" con la marca temporal como nombre
             with open('db_b/marca_temporal.txt', 'w') as file:
                 file.write('Backup creado el ' + now.strftime("%d-%m-%Y %H:%M"))
+        
+        # Empalmes
+        self.empalmes = pd.read_excel('Empalme IPC 23 01 2023.xlsx', sheet_name='Regiones')
+            
         # fin de carga de datos 
         # nombre de divisiones
         abr_diviciones = {
-            'Alimentos Y Bebidas No Alcohólicas': 'Alimentos',
-            'Bebidas Alcohólicas Y Tabaco':'Bebidas Alcohólicas',
-            'Prendas De Vestir Y Calzado':'Vestuario',
-            'Vivienda, Agua, Electricidad, Gas Y Otros Combustibles':'Vivienda',
-            'Muebles, Artículos Para El Hogar Y Para La Conservación  Del Hogar':'Muebles',
-            'Salud':'Salud',
-            'Transporte':'Transporte',
-            'Comunicaciones':'Comunicaciones',
-            'Recreación Y Cultura':'Recreación',
-            'Educación':'Educación',
-            'Restaurantes Y Hoteles':'Restaurantes',
-            'Bienes Y Servicios Diversos':'Bienes diversos'
+            'Alimentos Y Bebidas No Alcohólicas':                               'Alimentos',
+            'Bebidas Alcohólicas, Tabaco Y Narcóticos':                         'Bebidas Alcohólicas',
+            'Ropa Y Calzado':                                                   'Vestuario',
+            'Vivienda, Agua, Electricidad, Gas Y Otros':                        'Vivienda',
+            'Mobiliario, Equipo Y Mantenimiento Del Hogar':                     'Muebles',
+            'Salud':                                                            'Salud',
+            'Transporte':                                                       'Transporte',
+            'Información Y Comunicación':                                       'Comunicaciones',
+            'Recreación, Deporte Y Cultura':                                    'Recreación',
+            'Servicios Educativos':                                             'Educación',
+            'Restaurantes Y Servicios De Alojamiento':                          'Restaurantes',
+            'Cuidado Personal, Protección Social Y Bienes Y Servicios Varios':  'Bienes diversos',
+            'Seguros Y Servicios Financieros':                                  'Seguros'
         }
         df_DivNom_dic = self.df_DivNom.to_dict()
         self.NOMBRE_DIV = dict(zip(
@@ -184,6 +251,12 @@ class SqlIPC:
         return nombre.strip().title()
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
+
+        if anio <= 2023:
+            row = 12 * (anio - 2011) + mes - 4
+            col = 6 * RegCod  + 5
+            return self.empalmes.iloc[row, col]
+
         """
         Calcula el índice de precios al consumidor (IPC) para una región y período de tiempo dados.
 
@@ -311,7 +384,7 @@ class SqlIPC:
             Cada tupla contiene la variación ponderada de la división y su nombre.
         """
         incidencias = []
-        for DivCod in range(1, 13):
+        for DivCod in range(1, 14):
             ponderacion = self.df_DivPon[(self.df_DivPon['RegCod'] == RegCod) & (self.df_DivPon['DivCod'] == DivCod)]['DivPon'].iloc[0]
             Qanio = self.df_DivInd['PerAno'] == self.anio
             Qmes = self.df_DivInd['PerMes'] == self.mes
@@ -412,6 +485,9 @@ class SqlIPC:
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             indices = indices.sort_values(by=['PerAno', 'PerMes'])
+            # La evolución del índice de productos debe comenzar en diciembre 2023
+            if self.anio == 2023:
+                indices = indices.tail(self.mes + 1)
             if len(indices) != 0:
                 for i in range(len(indices)):
                     mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
@@ -443,15 +519,15 @@ class SqlIPC:
         else:
             funcion = self.calcular_IPC
         if self.mes != 12:
+            for i in range(1, self.mes):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                ipc = funcion(self.anio, i, RegCod)
+                serie.append((fecha, ipc))
             for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 ipc = funcion(self.anio - 1, i, RegCod)
-                serie.append((fecha, ipc))
-            for i in range(1, self.mes + 1):
-                mes_abr = mes_by_ordinal(i)
-                fecha = f'{mes_abr}-{self.anio}'
-                ipc = funcion(self.anio, i, RegCod)
                 serie.append((fecha, ipc))
         else:
             for i in range(1, 13):
@@ -579,10 +655,16 @@ class SqlIPC:
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 1
-        for i in range(24):
-            if i in (17,18,19): # no existen estos tipos de fuentes
-                continue
-            tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
+        TfnCods = {
+            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
+            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
+            351857, 351858, 351859, 351860, 351861,
+
+            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
+            351948, 351949
+        }
+        for i in TfnCods:
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
             conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"]).shape[0]
             S += conteo
             nmbr_Fnt = self.nombre_fuentes.get(i)
@@ -610,10 +692,16 @@ class SqlIPC:
         mes_ = self.df_Fnt['PerMes'] == self.mes
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 1
-        for i in range(24):
-            if i in (17,18,19): # no existen estos tipos de fuentes
-                continue
-            tipo_fuente_ = self.df_Fnt['TfnCod'] == str(i).zfill(2)
+        TfnCods = {
+            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
+            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
+            351857, 351858, 351859, 351860, 351861,
+
+            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
+            351948, 351949
+        }
+        for i in TfnCods:
+            tipo_fuente_ = self.df_Fnt['TfnCod'] == i
             conteo = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"]).shape[0]
             S += conteo
             nmbr_Fnt = self.nombre_fuentes.get(i)
