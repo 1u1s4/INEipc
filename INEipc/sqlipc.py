@@ -254,7 +254,7 @@ class SqlIPC:
 
         if anio <= 2023:
             row = 12 * (anio - 2011) + mes - 4
-            col = 6 * RegCod  + 5
+            col = 6 * RegCod + 5
             return self.empalmes.iloc[row, col]
 
         """
