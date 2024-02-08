@@ -264,7 +264,7 @@ class DescriptorIPC:
 
     def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=2) -> str:
         if QGba:
-            gba = f'índice del gasto basico {datos[0].lower()}'
+            gba = f'índice del producto {datos[0].lower()}'
             datos = datos[1]
         elif QReg:
             gba = 'número índice'
