@@ -786,7 +786,7 @@ class SqlIPC:
         elif tipo == 'acumulada':
             funcion = self.inflacion_acumulada
 
-        for anio in range(2012, self.anio + 1):
+        for anio in range(2012 + (self.mes < 4), self.anio + 1):
             mes_abr = mes_by_ordinal(self.mes)
             fecha = f'{mes_abr}-{anio}'
             indice = funcion(anio, self.mes, RegCod)
