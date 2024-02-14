@@ -61,7 +61,7 @@ class DescriptorIPC:
         nota_1 = '''\\footnote{El índice de precios de los alimentos de la FAO es una medida
                     de la variación mensual de los precios internacionales de
                     una canasta de productos alimenticios. Consiste en el promedio
-                    de los índices de precios de cinco grupos de productos básicos,
+                    de los índices de precios de cinco grupos de productos,
                     ponderado con las cuotas medias de exportación de cada uno
                     de los grupos para 2002-2004.}'''
         nota_2 = '''\\footnote{Organización de las Naciones Unidas para la
@@ -366,7 +366,7 @@ class DescriptorIPC:
             indices = [d[0]*-1 for d in datos]
             tipo = 'variaciones negativas'
         nombres = [d[1].lower() for d in datos]
-        plantilla = """Los gastos básicos que registraron mayor alza porcentual mensual
+        plantilla = """Los productos que registraron mayor alza porcentual mensual
                     en {} fueron: {}, {}, {}, {} y {} todo incluido al exterior con
                     {} de {:,.2f}%, {:,.2f}%, {:,.2f}%, {:,.2f}% y {:,.2f}%,
                     respectivamente.""".format(fecha, *nombres, tipo, *indices)
