@@ -580,8 +580,8 @@ class DatosIPC:
         mes = Jo.mes_by_ordinal(self.mes, abreviado=False).lower()
         fecha = f"{mes} de {self.anio}"
         firma = """\\begin{center}
-                    \\textbf{Brenda Izabel Miranda Consuegra}\\\\
-                    Gerente\\\\
+                    \\textbf{Marco Antonio Mejía Villatoro}\\\\
+                    Gerente en funciones\\\\
                     Instituto Nacional de Estadística
                     \\end{center}"""
         introduccion = f"""El presente informe mensual, contiene los principales
@@ -605,7 +605,7 @@ class DatosIPC:
                         la tasa de interés, entre otros. En el tercer apartado se presentan
                         los resultados del IPC, incluyendo la evolución del IPC, su variación
                         anual, acumulada y mensual, además de las incidencias mensuales
-                        por división de gasto básico y los bienes con mayor impacto en
+                        por división de producto y los bienes con mayor impacto en
                         la variación mensual. Los apartados 4 a 11 incluyen resultados del
                         IPC para las regiones I a VIII.\\\\\\\\
 
@@ -614,8 +614,8 @@ class DatosIPC:
                         los principales conceptos relacionados con el IPC, la metodología
                         de cálculo de las formulas más utilizadas para la obtención
                         de los diferentes índices y variaciones, y la evolución del IPC de
-                        cada gasto básico. Y por último un anexo con las series históricas anuales
-                        para cada gasto básico a nivel nacional.
+                        cada producto. Y por último un anexo con las series históricas anuales
+                        para cada producto a nivel nacional.
                         {firma}"""
         return self.Descriptor.retocar_plantilla(introduccion)
 
@@ -687,7 +687,7 @@ class DatosIPC:
 
     def incidencias_gba(self, RegCod: int = 0, Qpositiva: bool = True, top_n: int = 5) -> Tuple[List[Tuple[float, str]], str]:
         """
-        Obtiene las incidencias de gasto básico, mostrando el top 5 de incidencias positivas o negativas.
+        Obtiene las incidencias de producto, mostrando el top 5 de incidencias positivas o negativas.
 
         Parameters
         ----------
@@ -699,15 +699,18 @@ class DatosIPC:
         Returns
         -------
         top5 : List[Tuple[float, str]]
-            Lista de tuplas con las 5 incidencias de gasto básico más importantes, donde cada tupla contiene
-            el valor de la incidencia y la descripción del gasto básico.
+            Lista de tuplas con las 5 incidencias de producto más importantes, donde cada tupla contiene
+            el valor de la incidencia y la descripción del producto.
         descripcion : str
-            Descripción textual de las 5 incidencias de gasto básico más importantes, basada en los datos obtenidos.
+            Descripción textual de las 5 incidencias de producto más importantes, basada en los datos obtenidos.
         """
         incidencias = sorted(self.SQL.incidencia_gasto_basico(RegCod), reverse=Qpositiva)
         incidencias = [i[::-1] for i in incidencias]
         top = incidencias[0:top_n]
+        for i, tupla in enumerate(top):
+            top[i] = (tupla[0][:32],) + tupla[1:]
         descripcion = self.Descriptor.incidencias_gba(top, Qpositiva)
+
         return(top, descripcion)
 
     def serie_historica(self, tipo: str) -> Tuple[List[Tuple[int, float]], str]:

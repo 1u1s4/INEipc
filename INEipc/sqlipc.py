@@ -98,7 +98,7 @@ class SqlIPC:
             for j in range(2023,anio):
                 for i in range(1,13):
                     temp_df = pd.read_sql(
-                        f'EXEC sp_get_indice_grupo {anio}, {i}',
+                        f'EXEC sp_get_indice_grupo {j}, {i}',
                         self.__conexion
                     )
                     temp_df['PerAno'] = j
@@ -112,6 +112,10 @@ class SqlIPC:
                 temp_df['PerAno'] = anio
                 temp_df['PerMes'] = i
                 self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            #temp_df = pd.read_excel("Índices_good.xlsx")
+            #temp_df['PerAno'] = 2024
+            #temp_df['PerMes'] = 1
+            #self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
             # Nombres de las divisiones
             self.df_DivNom = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
                 columns={
@@ -400,7 +404,7 @@ class SqlIPC:
                 ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
             variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
-            variacion = r0und(variacion, 2)
+            #variacion = r0und(variacion, 2)
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 
@@ -485,9 +489,6 @@ class SqlIPC:
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             indices = indices.sort_values(by=['PerAno', 'PerMes'])
-            # La evolución del índice de productos debe comenzar en diciembre 2023
-            if self.anio == 2023:
-                indices = indices.tail(self.mes + 1)
             if len(indices) != 0:
                 for i in range(len(indices)):
                     mes_abr = mes_by_ordinal(indices['PerMes'].iat[i])
@@ -519,15 +520,15 @@ class SqlIPC:
         else:
             funcion = self.calcular_IPC
         if self.mes != 12:
-            for i in range(1, self.mes):
-                mes_abr = mes_by_ordinal(i)
-                fecha = f'{mes_abr}-{self.anio}'
-                ipc = funcion(self.anio, i, RegCod)
-                serie.append((fecha, ipc))
             for i in range(self.mes, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 ipc = funcion(self.anio - 1, i, RegCod)
+                serie.append((fecha, ipc))
+            for i in range(1, self.mes + 1):
+                mes_abr = mes_by_ordinal(i)
+                fecha = f'{mes_abr}-{self.anio}'
+                ipc = funcion(self.anio, i, RegCod)
                 serie.append((fecha, ipc))
         else:
             for i in range(1, 13):
@@ -606,7 +607,8 @@ class SqlIPC:
         """
         serie = []
         if self.mes != 12:
-            for i in range(self.mes, 13):
+            #for i in range(self.mes, 13):
+            for i in range(12, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio - 1}'
                 mes_ = self.df_Fnt['PerMes'] == i
