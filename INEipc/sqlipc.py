@@ -55,6 +55,18 @@ class SqlIPC:
             351947: 'Servicios aéreos',         #SERVICIOS AÉREOS
             351948: 'Veterinaria',              #SERVICIOS DE VETERINARIA
             351949: 'Extracción de basura',     #SERVICIO DE RETIRO O EXTRACCIÓN DE BASURA
+
+            352271: 'Establecimientos grandes', #ESTABLECIMIENTOS GRANDES
+            352272: 'Tiendas medianas',         #TIENDAS MEDIANAS
+            352273: 'Tiendas pequeñas',         #TIENDAS PEQUEÑAS
+            352274: 'Mercados',                 #MERCADOS
+            352275: 'Puestos ambulantes',       #PUESTOS AMBULANTES
+            352276: 'Puestos fijos',            #PUESTOS FIJOS
+            352277: 'Servicios diversos',       #ESTABLECIMIENTOS DE SERVICIOS DIVERSOS
+            352278: 'Servicios públicos o privados',#ESTABLECIMIENTOS DE SERVICIOS PÚBLIOCS O PRIVADOS
+            352279: 'Almacenes',                #TIENDAS O ALMACENES ESPECIALIZADOS
+            352280: 'Servicios especializados', #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
+            352281: 'Sitios web',               #SITIOS WEB
         }
         if dbBackup:
             self.df_DivInd = self.__codex.cargar_df('db_b/df_DivInd.parquet')
@@ -661,9 +673,11 @@ class SqlIPC:
             351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
             351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
             351857, 351858, 351859, 351860, 351861,
-
             351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
-            351948, 351949
+            351948, 351949,
+
+            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
+            352279, 352280, 352281
         }
         for i in TfnCods:
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i
@@ -698,9 +712,11 @@ class SqlIPC:
             351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
             351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
             351857, 351858, 351859, 351860, 351861,
-
             351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
-            351948, 351949
+            351948, 351949,
+
+            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
+            352279, 352280, 352281
         }
         for i in TfnCods:
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i

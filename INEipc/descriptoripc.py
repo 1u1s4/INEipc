@@ -283,7 +283,10 @@ class DescriptorIPC:
     def serie_historica_ipc(self, datos, QGba: bool=False, QReg: bool=False, precision: int=2) -> str:
         if QGba:
             gba = f'índice del producto {datos[0].lower()}'
-            datos = datos[1][-3:]
+            if (self.anio == 2024):
+                datos = datos[1][-1 - self.mes:]
+            else:
+                datos = datos[1]
         elif QReg:
             gba = 'número índice'
         else:
@@ -304,7 +307,7 @@ class DescriptorIPC:
         diferencia = indice_1 - indice_2
 
         if diferencia == 0:
-            return self.retocar_plantilla(f"""En los períodos de {fecha_2} y
+            return self.retocar_plantilla(f"""En el períodos de {fecha_2} a
                 {fecha_1} se observó una igualdad en el {gba}.""")
         
         if diferencia > 0:
@@ -320,7 +323,7 @@ class DescriptorIPC:
         fecha_4 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_3 = maximo[0]
         indice_4 = minimo[0]
-        plantilla = f"""En los períodos de {fecha_2} y {fecha_1} se observó
+        plantilla = f"""En el período de {fecha_2} a {fecha_1} se observó
             {cambio} en el {gba}, de {indice_2:,.{precision}f} a
             {indice_1:,.{precision}f}, alcanzando el punto más alto en {fecha_3}
             con {indice_3:,.{precision}f} y el más bajo en {fecha_4} con

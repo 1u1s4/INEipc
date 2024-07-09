@@ -148,25 +148,29 @@ class DatosIPC:
             nacional.
         """
         FORMATO = "%d/%m/%Y"
-        FECHA_FINAL = f"28/{self.mes}/{self.anio}"
+        _, num_dias = calendar.monthrange(self.anio, self.mes)
+        FECHA_FINAL = f"{num_dias}/{self.mes}/{self.anio}"
         FECHA_INICIAL = Jo.year_ago(fecha=FECHA_FINAL, formato=FORMATO, inicio_de_mes=True)
         # SOAP request URL
-        URL = "http://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
-        PAYLOAD = """<?xml version="1.0" encoding="utf-8"?>
+        URL = "https://www.banguat.gob.gt/variables/ws/TipoCambio.asmx"
+
+        PAYLOAD = f"""<?xml version="1.0" encoding="utf-8"?>
         <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
         <soap12:Body>
-            <TipoCambioRango xmlns="http://www.banguat.gob.gt/variables/ws/">
-            <fechainit>{}</fechainit>
-            <fechafin>{}</fechafin>
+        <TipoCambioRango xmlns="http://www.banguat.gob.gt/variables/ws/">
+            <fechainit>{FECHA_INICIAL}</fechainit>
+            <fechafin>{FECHA_FINAL}</fechafin>
             </TipoCambioRango>
         </soap12:Body>
-        </soap12:Envelope>""".format(FECHA_INICIAL, FECHA_FINAL)
+        </soap12:Envelope>"""
+
         # headers
         HEADERS = {
-            'Content-Type': 'text/xml; charset=utf-8'
+            'Content-Type': 'text/xml; charset=utf-8',
+            'SOAPAction': 'http://www.banguat.gob.gt/variables/ws/TipoCambioRango'
         }
         # POST request
-        response = requests.request("POST", URL, headers=HEADERS, data=PAYLOAD)
+        response = requests.post(URL, headers=HEADERS, data=PAYLOAD)
         # parsear XML
         with open("cambio.xml", "w") as f:
             f.write(response.text)
@@ -306,13 +310,19 @@ class DatosIPC:
             try:
                 precio = data[Jo.date_mini(fecha_i)]
                 precio_anterior = data[Jo.date_mini(Jo.year_ago(fecha_i))]
-                mes_actual_i = "-".join((fecha_i.split("-")[0], Jo.mes_by_ordinal(fecha_i.split("-")[1])))
+                mes_actual_i = "-".join((
+                    fecha_i.split("-")[0],
+                    Jo.mes_by_ordinal(fecha_i.split("-")[1])
+                ))
                 variacion = ((precio / precio_anterior) - 1) * 100
                 datos_variacion_interanual.append((mes_actual_i, variacion))
                 fecha_i = Jo.month_after(fecha_i)
             except:
                 pass
-        return(Jo.invertir_orden(datos_variacion_interanual), self.Descriptor.ipc_mex(datos_variacion_interanual))
+        return (
+            Jo.invertir_orden(datos_variacion_interanual),
+            self.Descriptor.ipc_mex(datos_variacion_interanual)
+        )
 
     def inflacion_CA_RD_MEX(self) -> Tuple[List[Tuple[str, float, float]], str]:
         """
@@ -329,30 +339,49 @@ class DatosIPC:
         - Descriptor.inflacion(data, mes_actual.lower(), self.anio): llamada a un método de la clase Descriptor que devuelve una cadena
         que describe la inflación en los países seleccionados para el mes y año proporcionados.
         """
-        paises: Tuple[str, ...] = ("Guatemala", "El Salvador", "Honduras", "Nicaragua", "Costa Rica", "Republica Dominicana", "Panamá", "México")
-        mes: str = Jo.mes_by_ordinal(self.mes)
-        data: List[Tuple[str, str, str]] = [("País", f"{mes}-{self.anio - 1}", f"{mes}-{self.anio}")]
-        mes_actual: str = Jo.mes_by_ordinal(self.mes, abreviado=False)
+        paises: Tuple[str, ...] = (
+            "Guatemala",
+            "El Salvador",
+            "Honduras",
+            "Nicaragua",
+            "Costa Rica",
+            "Republica Dominicana",
+            "Panamá",
+            "México"
+        )
+        # mes_actual en realidad es el mes anterior a self.mes
+        mes_ant = ((self.mes - 2) % 12) + 1
+        anio_mes_ant = self.anio - (self.mes == 1)
+        # Esto es porque el IPC del mes actual no necesariamente está reportado
+        # en todos los países al momento de generar el informe.
+        mes: str = Jo.mes_by_ordinal(mes_ant)
+        data: List[Tuple[str, str, str]] = [
+            ("País", f"{mes}-{anio_mes_ant - 1}", f"{mes}-{anio_mes_ant}")
+        ]
+        mes_actual: str = Jo.mes_by_ordinal(mes_ant, abreviado=False)
         for pais in paises:
             df = pd.read_excel('IPC CA RD Y MEX.xlsx', sheet_name=pais)
             # inflacion interanual del mes actual
             mes_ = df["mes"] == mes_actual
-            anio_ = df["anio"] == self.anio
+            anio_ = df["anio"] == anio_mes_ant
             indice_actual = df[mes_ & anio_]["indice"].iloc[0]
             mes_ = df["mes"] == mes_actual
-            anio_ = df["anio"] == (self.anio - 1)
+            anio_ = df["anio"] == (anio_mes_ant - 1)
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_actual = (indice_actual/indice_anterior - 1) * 100 
             # inflacion interanual del anio anterior
             mes_ = df["mes"] == mes_actual
-            anio_ = df["anio"] == (self.anio - 1)
+            anio_ = df["anio"] == (anio_mes_ant - 1)
             indice_actual = df[mes_ & anio_]["indice"].iloc[0]
             mes_ = df["mes"] == mes_actual
-            anio_ = df["anio"] == (self.anio - 2)
+            anio_ = df["anio"] == (anio_mes_ant - 2)
             indice_anterior = df[mes_ & anio_]["indice"].iloc[0]
             inflacion_anterior = (indice_actual/indice_anterior - 1) * 100 
             data.append((pais, inflacion_anterior, inflacion_actual))
-        return (data, self.Descriptor.inflacion(data, mes_actual.lower(), self.anio))
+        return (
+            data,
+            self.Descriptor.inflacion(data, mes_actual.lower(), anio_mes_ant)
+        )
 
 # para el capitulo 3
     def serie_IPC(self, RegCod: int, QGba: bool = False) -> Tuple[List, str]:
@@ -372,7 +401,9 @@ class DatosIPC:
         descripcion = self.Descriptor.serie_historica_ipc(datos, QGba)
         return(datos, descripcion)
     
-    def serie_inflacion(self, RegCod: int, tipo: str, nivel: str='nacional') -> Tuple[List, str]:
+    def serie_inflacion(
+        self, RegCod: int, tipo: str, nivel: str='nacional'
+    ) -> Tuple[List, str]:
         """
         Devuelve una serie histórica de la inflación para una región específica y tipo de índice.
         
@@ -388,7 +419,9 @@ class DatosIPC:
         - descripcion: cadena que describe la serie histórica obtenida.
         """
         datos = self.SQL.serie_historica_inflacion(RegCod, tipo)
-        descripcion = self.Descriptor.serie_historica_inflacion(datos, tipo, nivel)
+        descripcion = self.Descriptor.serie_historica_inflacion(
+            datos, tipo, nivel
+        )
         return(datos, descripcion)
 
     def serie_poder_adquisitivo(self, RegCod: int) -> Tuple[List, str]:
@@ -479,7 +512,10 @@ class DatosIPC:
             Descripción textual de la serie de imputación de precios.
         """
         serie = []
-        df = pd.read_excel('BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx', sheet_name=1).fillna(0)
+        df = pd.read_excel(
+            'BASE DE DATOS PERIODOS DE ESPERA POR DECADA.xlsx',
+            sheet_name=1
+        ).fillna(0)
         df['Prec_PE'] = pd.to_numeric(df['Prec_PE'], errors='coerce')
         df['Prec_Recup'] = pd.to_numeric(df['Prec_Recup'], errors='coerce')
         df['Prec_Pre'] = pd.to_numeric(df['Prec_Pre'], errors='coerce')
@@ -545,7 +581,10 @@ class DatosIPC:
             Descripción textual de las incidencias de divisiones para la región especificada.
         """
         datos = self.SQL.incidencia_divisiones(RegCod)
-        descripcion = self.Descriptor.incidencia_divisiones(datos, self.SQL.inflacion_mensual(self.anio, self.mes, RegCod))
+        descripcion = self.Descriptor.incidencia_divisiones(
+            datos,
+            self.SQL.inflacion_mensual(self.anio, self.mes, RegCod)
+        )
         datos = Jo.invertir_orden(sorted(datos, reverse=True), Qfecha=False)
         return(datos, descripcion)
     
