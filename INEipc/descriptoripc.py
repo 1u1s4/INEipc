@@ -307,7 +307,7 @@ class DescriptorIPC:
         diferencia = indice_1 - indice_2
 
         if diferencia == 0:
-            return self.retocar_plantilla(f"""En el períodos de {fecha_2} a
+            return self.retocar_plantilla(f"""En los períodos de {fecha_2} y
                 {fecha_1} se observó una igualdad en el {gba}.""")
         
         if diferencia > 0:
@@ -323,7 +323,7 @@ class DescriptorIPC:
         fecha_4 = mes_anio_by_abreviacion(minimo[1], mmaa=True)
         indice_3 = maximo[0]
         indice_4 = minimo[0]
-        plantilla = f"""En el período de {fecha_2} a {fecha_1} se observó
+        plantilla = f"""En los períodos de {fecha_2} y {fecha_1} se observó
             {cambio} en el {gba}, de {indice_2:,.{precision}f} a
             {indice_1:,.{precision}f}, alcanzando el punto más alto en {fecha_3}
             con {indice_3:,.{precision}f} y el más bajo en {fecha_4} con
@@ -375,12 +375,12 @@ class DescriptorIPC:
             registró {cambio_2} de {diferencia_2:,.{precision}f} puntos."""
         elif tipo == "acumulada":
             fecha_2 = mes_anio_by_abreviacion(datos[-2][0], mmaa=True)
+            fecha_3 = mes_anio_by_abreviacion(datos[0][0], mmaa=True)
             indice_3 = datos[-2][1]
-            # LDEBUG Cambiar enero 2012 a {fecha_2} cuando se resuelva
             plantilla = f"""La variación {tipo} en {fecha_1} fue de
                 {indice_1:,.{precision}f}%, marcando una disminución respecto al
                 valor alcanzado en {fecha_2}, que fue del
-                {indice_3:,.{precision}f}%. Dentro del período de enero 2012 a
+                {indice_3:,.{precision}f}%. Dentro del período de {fecha_3} a
                 {fecha_1} se observaron fluctuaciones, con el punto más bajo en
                 {fecha_5} ({indice_5:,.{precision}f}%) y el más alto en
                 {fecha_4} ({indice_4:,.{precision}f}%)."""
