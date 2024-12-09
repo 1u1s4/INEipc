@@ -24,49 +24,59 @@ class SqlIPC:
         self.mes = mes
         # diccionario tipo de fuentes
         self.nombre_fuentes = {
-            351841: 'Sin tipo',                 #SIN TIPO DE FUENTE ASIGNADO
-            351842: 'Carnicerias',              #CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
-            351843: 'Supermercados',            #SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
-            351844: 'Hipermercados',            #HIPERMERCADOS
-            351845: 'Depositos',                #DEPOSITOS Y ABARROTERIAS
-            351846: 'Tiendas no especializadas',#TIENDAS NO ESPECIALIZADAS
-            351847: 'Almacenes',                #ALMACENES O TIENDAS ESPECIALIZADAS
-            351848: 'Restaurantes',             #RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
-            351849: 'Empresas',                 #EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
-            351850: 'Expendios de Gas',         #EXPENDIOS DE GAS PROPANO
-            351851: 'Farmacias',                #FARMACIAS, DROGUERIAS Y PERFUMERIAS
-            351852: 'Centros de Salud',         #HOSPITALES, CLINICAS, LABORATORIOS, CENTROS Y PUESTOS DE SALUD
-            351853: 'Hoteles',                  #HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
-            351854: 'Centros Educativos',       #COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
-            351855: 'Otros establecimientos especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PRESTACION DE SERVICIOS
-            351856: 'Servicio domestico',       #SERVICIO DOMESTICO
-            351857: 'Otros establecimientos no especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
-            351858: 'Cuarto de alquiler',       #VIVIENDA TIPO CUARTO DE ALQUILER
-            351859: 'Apartamento de alquiler',  #VIVIENDA TIPO APARTAMENTO DE ALQUILER
-            351860: 'Casa de alquiler',         #VIVIENDA TIPO CASA DE ALQUILER
-            351861: 'Mercados',                 #MERCADOS CANTONALES Y MUNICIPALES
-            351940: 'Salones de belleza',       #SALONES DE BELLEZA
-            351941: 'Ventas informales',        #VENTAS INFORMALES
-            351942: 'Comedores',                #COMEDORES
-            351943: 'Heladerías',               #HELADERÍAS, PARTELERÍAS, REPOSTERÍAS
-            351944: 'Entradas',                 #CINE, TEATRO, ENTRADAS AL ESTADIO
-            351945: 'Transporte',               #SERVICIO DE TRANSPORTE
-            351946: 'Médico especialista',      #SERVICIO MÉDICO ESPECIALISTA
-            351947: 'Servicios aéreos',         #SERVICIOS AÉREOS
-            351948: 'Veterinaria',              #SERVICIOS DE VETERINARIA
-            351949: 'Extracción de basura',     #SERVICIO DE RETIRO O EXTRACCIÓN DE BASURA
+#            351841: 'Sin tipo',                 #SIN TIPO DE FUENTE ASIGNADO
+#            351842: 'Carnicerias',              #CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
+#            351843: 'Supermercados',            #SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
+#            351844: 'Hipermercados',            #HIPERMERCADOS
+#            351845: 'Depositos',                #DEPOSITOS Y ABARROTERIAS
+#            351846: 'Tiendas no especializadas',#TIENDAS NO ESPECIALIZADAS
+#            351847: 'Almacenes',                #ALMACENES O TIENDAS ESPECIALIZADAS
+#            351848: 'Restaurantes',             #RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
+#            351849: 'Empresas',                 #EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
+#            351850: 'Expendios de Gas',         #EXPENDIOS DE GAS PROPANO
+#            351851: 'Farmacias',                #FARMACIAS, DROGUERIAS Y PERFUMERIAS
+#            351852: 'Centros de Salud',         #HOSPITALES, CLINICAS, LABORATORIOS, CENTROS Y PUESTOS DE SALUD
+#            351853: 'Hoteles',                  #HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
+#            351854: 'Centros Educativos',       #COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
+#            351855: 'Otros establecimientos especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PRESTACION DE SERVICIOS
+#            351856: 'Servicio domestico',       #SERVICIO DOMESTICO
+#            351857: 'Otros establecimientos no especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
+#            351858: 'Cuarto de alquiler',       #VIVIENDA TIPO CUARTO DE ALQUILER
+#            351859: 'Apartamento de alquiler',  #VIVIENDA TIPO APARTAMENTO DE ALQUILER
+#            351860: 'Casa de alquiler',         #VIVIENDA TIPO CASA DE ALQUILER
+#            351861: 'Mercados',                 #MERCADOS CANTONALES Y MUNICIPALES
+#            351940: 'Salones de belleza',       #SALONES DE BELLEZA
+#            351941: 'Ventas informales',        #VENTAS INFORMALES
+#            351942: 'Comedores',                #COMEDORES
+#            351943: 'Heladerías',               #HELADERÍAS, PARTELERÍAS, REPOSTERÍAS
+#            351944: 'Entradas',                 #CINE, TEATRO, ENTRADAS AL ESTADIO
+#            351945: 'Transporte',               #SERVICIO DE TRANSPORTE
+#            351946: 'Médico especialista',      #SERVICIO MÉDICO ESPECIALISTA
+#            351947: 'Servicios aéreos',         #SERVICIOS AÉREOS
+#            351948: 'Veterinaria',              #SERVICIOS DE VETERINARIA
+#            351949: 'Extracción de basura',     #SERVICIO DE RETIRO O EXTRACCIÓN DE BASURA
 
-            352271: 'Establecimientos grandes', #ESTABLECIMIENTOS GRANDES
-            352272: 'Tiendas medianas',         #TIENDAS MEDIANAS
-            352273: 'Tiendas pequeñas',         #TIENDAS PEQUEÑAS
-            352274: 'Mercados',                 #MERCADOS
-            352275: 'Puestos ambulantes',       #PUESTOS AMBULANTES
-            352276: 'Puestos fijos',            #PUESTOS FIJOS
-            352277: 'Servicios diversos',       #ESTABLECIMIENTOS DE SERVICIOS DIVERSOS
-            352278: 'Servicios públicos o privados',#ESTABLECIMIENTOS DE SERVICIOS PÚBLIOCS O PRIVADOS
-            352279: 'Almacenes',                #TIENDAS O ALMACENES ESPECIALIZADOS
-            352280: 'Servicios especializados', #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
-            352281: 'Sitios web',               #SITIOS WEB
+#            352271: 'Establecimientos grandes', #ESTABLECIMIENTOS GRANDES
+#            352272: 'Tiendas medianas',         #TIENDAS MEDIANAS
+#            352273: 'Tiendas pequeñas',         #TIENDAS PEQUEÑAS
+#            352274: 'Mercados',                 #MERCADOS
+#            352275: 'Puestos ambulantes',       #PUESTOS AMBULANTES
+#            352276: 'Puestos fijos',            #PUESTOS FIJOS
+#            352277: 'Servicios diversos',       #ESTABLECIMIENTOS DE SERVICIOS DIVERSOS
+#            352278: 'Servicios públicos o privados',#ESTABLECIMIENTOS DE SERVICIOS PÚBLICOS O PRIVADOS
+#            352279: 'Almacenes',                #TIENDAS O ALMACENES ESPECIALIZADOS
+#            352280: 'Servicios especializados', #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
+#            352281: 'Sitios web',               #SITIOS WEB
+
+            352271: 'Tiendas grandes',              #TIENDAS GRANDES
+            352272: 'Tiendas no especializadas',    #TIENDAS NO ESPECIALIZADAS
+            352274: 'Mercados',                     #MERCADOS
+            352275: 'Puestos callejeros',           #PUESTOS CALLEJEROS
+            352277: 'Servicios especializados',     #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
+            352278: 'Servicios básicos y regulados',#ESTABLECIMIENTOS DE SERVICIOS BÁSICOS Y REGULADOS
+            352279: 'Tiendas o almacenes',          #TIENDAS O ALMACENES ESPECIALIZADOS
+            352280: 'Servicios individuales',       #SERVICIOS INDIVIDUALES
+            352281: 'Plataformas digitales',        #PLATAFORMAS DIGITALES
         }
         if dbBackup:
             self.df_DivInd = self.__codex.cargar_df('db_b/df_DivInd.parquet')
@@ -670,14 +680,17 @@ class SqlIPC:
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 1
         TfnCods = {
-            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
-            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
-            351857, 351858, 351859, 351860, 351861,
-            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
-            351948, 351949,
+#            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
+#            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
+#            351857, 351858, 351859, 351860, 351861,
+#            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
+#            351948, 351949,
 
-            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
-            352279, 352280, 352281
+#            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
+#            352279, 352280, 352281
+
+            352271, 352272, 352274, 352275, 352277, 352278, 352279,
+            352280, 352281
         }
         for i in TfnCods:
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i
@@ -709,14 +722,17 @@ class SqlIPC:
         anio_ = self.df_Fnt['PerAno'] == self.anio
         S = 1
         TfnCods = {
-            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
-            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
-            351857, 351858, 351859, 351860, 351861,
-            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
-            351948, 351949,
+#            351841, 351842, 351843, 351844, 351845, 351846, 351847, 351848,
+#            351849, 351850, 351851, 351852, 351853, 351854, 351855, 351856,
+#            351857, 351858, 351859, 351860, 351861,
+#            351940, 351941, 351942, 351943, 351944, 351945, 351946, 351947,
+#            351948, 351949,
 
-            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
-            352279, 352280, 352281
+#            352271, 352272, 352273, 352274, 352275, 352276, 352277, 352278,
+#            352279, 352280, 352281
+
+            352271, 352272, 352274, 352275, 352277, 352278, 352279,
+            352280, 352281
         }
         for i in TfnCods:
             tipo_fuente_ = self.df_Fnt['TfnCod'] == i

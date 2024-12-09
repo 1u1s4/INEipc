@@ -256,7 +256,7 @@ class DescriptorIPC:
             cambio = "desaceleración"
             diferencia *= -1
         elif diferencia > 0:
-            cambio = "aceleeración"
+            cambio = "aceleración"
         else:
             cambio = "cambio"
         nota = """\\footnote{Para mayor información sobre el índice de precios 
@@ -477,7 +477,7 @@ class DescriptorIPC:
                 IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
                 {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron
                 la mayor incidencia mensual positiva. Por su parte,
-                {minimo[1].lower()} es la división de gasto con menor incidencia
+                {minimo[1].lower()} es la división de gasto con mayor incidencia
                 mensual negativa ({round(minimo[0], 2):,.2f}%)."""
         else:
             plantilla = f"""De las trece divisiones de gasto que integran el
