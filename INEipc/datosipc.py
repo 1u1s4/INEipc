@@ -619,8 +619,8 @@ class DatosIPC:
         mes = Jo.mes_by_ordinal(self.mes, abreviado=False).lower()
         fecha = f"{mes} de {self.anio}"
         firma = """\\begin{center}
-                    \\textbf{Marco Antonio Mejía Villatoro}\\\\
-                    Gerente en funciones\\\\
+                    \\textbf{Ing Oscar José Chávez Valdez}\\\\
+                    Gerente\\\\
                     Instituto Nacional de Estadística
                     \\end{center}"""
         introduccion = f"""El presente informe mensual, contiene los principales

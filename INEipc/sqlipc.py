@@ -507,7 +507,11 @@ class SqlIPC:
                 Qreg = self.df_GbaInd['RegCod'] == RegCod
                 Qgba = self.df_GbaInd['GbaCod'] == GbaCod
                 #Qsem = self.df_GbaInd['PerSem'] == 3
-                indices = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                indices1 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
+                Qmes = self.df_GbaInd['PerMes'] >= self.mes
+                indices2 = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba][['PerAno','PerMes','GbaInd']]
+                indices = pd.merge(indices2, indices1, how='outer')
             nombre_gba = self.get_nombre_Gba(GbaCod)
             indices_final = []
             indices = indices.sort_values(by=['PerAno', 'PerMes'])
@@ -553,6 +557,10 @@ class SqlIPC:
                 ipc = funcion(self.anio, i, RegCod)
                 serie.append((fecha, ipc))
         else:
+            mes_abr = mes_by_ordinal(self.mes)
+            fecha = f'{mes_abr}-{self.anio - 1}'
+            ipc = funcion(self.anio - 1, self.mes, RegCod)
+            serie.append((fecha, ipc))
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
@@ -601,6 +609,10 @@ class SqlIPC:
                     indice = funcion(self.anio, i, RegCod)
                     serie.append((fecha, indice))
             else:
+                mes_abr = mes_by_ordinal(self.mes)
+                fecha = f'{mes_abr}-{self.anio - 1}'
+                indice = funcion(self.anio - 1, self.mes, RegCod)
+                serie.append((fecha, indice))
                 for i in range(1, 13):
                     mes_abr = mes_by_ordinal(i)
                     fecha = f'{mes_abr}-{self.anio}'
@@ -653,6 +665,16 @@ class SqlIPC:
                     conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
                 serie.append((fecha, conteo.shape[0]))
         else:
+            mes_abr = mes_by_ordinal(self.mes)
+            fecha = f'{mes_abr}-{self.anio - 1}'
+            mes_ = self.df_Fnt['PerMes'] == self.mes
+            anio_ = self.df_Fnt['PerAno'] == self.anio - 1
+            conteo = self.df_Fnt[anio_ & mes_]
+            if RegCod != 0:
+                conteo = conteo[conteo['RegCod'] == RegCod]
+            if Qfuentes:
+                conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+            serie.append((fecha, conteo.shape[0]))
             for i in range(1, 13):
                 mes_abr = mes_by_ordinal(i)
                 fecha = f'{mes_abr}-{self.anio}'
