@@ -16,7 +16,9 @@ from INEcodex import Codex
 from INEfnts import Fuentes
 
 class SqlIPC:
-    def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
+    def __init__(
+        self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False
+    ) -> None:
         # cargar Codex
         self.__codex = Codex()
         self.__codex.cargar_clave()
@@ -24,59 +26,15 @@ class SqlIPC:
         self.mes = mes
         # diccionario tipo de fuentes
         self.nombre_fuentes = {
-#            351841: 'Sin tipo',                 #SIN TIPO DE FUENTE ASIGNADO
-#            351842: 'Carnicerias',              #CARNICERIAS, MARRANERIAS, POLLERIAS, ETC.
-#            351843: 'Supermercados',            #SUPERMERCADOS, DESPENSAS Y ALMACENES EN CADENA
-#            351844: 'Hipermercados',            #HIPERMERCADOS
-#            351845: 'Depositos',                #DEPOSITOS Y ABARROTERIAS
-#            351846: 'Tiendas no especializadas',#TIENDAS NO ESPECIALIZADAS
-#            351847: 'Almacenes',                #ALMACENES O TIENDAS ESPECIALIZADAS
-#            351848: 'Restaurantes',             #RESTAURANTES  O EXPENDIOS DE COMIDAS PREPARADAS EN CADENA
-#            351849: 'Empresas',                 #EMPRESAS ESPECIALIZADAS EN PRESTACION DE SERVICIOS
-#            351850: 'Expendios de Gas',         #EXPENDIOS DE GAS PROPANO
-#            351851: 'Farmacias',                #FARMACIAS, DROGUERIAS Y PERFUMERIAS
-#            351852: 'Centros de Salud',         #HOSPITALES, CLINICAS, LABORATORIOS, CENTROS Y PUESTOS DE SALUD
-#            351853: 'Hoteles',                  #HOTELES, MOTELES, HOSPEDAJES, PENSIONES Y ALOJAMIENTOS
-#            351854: 'Centros Educativos',       #COLEGIOS, ACADEMIAS,  INSTITUTOS, UNIVERSIDADES Y OTROS
-#            351855: 'Otros establecimientos especializados',#OTROS ESTABLECIMIENTOS ESPECIALIZADOS EN PRESTACION DE SERVICIOS
-#            351856: 'Servicio domestico',       #SERVICIO DOMESTICO
-#            351857: 'Otros establecimientos no especializados',#OTROS ESTABLECIMIENTOS NO ESPECIALIZADOS EN OTRO CODIGO
-#            351858: 'Cuarto de alquiler',       #VIVIENDA TIPO CUARTO DE ALQUILER
-#            351859: 'Apartamento de alquiler',  #VIVIENDA TIPO APARTAMENTO DE ALQUILER
-#            351860: 'Casa de alquiler',         #VIVIENDA TIPO CASA DE ALQUILER
-#            351861: 'Mercados',                 #MERCADOS CANTONALES Y MUNICIPALES
-#            351940: 'Salones de belleza',       #SALONES DE BELLEZA
-#            351941: 'Ventas informales',        #VENTAS INFORMALES
-#            351942: 'Comedores',                #COMEDORES
-#            351943: 'Heladerías',               #HELADERÍAS, PARTELERÍAS, REPOSTERÍAS
-#            351944: 'Entradas',                 #CINE, TEATRO, ENTRADAS AL ESTADIO
-#            351945: 'Transporte',               #SERVICIO DE TRANSPORTE
-#            351946: 'Médico especialista',      #SERVICIO MÉDICO ESPECIALISTA
-#            351947: 'Servicios aéreos',         #SERVICIOS AÉREOS
-#            351948: 'Veterinaria',              #SERVICIOS DE VETERINARIA
-#            351949: 'Extracción de basura',     #SERVICIO DE RETIRO O EXTRACCIÓN DE BASURA
-
-#            352271: 'Establecimientos grandes', #ESTABLECIMIENTOS GRANDES
-#            352272: 'Tiendas medianas',         #TIENDAS MEDIANAS
-#            352273: 'Tiendas pequeñas',         #TIENDAS PEQUEÑAS
-#            352274: 'Mercados',                 #MERCADOS
-#            352275: 'Puestos ambulantes',       #PUESTOS AMBULANTES
-#            352276: 'Puestos fijos',            #PUESTOS FIJOS
-#            352277: 'Servicios diversos',       #ESTABLECIMIENTOS DE SERVICIOS DIVERSOS
-#            352278: 'Servicios públicos o privados',#ESTABLECIMIENTOS DE SERVICIOS PÚBLICOS O PRIVADOS
-#            352279: 'Almacenes',                #TIENDAS O ALMACENES ESPECIALIZADOS
-#            352280: 'Servicios especializados', #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
-#            352281: 'Sitios web',               #SITIOS WEB
-
-            352271: 'Tiendas grandes',              #TIENDAS GRANDES
-            352272: 'Tiendas no especializadas',    #TIENDAS NO ESPECIALIZADAS
-            352274: 'Mercados',                     #MERCADOS
-            352275: 'Puestos callejeros',           #PUESTOS CALLEJEROS
-            352277: 'Servicios especializados',     #ESTABLECIMIENTOS DE SERVICIOS ESPECIALIZADOS, SERVICIOS INDIVIDUALIZADOS
-            352278: 'Servicios básicos y regulados',#ESTABLECIMIENTOS DE SERVICIOS BÁSICOS Y REGULADOS
-            352279: 'Tiendas o almacenes',          #TIENDAS O ALMACENES ESPECIALIZADOS
-            352280: 'Servicios individuales',       #SERVICIOS INDIVIDUALES
-            352281: 'Plataformas digitales',        #PLATAFORMAS DIGITALES
+            352271: 'Tiendas grandes',
+            352272: 'Tiendas no especializadas',
+            352274: 'Mercados',
+            352275: 'Puestos callejeros',
+            352277: 'Servicios especializados',
+            352278: 'Servicios básicos y regulados',
+            352279: 'Tiendas o almacenes',
+            352280: 'Servicios individuales',
+            352281: 'Plataformas digitales',
         }
         if dbBackup:
             self.df_DivInd = self.__codex.cargar_df('db_b/df_DivInd.parquet')
@@ -87,36 +45,83 @@ class SqlIPC:
             self.df_DivNom = self.__codex.cargar_df('db_b/df_DivNom.parquet')
             self.df_Fnt = self.__codex.cargar_df('db_b/df_Fnt.parquet')
         elif dbPack:
-            self.df_DivInd = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivInd.parquet'))
-            self.df_DivPon = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivPon.parquet'))
-            self.df_GbaInd = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInd.parquet'))
-            self.df_GbaPon = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaPon.parquet'))
-            self.df_GbaInfo = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_GbaInfo.parquet'))
-            self.df_DivNom = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_DivNom.parquet'))
-            self.df_Fnt = self.__codex.cargar_df(pkg_resources.resource_filename(__name__, 'db_pack/df_Fnt.parquet'))
+            self.df_DivInd = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_DivInd.parquet'
+                )
+            )
+            self.df_DivPon = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_DivPon.parquet'
+                )
+            )
+            self.df_GbaInd = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_GbaInd.parquet'
+                )
+            )
+            self.df_GbaPon = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_GbaPon.parquet'
+                )
+            )
+            self.df_GbaInfo = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_GbaInfo.parquet'
+                )
+            )
+            self.df_DivNom = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_DivNom.parquet'
+                )
+            )
+            self.df_Fnt = self.__codex.cargar_df(
+                pkg_resources.resource_filename(
+                    __name__, 'db_pack/df_Fnt.parquet'
+                )
+            )
         else:
             # datos servidor
-            DATABASE = "db-indices"
             if os.path.exists('config.ini'):
                 config = configparser.ConfigParser()
                 config.read('config.ini')
-                db_config = config['database']
-                SERVER, USERNAME, PASSWORD = db_config['SERVER'], db_config['USERNAME'], db_config['PASSWORD']
-            elif all([os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')]):
-                SERVER, USERNAME, PASSWORD = os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')
+                db_config = config['prod']
+                SERVER = db_config['SERVER']
+                DATABASE = db_config['DATABASE']
+                USERNAME = db_config['USERNAME']
+                PASSWORD = db_config['PASSWORD']
+            elif all([
+                    os.getenv('SERVER'),
+                    os.getenv('DATABASE'),
+                    os.getenv('USERNAME'),
+                    os.getenv('PASSWORD')
+                ]):
+                SERVER = os.getenv('SERVER')
+                DATABASE = os.getenv('DATABASE')
+                USERNAME = os.getenv('USERNAME')
+                PASSWORD = os.getenv('PASSWORD')
             else:
-                print('Datos de conexión no encontrados. Ingrese los datos de conexión a la base de datos:')
+                print(
+                    'Datos de conexión no encontrados. '
+                    'Ingrese los datos de conexión a la base de datos:'
+                )
                 os.environ['SERVER'] = input('Servidor: ')
+                os.environ['DATABASE'] = input('Base de datos: ')
                 os.environ['USERNAME'] = input('Usuario: ')
                 os.environ['PASSWORD'] = input('Contraseña: ')
-                SERVER, USERNAME, PASSWORD = os.getenv('SERVER'), os.getenv('USERNAME'), os.getenv('PASSWORD')
+                SERVER = os.getenv('SERVER')
+                DATABASE = os.getenv('DATABASE')
+                USERNAME = os.getenv('USERNAME')
+                PASSWORD = os.getenv('PASSWORD')
             # conexion
             import pyodbc
             self.__conexion = pyodbc.connect(
                 'DRIVER={ODBC Driver 17 for SQL Server}'
-                + f';SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+                + f';SERVER={SERVER};DATABASE={DATABASE}'
+                + f';UID={USERNAME};PWD={PASSWORD}'
             )
             self.Grupos = pd.DataFrame() 
+            """ Temporary
             for j in range(2023,anio):
                 for i in range(1,13):
                     temp_df = pd.read_sql(
@@ -134,30 +139,80 @@ class SqlIPC:
                 temp_df['PerAno'] = anio
                 temp_df['PerMes'] = i
                 self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            """
+            temp_df = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2024, 12',
+                self.__conexion
+            )
+            temp_df['PerAno'] = 2024
+            temp_df['PerMes'] = 12
+            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            temp_df = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2025, 1',
+                self.__conexion
+            )
+            temp_df['PerAno'] = 2025
+            temp_df['PerMes'] = 1
+            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            temp_df = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2025, 2',
+                self.__conexion
+            )
+            temp_df['PerAno'] = 2025
+            temp_df['PerMes'] = 2
+            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+            temp_df = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2025, 3',
+                self.__conexion
+            )
+            temp_df['PerAno'] = 2025
+            temp_df['PerMes'] = 3
+            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+
+            temp_df = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2025, 4',
+                self.__conexion
+            )
+            temp_df['PerAno'] = 2025
+            temp_df['PerMes'] = 4
+            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
+
             #temp_df = pd.read_excel("Índices_good.xlsx")
             #temp_df['PerAno'] = 2024
             #temp_df['PerMes'] = 1
             #self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
             # Nombres de las divisiones
-            self.df_DivNom = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
+            self.df_DivNom = self.Grupos[
+                self.Grupos['tipo_grupo'] == 'División'
+            ].rename(
                 columns={
                     'grupo_codigo': 'DivCod',
                     'grupo_nombre': 'DivNom'
                 }
             )[['DivCod', 'DivNom']].head(13)
             # ponderaciones de las divisiones
-            self.df_DivPon = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
+            self.df_DivPon = self.Grupos[
+                self.Grupos['tipo_grupo'] == 'División'
+            ].rename(
                 columns={
                     'region_id':            'RegCod',
                     'grupo_codigo':         'DivCod',
                     'ponderacion_region':   'DivPon',
                 }
             )[['RegCod', 'DivCod', 'DivPon']].head(13 * 9)
-            self.df_DivPon = self.df_DivPon.astype({'RegCod': 'int64', 'DivCod': 'int64'})
+            self.df_DivPon = self.df_DivPon.astype({
+                'RegCod': 'int64', 'DivCod': 'int64'
+            })
             # ponderaciones de los productos
-            self.df_GbaPon = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto']
-            self.df_GbaPon = self.df_GbaPon[self.df_GbaPon['PerAno'] == self.anio]
-            self.df_GbaPon = self.df_GbaPon[self.df_GbaPon['PerMes'] == self.mes]
+            self.df_GbaPon = self.Grupos[
+                self.Grupos['tipo_grupo'] == 'Producto'
+            ]
+            self.df_GbaPon = self.df_GbaPon[
+                self.df_GbaPon['PerAno'] == self.anio
+            ]
+            self.df_GbaPon = self.df_GbaPon[
+                self.df_GbaPon['PerMes'] == self.mes
+            ]
             self.df_GbaPon = self.df_GbaPon.rename(
                 columns={
                     'region_id':            'RegCod',
@@ -165,20 +220,32 @@ class SqlIPC:
                     'ponderacion_region':   'GbaPon',
                 }
             )[['RegCod', 'GbaCod', 'GbaPon']]
-            self.df_GbaPon.insert(1, 'DivCod', self.df_GbaPon['GbaCod'] // 100000)
+            self.df_GbaPon.insert(
+                1, 'DivCod', self.df_GbaPon['GbaCod'] // 1_0_0_0_00_00
+            )
             columnas = ("RegCod", "DivCod", "GbaCod")
-            self.df_GbaPon = self.df_GbaPon.astype(dict.fromkeys(columnas, "int64"))
+            self.df_GbaPon = self.df_GbaPon.astype(
+                dict.fromkeys(columnas, "int64")
+            )
             # informacion productos
-            self.df_GbaInfo = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto']
-            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['PerAno'] == self.anio]
-            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['PerMes'] == self.mes]
+            self.df_GbaInfo = self.Grupos[
+                self.Grupos['tipo_grupo'] == 'Producto'
+            ]
+            self.df_GbaInfo = self.df_GbaInfo[
+                self.df_GbaInfo['PerAno'] == self.anio
+            ]
+            self.df_GbaInfo = self.df_GbaInfo[
+                self.df_GbaInfo['PerMes'] == self.mes
+            ]
             self.df_GbaInfo = self.df_GbaInfo.rename(
                 columns={
                     'grupo_codigo': 'GbaCod',
                     'grupo_nombre': 'GbaNom'
                 }
             )
-            self.df_GbaInfo = self.df_GbaInfo[self.df_GbaInfo['region_id'] == 0][['GbaCod', 'GbaNom']]
+            self.df_GbaInfo = self.df_GbaInfo[
+                self.df_GbaInfo['region_id'] == 0
+            ][['GbaCod', 'GbaNom']]
             self.df_GbaInfo.insert(0, 'SubCod', self.df_GbaInfo['GbaCod'] // 100)
             self.df_GbaInfo.insert(0, 'GruCod', self.df_GbaInfo['SubCod'] // 10)
             self.df_GbaInfo.insert(0, 'AgrCod', self.df_GbaInfo['GruCod'] // 10)
@@ -190,15 +257,18 @@ class SqlIPC:
                 columns={
                     'region_id':    'RegCod',
                     'grupo_codigo': 'DivCod',
+            #        'codigo': 'DivCod',
                     'indice_grupo': 'DivInd'
                 }
             )[['RegCod', 'PerAno', 'PerMes', 'DivCod', 'DivInd']]
             self.df_DivInd = self.df_DivInd.astype({"RegCod": "int64", "DivCod": "int64"})
+
             # indices por gasto basico
             self.df_GbaInd = self.Grupos[self.Grupos['tipo_grupo'] == 'Producto'].rename(
                 columns={
                     'region_id':    'RegCod',
                     'grupo_codigo': 'GbaCod',
+            #        'codigo': 'GbaCod',
                     'indice_grupo': 'GbaInd'
                 }
             )[['RegCod', 'PerAno', 'PerMes', 'GbaCod', 'GbaInd']]
@@ -234,22 +304,32 @@ class SqlIPC:
         
         # Empalmes
         self.empalmes = pd.read_excel('Empalme IPC 23 01 2023.xlsx', sheet_name='Regiones')
+        
+        # Empalmes
+        EmpalmeR0Div = pd.read_excel("Empalmes_2024_Div.xlsx")
+        for idx, row in self.df_DivInd.iterrows():
+            if row["PerAno"] == 2024 and row["RegCod"] == 0:
+                self.df_DivInd.at[idx, "DivInd"] = EmpalmeR0Div.iloc[int(row["PerMes"]) - 1, int(row["DivCod"])]
+        
+
+        # Empalmes
+        self.empalmes_2024_gba = pd.read_excel('Empalmes_prod_2024.xlsx')
             
         # fin de carga de datos 
         # nombre de divisiones
         abr_diviciones = {
             'Alimentos Y Bebidas No Alcohólicas':                               'Alimentos',
             'Bebidas Alcohólicas, Tabaco Y Narcóticos':                         'Bebidas Alcohólicas',
-            'Ropa Y Calzado':                                                   'Vestuario',
-            'Vivienda, Agua, Electricidad, Gas Y Otros':                        'Vivienda',
-            'Mobiliario, Equipo Y Mantenimiento Del Hogar':                     'Muebles',
+            'Vestuario Y Calzado':                                              'Vestuario',
+            'Vivienda, Agua, Electricidad, Gas Y Otros Combustibles':           'Vivienda',
+            'Mobiliario, Equipo Y Mantenimiento Rutinario Del Hogar':           'Muebles',
             'Salud':                                                            'Salud',
             'Transporte':                                                       'Transporte',
             'Información Y Comunicación':                                       'Comunicaciones',
             'Recreación, Deporte Y Cultura':                                    'Recreación',
             'Servicios Educativos':                                             'Educación',
             'Restaurantes Y Servicios De Alojamiento':                          'Restaurantes',
-            'Cuidado Personal, Protección Social Y Bienes Y Servicios Varios':  'Bienes diversos',
+            'Cuidado Personal, Protección Social, Bienes Y Servicios Diversos': 'Bienes diversos',
             'Seguros Y Servicios Financieros':                                  'Seguros'
         }
         df_DivNom_dic = self.df_DivNom.to_dict()
@@ -277,21 +357,157 @@ class SqlIPC:
         return nombre.strip().title()
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
+        
+        if anio == 2024:
+            if mes == 1:
+                return [
+                    98.8566959789581,
+                    99.0703516980739,
+                    98.4589459109483,
+                    99.2732399599357,
+                    98.7060730128276,
+                    98.9889558644043,
+                    99.0633198918171,
+                    98.3610164417958,
+                    99.0030424784213
+                ][RegCod]
+            elif mes == 2:
+                return [
+                    98.9946170444611,
+                    99.4364034366602,
+                    98.4472428743909,
+                    99.3516937093573,
+                    99.1422555329436,
+                    98.9869047727995,
+                    99.0687058323882,
+                    98.4382783462334,
+                    99.0913595283268
+                ][RegCod]
+            elif mes == 3:
+                return [
+                    99.3001063784863,
+                    100.0180590542190,
+                    98.4599639511934,
+                    99.5920528652636,
+                    99.4853949248333,
+                    99.3307836871359,
+                    99.3552364851949,
+                    98.5871297222272,
+                    99.3728206059840
+                ][RegCod]
+            elif mes == 4:
+                return [
+                    99.5941332154716,
+                    100.3758691360640,
+                    98.7136763017206,
+                    100.1194001167880,
+                    99.8160867445613,
+                    99.5781514691463,
+                    99.5287613558820,
+                    98.8357987784852,
+                    99.5104659063637
+                ][RegCod]
+            elif mes == 5:
+                return [
+                    99.6225049933957,
+                    99.8971263223512,
+                    99.0171588693267,
+                    100.1115466201590,
+                    99.9728445595770,
+                    99.4194255169563,
+                    99.6305819927960,
+                    99.1436070044165,
+                    99.7106211181326
+                ][RegCod]
+            elif mes == 6:
+                return [
+                    99.7815546988695,
+                    99.8560061419072,
+                    99.4858072043359,
+                    100.2289957443490,
+                    99.9760410152592,
+                    99.5714757744731,
+                    99.8301582735396,
+                    99.5040948972420,
+                    99.7758349414034
+                ][RegCod]
+            elif mes == 7:
+                return [
+                    100.6382598378680,
+                    100.3104705403120,
+                    100.8659796107090,
+                    100.5939105012150,
+                    100.5739172998620,
+                    100.5797124613060,
+                    100.8777504364930,
+                    101.0315533218260,
+                    100.4038266822690
+                ][RegCod]
+            elif mes == 8:
+                return [
+                    100.5755433856820,
+                    100.3203383436650,
+                    100.8337411583420,
+                    100.5213375634430,
+                    100.5550741866870,
+                    100.4156993780340,
+                    100.8389200643260,
+                    100.7556405465690,
+                    100.4397388714060
+                ][RegCod]
+            elif mes == 9:
+                return [
+                    100.1963145064570,
+                    100.0635322555170,
+                    100.3741125085020,
+                    100.0828885147640,
+                    100.3514075127210,
+                    100.1088202473040,
+                    100.3420118268560,
+                    100.2302318551780,
+                    100.0413903730920
+                ][RegCod]
+            elif mes == 10:
+                return [
+                    100.5259968606100,
+                    100.3810654448450,
+                    100.5533019453350,
+                    100.0354939413890,
+                    100.4958947413020,
+                    100.6534990890160,
+                    100.3420118268560,
+                    101.1151212285570,
+                    100.5812006099110
+                ][RegCod]
+            elif mes == 11:
+                return [
+                    100.3556018441820,
+                    100.1687583508100,
+                    100.5699964189440,
+                    99.8177022757379,
+                    100.2291771596140,
+                    100.4689604736330,
+                    100.2442733162820,
+                    100.7876185586310,
+                    100.5234035391140
+                ][RegCod]
 
         if anio <= 2023:
             row = 12 * (anio - 2011) + mes - 4
             col = 6 * RegCod + 5
             return self.empalmes.iloc[row, col]
-
+        
         """
-        Calcula el índice de precios al consumidor (IPC) para una región y período de tiempo dados.
+        Calcula el índice de precios al consumidor (IPC) para una región y
+        período de tiempo dados.
 
         Parameters
         ----------
         anio : int
             Año para el cual se desea calcular el IPC.
         mes : int
-            Mes (número entero entre 1 y 12) para el cual se desea calcular el IPC.
+            Mes (número entero entre 1 y 12) para el cual se desea calcular el
+            IPC.
         RegCod : int
             Código de la región para la cual se desea calcular el IPC.
 
@@ -300,7 +516,9 @@ class SqlIPC:
         float
             IPC calculado para la región y período de tiempo dados.
         """
-        PONDERACIONES_REG = self.df_DivPon[self.df_DivPon['RegCod'] == RegCod]['DivPon']
+        PONDERACIONES_REG = self.df_DivPon[
+            self.df_DivPon['RegCod'] == RegCod
+        ]['DivPon']
         Qanio = self.df_DivInd['PerAno'] == anio
         Qmes = self.df_DivInd['PerMes'] == mes
         Qreg = self.df_DivInd['RegCod'] == RegCod
@@ -405,34 +623,92 @@ class SqlIPC:
             RegCod (int): Código de la región.
 
         Returns:
-            List[float]: Lista de tuplas que contiene la incidencia de cada división 
-            en el índice de precios al consumidor de la región, en orden descendente. 
-            Cada tupla contiene la variación ponderada de la división y su nombre.
+            List[float]: Lista de tuplas que contiene la incidencia de cada
+            división en el índice de precios al consumidor de la región, en
+            orden descendente. Cada tupla contiene la variación ponderada de la
+            división y su nombre.
         """
         incidencias = []
         for DivCod in range(1, 14):
-            ponderacion = self.df_DivPon[(self.df_DivPon['RegCod'] == RegCod) & (self.df_DivPon['DivCod'] == DivCod)]['DivPon'].iloc[0]
+            ponderacion = self.df_DivPon[
+                (self.df_DivPon['RegCod'] == RegCod) &
+                (self.df_DivPon['DivCod'] == DivCod)
+            ]['DivPon'].iloc[0]
             Qanio = self.df_DivInd['PerAno'] == self.anio
             Qmes = self.df_DivInd['PerMes'] == self.mes
             Qreg = self.df_DivInd['RegCod'] == RegCod
             Qdiv = self.df_DivInd['DivCod'] == DivCod
-            indice_actual = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
+            indice_actual = self.df_DivInd[
+                Qanio & Qmes & Qreg & Qdiv
+            ]['DivInd'].iloc[0]
             if self.mes == 1:
                 Qanio = self.df_DivInd['PerAno'] == self.anio - 1
                 Qmes = self.df_DivInd['PerMes'] == 12
                 ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_DivInd['PerMes'] == self.mes - 1
-                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
-            indice_anterior = self.df_DivInd[Qanio & Qmes & Qreg & Qdiv]['DivInd'].iloc[0]
-            variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
-            #variacion = r0und(variacion, 2)
+                ipc_anterior = self.calcular_IPC(
+                    self.anio, self.mes - 1, RegCod
+                )
+            indice_anterior = self.df_DivInd[
+                Qanio & Qmes & Qreg & Qdiv
+            ]['DivInd'].iloc[0]
+            variacion = (indice_actual - indice_anterior) * ponderacion \
+                / ipc_anterior
             incidencias.append((variacion, self.NOMBRE_DIV[DivCod]))
         return incidencias
 
+
+    def variacion_divisiones(self, RegCod: int) -> List[float]:
+        """
+        Calcula la variación de cada división en el índice de precios al
+        consumidor en una determinada región y periodo.
+
+        Args:
+            RegCod (int): Código de la región.
+
+        Returns:
+            List[float]: Lista de tuplas que contiene la incidencia de cada
+            división en el índice de precios al consumidor de la región, en
+            orden descendente. Cada tupla contiene la variación ponderada de la
+            división y su nombre.
+        """
+        variaciones = []
+        for DivCod in range(1, 14):
+            Qanio = self.df_DivInd['PerAno'] == self.anio
+            Qmes = self.df_DivInd['PerMes'] == self.mes
+            Qreg = self.df_DivInd['RegCod'] == RegCod
+            Qdiv = self.df_DivInd['DivCod'] == DivCod
+            indice_actual = self.df_DivInd[
+                Qanio & Qmes & Qreg & Qdiv
+            ]['DivInd'].iloc[0]
+            if self.mes == 1:
+                Qanio = self.df_DivInd['PerAno'] == self.anio - 1
+                Qmes = self.df_DivInd['PerMes'] == 12
+                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
+            else:
+                Qmes = self.df_DivInd['PerMes'] == self.mes - 1
+                ipc_anterior = self.calcular_IPC(
+                    self.anio, self.mes - 1, RegCod
+                )
+            indice_anterior = self.df_DivInd[
+                Qanio & Qmes & Qreg & Qdiv
+            ]['DivInd'].iloc[0]
+            variaciones.append((
+                (indice_actual / indice_anterior) * 100 - 100,
+                self.NOMBRE_DIV[DivCod]
+            ))
+        return variaciones
+
+
+
+
+
+
     def incidencia_gasto_basico(self, RegCod: int) -> List[Tuple[float, str]]:
         """
-        Obtiene la incidencia de la variación de los gastos básicos para una región.
+        Obtiene la incidencia de la variación de los gastos básicos para una
+        región.
 
         Parámetros:
         -----------
@@ -440,37 +716,59 @@ class SqlIPC:
 
         Retorna:
         --------
-        - List[Tuple[float, str]]: Lista de tuplas que contienen la incidencia de la variación de los gastos básicos
-        y su nombre correspondiente para la región de interés.
+        - List[Tuple[float, str]]: Lista de tuplas que contienen la incidencia
+        de la variación de los gastos básicos y su nombre correspondiente para
+        la región de interés.
         """
+
         incidencias = []
         for GbaCod in self.df_GbaInfo['GbaCod'].to_list():
-            ponderacion = self.df_GbaPon[(self.df_GbaPon['RegCod'] == RegCod) & (self.df_GbaPon['GbaCod'] == GbaCod)]['GbaPon'].iloc[0]
+            ponderacion = self.df_GbaPon[
+                (self.df_GbaPon['RegCod'] == RegCod) &
+                (self.df_GbaPon['GbaCod'] == GbaCod)
+            ]['GbaPon'].iloc[0]
             Qanio = self.df_GbaInd['PerAno'] == self.anio
             Qmes = self.df_GbaInd['PerMes'] == self.mes
             Qreg = self.df_GbaInd['RegCod'] == RegCod
             Qgba = self.df_GbaInd['GbaCod'] == GbaCod
             try:
-                indice_actual = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+                indice_actual = self.df_GbaInd[
+                    Qanio & Qmes & Qreg & Qgba
+                ]['GbaInd'].iloc[0]
             except:
                 pass
             if self.mes == 1:
                 Qanio = self.df_GbaInd['PerAno'] == self.anio - 1
                 Qmes = self.df_GbaInd['PerMes'] == 12
-                ipc_anterior = self.calcular_IPC(self.anio - 1, 12, RegCod)
+                ipc_ant = self.calcular_IPC(self.anio - 1, 12, RegCod)
             else:
                 Qmes = self.df_GbaInd['PerMes'] == self.mes - 1
-                ipc_anterior = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
+                ipc_ant = self.calcular_IPC(self.anio, self.mes - 1, RegCod)
             try:
-                indice_anterior = self.df_GbaInd[Qanio & Qmes & Qreg & Qgba]['GbaInd'].iloc[0]
+                indice_ant = self.df_GbaInd[
+                    Qanio & Qmes & Qreg & Qgba
+                ]['GbaInd'].iloc[0]
             except:
                 pass
-            variacion = ((indice_actual - indice_anterior) / ipc_anterior) * ponderacion
+            variacion = ((indice_actual - indice_ant) / ipc_ant) * ponderacion
             nombre_gba = self.get_nombre_Gba(GbaCod)
             incidencias.append((variacion, nombre_gba))
         return incidencias
 
-    def series_historicas_Gbas(self, RegCod: int) -> List[Tuple[str, List[Tuple[str, float]]]]:
+    def series_historicas_Gbas(self, RegCod: int) -> \
+        List[Tuple[str, List[Tuple[str, float]]]]:
+
+        resultado = []
+        for producto, group in self.empalmes_2024_gba.groupby(by="grupo_codigo"):
+            lista_meses_precios = list(zip(group['mes'], group['indice_empalmado']))
+            resultado.append((producto, lista_meses_precios))
+        resultado_modificable = [list(item) for item in resultado]
+        ind = 0
+        for gba in resultado_modificable:
+            gba[0] = self.empalmes_2024_gba.iloc[ind*13,2]
+            ind += 1
+        return [tuple(item) for item in resultado_modificable]
+
         """
         Devuelve una lista de tuplas, cada una representando una serie histórica
         de un gasto básico diferente. La tupla contiene el nombre del gasto básico
@@ -773,14 +1071,17 @@ class SqlIPC:
         return serie
 
     def cobertura_fuentes_precios(self, Qfuentes: bool = True) -> List[Tuple[int, int]]:
-        """Calcula la cobertura de fuentes de precios para cada región en un mes y año específico.
+        """Calcula la cobertura de fuentes de precios para cada región en un mes
+        y año específico.
 
         Args:
-            Qfuentes (bool, optional): Si se requiere el conteo de fuentes únicas. Defaults to True.
+            Qfuentes (bool, optional): Si se requiere el conteo de fuentes
+            únicas. Defaults to True.
 
         Returns:
-            List[Tuple[int, int]]: Una lista de tuplas que contiene el código de región y el número de fuentes 
-            de precios para la región especificada en el mes y año específico.
+            List[Tuple[int, int]]: Una lista de tuplas que contiene el código de
+            región y el número de fuentes de precios para la región especificada
+            en el mes y año específico.
         """
         cobertura = []
         mes_ = self.df_Fnt['PerMes'] == self.mes
@@ -789,7 +1090,9 @@ class SqlIPC:
             RegCod_ = self.df_Fnt['RegCod'] == i
             conteo = self.df_Fnt[anio_ & mes_ & RegCod_]
             if Qfuentes:
-                conteo = conteo.drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+                conteo = conteo.drop_duplicates(
+                    subset=["DepCod", "MunCod", "FntCod"]
+                )
             cobertura.append((i, conteo.shape[0]))
         return cobertura
 
@@ -855,7 +1158,9 @@ class SqlIPC:
         tipo_fuente = 0
 
         tipo_fuente_ = self.df_Fnt['TfnCod'] == str(tipo_fuente).zfill(2)
-        sin_fuente = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(subset=["DepCod", "MunCod", "FntCod"])
+        sin_fuente = self.df_Fnt[anio_ & mes_ & tipo_fuente_].drop_duplicates(
+            subset=["DepCod", "MunCod", "FntCod"]
+        )
 
         nmbr_Fnt = self.nombre_fuentes.get(tipo_fuente)
 
