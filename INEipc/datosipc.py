@@ -14,7 +14,6 @@ import utilsjo as Jo
 from .descriptoripc import DescriptorIPC
 from .sqlipc import SqlIPC
 
-
 class DatosIPC:
     def __init__(self, anio: int, mes: int, dbBackup: bool=False, dbPack: bool=False) -> None:
         """
@@ -772,3 +771,4 @@ class DatosIPC:
         serie = self.SQL.serie_historica_mensual_inflacion(RegCod, tipo)
         descripcion = self.Descriptor.serie_historica_mensual_inflacion(serie, tipo)
         return(serie, descripcion)
+
