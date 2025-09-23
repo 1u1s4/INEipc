@@ -890,9 +890,23 @@ class DatosIPC:
             self.SQL.incidencia_gasto_basico(RegCod), reverse=Qpositiva
         )
         incidencias = [i[::-1] for i in incidencias]
+        nombres = {
+            "Maquinas para afeitar eléctricas y depiladoras eléctricas": "Afeitadoras Y Depiladoras Eléctricas",
+            "Pago de impuestos de circulación de vehículo": "Impuesto de Circulación de Vehículo",
+            "Servicio De Hospitalización Con Cirugía": "Hospitalización Con Cirugía",
+            "Servicio De Hospitalización Sin Cirugía": "Hospitalización Sin Cirugía",
+            "Servicio De Transporte De Pasajeros Por Aire, Vuelos Internacionales": "Transporte Aéreo De Pasajeros",
+            "Servicios De Acceso A Internet Provistos Por Operadores De Red Con Infraestructura Cableada, Inalámbrica O Satelital": "Servicios de Internet",
+            "Servicios De Transporte Interurbano Nacional Departamentales Y Municipales": "Transporte Interurbano Nacional",
+        }
+
         top = incidencias[0:top_n]
         for i, tupla in enumerate(top):
-            top[i] = (tupla[0][:32],) + tupla[1:]
+            #top[i] = (tupla[0][:32],) + tupla[1:]
+            if tupla[0] in nombres:
+                top[i] = (nombres[tupla[0]],) + tupla[1:]
+            else:
+                top[i] = (tupla[0],) + tupla[1:]
         descripcion = self.Descriptor.incidencias_gba(top, Qpositiva)
 
         return(top, descripcion)
@@ -907,9 +921,22 @@ class DatosIPC:
             self.SQL.incidencia_gasto_basico(RegCod), reverse=True
         )
         incidencias = [i[::-1] for i in incidencias]
+        nombres = {
+            "Maquinas para afeitar eléctricas y depiladoras eléctricas": "Afeitadoras Y Depiladoras Eléctricas",
+            "Pago de impuestos de circulación de vehículo": "Impuesto de Circulación de Vehículo",
+            "Servicio De Hospitalización Con Cirugía": "Hospitalización Con Cirugía",
+            "Servicio De Hospitalización Sin Cirugía": "Hospitalización Sin Cirugía",
+            "Servicio De Transporte De Pasajeros Por Aire, Vuelos Internacionales": "Transporte Aéreo De Pasajeros",
+            "Servicios De Acceso A Internet Provistos Por Operadores De Red Con Infraestructura Cableada, Inalámbrica O Satelital": "Servicios de Internet",
+            "Servicios De Transporte Interurbano Nacional Departamentales Y Municipales": "Transporte Interurbano Nacional",
+        }
         top = incidencias[0:top_n] + incidencias[-top_n:]
         for i, tupla in enumerate(top):
-            top[i] = (tupla[0][:32],) + tupla[1:]
+            #top[i] = (tupla[0][:32],) + tupla[1:]
+            if tupla[0] in nombres:
+                top[i] = (nombres[tupla[0]],) + tupla[1:]
+            else:
+                top[i] = (tupla[0],) + tupla[1:]
         descripcion = self.Descriptor.incidencias_ejecutivas_gba(top)
 
         return(top, descripcion)

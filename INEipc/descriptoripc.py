@@ -474,17 +474,17 @@ class DescriptorIPC:
         minimo = datos[-1]
         if variacion_mensual > 0:
             plantilla = f"""De las trece divisiones de gasto que integran el
-                IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
-                {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron
+                IPC, la de {maximo1[1].lower()} ({round(maximo1[0], 4):,.4f}%) y
+                {maximo2[1].lower()} ({round(maximo2[0], 4):,.4f}%), registraron
                 la mayor incidencia mensual positiva. Por su parte,
                 {minimo[1].lower()} es la división de gasto con mayor incidencia
-                mensual negativa ({round(minimo[0], 2):,.2f}%)."""
+                mensual negativa ({round(minimo[0], 4):,.4f}%)."""
         else:
             plantilla = f"""De las trece divisiones de gasto que integran el
                 IPC, la de {minimo[1].lower()} es la división de gasto con menor
-                incidencia mensual negativa ({round(minimo[0], 2):,.2f}%). Por
-                su parte, {maximo1[1].lower()} ({round(maximo1[0], 2):,.2f}%) y
-                {maximo2[1].lower()} ({round(maximo2[0], 2):,.2f}%), registraron
+                incidencia mensual negativa ({round(minimo[0], 4):,.4f}%). Por
+                su parte, {maximo1[1].lower()} ({round(maximo1[0], 4):,.4f}%) y
+                {maximo2[1].lower()} ({round(maximo2[0], 4):,.4f}%), registraron
                 la mayor incidencia mensual positiva."""
         return self.retocar_plantilla(plantilla)
 
@@ -567,12 +567,26 @@ class DescriptorIPC:
             gba = d[0]
             gba = gba.capitalize()
             indice = d[1]
-            tx = f"{gba} ({indice:,.2f}%)"
+            tx = f"{gba} ({indice:,.4f}%)"
             textos.append(tx)
         plantilla = """Los cinco productos que presentan la mayor incidencia {}
         mensual son los siguientes: {}, {}, {}, {} y {}.""".format(
             signo,
             *textos)
+        return self.retocar_plantilla(plantilla)
+
+    def incidencias_ejecutivas_gba(self, datos, Qpositiva: bool = True):
+        textos = []
+        for d in datos:
+            gba = d[0]
+            gba = gba.capitalize()
+            indice = d[1]
+            tx = f"{gba} ({indice:,.4f}%)"
+            textos.append(tx)
+        plantilla = """Los cinco productos que presentan la mayor incidencia
+        positiva mensual son los siguientes: {}, {}, {}, {} y {}. Los cinco
+        productos que presentan la mayor incidencia negativa mensual son los
+        siguientes: {}, {}, {}, {} y {}.""".format(*textos)
         return self.retocar_plantilla(plantilla)
 
     def serie_historica(self, tipo: str) -> str:

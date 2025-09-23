@@ -120,9 +120,17 @@ class SqlIPC:
                 + f';SERVER={SERVER};DATABASE={DATABASE}'
                 + f';UID={USERNAME};PWD={PASSWORD}'
             )
-            self.Grupos = pd.DataFrame() 
-            """ Temporary
-            for j in range(2023,anio):
+
+            # Carga de datos
+
+            self.Grupos = pd.read_sql(
+                f'EXEC sp_get_indice_grupo 2024, 12',
+                self.__conexion
+            )
+            self.Grupos['PerAno'] = 2024
+            self.Grupos['PerMes'] = 12
+
+            for j in range(2025,anio):
                 for i in range(1,13):
                     temp_df = pd.read_sql(
                         f'EXEC sp_get_indice_grupo {j}, {i}',
@@ -139,49 +147,8 @@ class SqlIPC:
                 temp_df['PerAno'] = anio
                 temp_df['PerMes'] = i
                 self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            """
-            temp_df = pd.read_sql(
-                f'EXEC sp_get_indice_grupo 2024, 12',
-                self.__conexion
-            )
-            temp_df['PerAno'] = 2024
-            temp_df['PerMes'] = 12
-            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            temp_df = pd.read_sql(
-                f'EXEC sp_get_indice_grupo 2025, 1',
-                self.__conexion
-            )
-            temp_df['PerAno'] = 2025
-            temp_df['PerMes'] = 1
-            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            temp_df = pd.read_sql(
-                f'EXEC sp_get_indice_grupo 2025, 2',
-                self.__conexion
-            )
-            temp_df['PerAno'] = 2025
-            temp_df['PerMes'] = 2
-            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            temp_df = pd.read_sql(
-                f'EXEC sp_get_indice_grupo 2025, 3',
-                self.__conexion
-            )
-            temp_df['PerAno'] = 2025
-            temp_df['PerMes'] = 3
-            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
 
-            temp_df = pd.read_sql(
-                f'EXEC sp_get_indice_grupo 2025, 4',
-                self.__conexion
-            )
-            temp_df['PerAno'] = 2025
-            temp_df['PerMes'] = 4
-            self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-
-            #temp_df = pd.read_excel("Índices_good.xlsx")
-            #temp_df['PerAno'] = 2024
-            #temp_df['PerMes'] = 1
-            #self.Grupos = pd.concat([self.Grupos,temp_df], ignore_index=True)
-            # Nombres de las divisiones
+            #Clasificación de los índices por grupo
             self.df_DivNom = self.Grupos[
                 self.Grupos['tipo_grupo'] == 'División'
             ].rename(
@@ -190,6 +157,7 @@ class SqlIPC:
                     'grupo_nombre': 'DivNom'
                 }
             )[['DivCod', 'DivNom']].head(13)
+
             # ponderaciones de las divisiones
             self.df_DivPon = self.Grupos[
                 self.Grupos['tipo_grupo'] == 'División'
@@ -203,6 +171,7 @@ class SqlIPC:
             self.df_DivPon = self.df_DivPon.astype({
                 'RegCod': 'int64', 'DivCod': 'int64'
             })
+
             # ponderaciones de los productos
             self.df_GbaPon = self.Grupos[
                 self.Grupos['tipo_grupo'] == 'Producto'
@@ -227,6 +196,7 @@ class SqlIPC:
             self.df_GbaPon = self.df_GbaPon.astype(
                 dict.fromkeys(columnas, "int64")
             )
+
             # informacion productos
             self.df_GbaInfo = self.Grupos[
                 self.Grupos['tipo_grupo'] == 'Producto'
@@ -252,6 +222,7 @@ class SqlIPC:
             self.df_GbaInfo.insert(0, 'DivCod', self.df_GbaInfo['AgrCod'] // 10)
             columnas = ('DivCod', 'AgrCod', 'GruCod', 'SubCod', 'GbaCod')
             self.df_GbaInfo = self.df_GbaInfo.astype(dict.fromkeys(columnas, "int64"))
+
             # indices por division
             self.df_DivInd = self.Grupos[self.Grupos['tipo_grupo'] == 'División'].rename(
                 columns={
@@ -358,6 +329,9 @@ class SqlIPC:
 
     def calcular_IPC(self, anio: int, mes: int, RegCod: int) -> float:
         
+        # los empalmes no se encuentran en el servidor por lo que tuve que
+        # incluirlos manualmente aquí. 
+
         if anio == 2024:
             if mes == 1:
                 return [
@@ -612,7 +586,7 @@ class SqlIPC:
         float
             El valor del poder adquisitivo de la moneda para la región y el periodo especificados, expresado como un porcentaje.
         """
-        return (1 / self.calcular_IPC(anio, mes, RegCod)) * 100
+        return self.calcular_IPC(2023, 12, RegCod) / self.calcular_IPC(anio, mes, RegCod)
 
     def incidencia_divisiones(self, RegCod: int) -> List[float]:
         """
@@ -699,11 +673,6 @@ class SqlIPC:
                 self.NOMBRE_DIV[DivCod]
             ))
         return variaciones
-
-
-
-
-
 
     def incidencia_gasto_basico(self, RegCod: int) -> List[Tuple[float, str]]:
         """
